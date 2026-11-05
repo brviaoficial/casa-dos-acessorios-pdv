@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07162f"><title>Casa dos Acessórios | PDV — Menu de Caixa (TESTE)</title><style>
+:root{color-scheme:dark;--bg:#07111f;--card:#101f37;--line:#243953;--ink:#f2f7ff;--muted:#a0b3cd;--blue:#237cfa;--good:#16b887;--warn:#f5a623}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:wait}.app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}.sidebar{background:#0a1b36;border-right:1px solid var(--line);padding:26px 16px}.logo{font-size:20px;font-weight:900;line-height:1.05;letter-spacing:.5px;color:#fff;padding:6px 8px 30px}.logo span{color:#4a9fff}.nav{border-radius:12px;background:#17468a;border:1px solid #3166ab;padding:13px;color:#fff;font-weight:700}.nav2{padding:13px;color:var(--muted)}.main{padding:28px;max-width:1600px;width:100%;margin:auto}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:16px}.top h1{font-size:29px;letter-spacing:-.6px;margin:0}.sub{color:var(--muted);margin:2px 0}.tag{padding:8px 12px;border-radius:30px;background:#382d1d;border:1px solid #70532e;color:#ffd18c;font-size:12px;font-weight:700}.notice{background:#2b2618;border:1px solid #6d542c;border-radius:12px;padding:12px 16px;color:#f7d69c;margin:18px 0}.login{background:#10233d;border:1px solid #2c496b;border-radius:16px;padding:20px;max-width:950px;margin-bottom:20px}.login h2{font-size:19px;margin:0 0 4px}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:15px}.form label{font-size:12px;color:#cad7ea;font-weight:700}.form input,.form select{margin-top:7px;width:100%;padding:12px;border-radius:9px;border:1px solid #45627e;background:#07182c;color:#fff;outline-color:#4d9afa}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}.btn{border:0;background:var(--blue);border-radius:10px;padding:12px 18px;color:white;font-weight:800}.btn.secondary{background:#1e344f;border:1px solid #3c5778}.msg{margin-top:10px;color:#c5daef;white-space:pre-wrap}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px}.card strong{display:block;font-size:26px;margin-top:12px;letter-spacing:-.5px}.card small{color:var(--muted)}.card.blue{background:linear-gradient(135deg,#1557c7,#237cfa);border-color:#4a9fff}.card.green{background:linear-gradient(135deg,#086d67,#0ba87f)}.card.orange{background:linear-gradient(135deg,#99551a,#d78321)}.card.blue small,.card.green small,.card.orange small{color:#f3f7ff}.section{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;margin-top:15px}.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px;overflow:auto}.panel h3{margin:0 0 15px;font-size:16px}.bars{display:flex;align-items:end;gap:12px;height:180px;border-bottom:1px solid #324660;padding:0 4px}.barwrap{flex:1;height:100%;display:flex;align-items:center;justify-content:end;flex-direction:column;gap:5px;min-width:0}.bar{background:linear-gradient(#4db5ff,#1269e8);border-radius:5px 5px 0 0;width:65%;min-height:2px}.barwrap b{font-size:10px;white-space:nowrap}.barwrap small{font-size:11px;color:var(--muted)}.payments{display:grid;gap:10px}.pay{display:flex;justify-content:space-between;border-bottom:1px solid #263b55;padding:9px 0}.pay span{color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:13px;min-width:500px}th{text-align:left;color:#b1c1d6;background:#182b44}td,th{padding:12px;border-bottom:1px solid #263a54}td{color:#dce7f6}.foot{margin-top:16px;color:#91a5c0;font-size:12px}.toggle{display:inline-flex;align-items:center;gap:8px;color:#e0eafd;font-size:13px}.toggle input{accent-color:#2c88fa}#dashboard{display:none}@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.section{grid-template-columns:1fr}}@media(max-width:690px){.app{display:block}.sidebar{padding:12px 18px;display:flex;align-items:center;justify-content:space-between}.logo{padding:0;font-size:15px}.nav2{display:none}.nav{font-size:12px}.main{padding:16px}.top h1{font-size:23px}.form{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr;gap:8px}.card{padding:14px}.card strong{font-size:19px}.section{gap:10px}.bars{gap:4px}.barwrap small{font-size:9px}}
+
+/* Recuperação de senha do Supabase Auth (sem armazenar tokens ou senhas) */
+.recovery-panel{display:none;background:linear-gradient(145deg,#102c4c,#11243e);border:1px solid #3a648a;border-radius:16px;padding:24px;max-width:740px;margin:18px 0}
+.recovery-panel h2{font-size:23px;margin:0 0 8px}.recovery-panel p{color:#bcd0e7}.recovery-panel label{display:block;color:#cad7ea;font-size:13px;font-weight:700;margin:12px 0}
+.recovery-panel input{display:block;width:100%;padding:12px;margin-top:6px;border-radius:9px;border:1px solid #527394;background:#07182c;color:#fff}
+.recovery-panel .hint{font-size:12px}.recovery-panel .message{margin-top:14px;white-space:pre-wrap;color:#f5d7a0}
+body.recover-mode #loginPanel,body.recover-mode #dashboard{display:none!important}
+body.recover-mode #recoveryPanel{display:block}
+@media(max-width:690px){.recovery-panel{padding:17px}}
+
+.nav-button{width:100%;display:block;text-align:left;border:0;cursor:pointer;font:inherit}.nav-button:hover{color:#fff;background:#193b67}.nav2.nav-button{border-radius:10px}.nav-button.selected{background:#17468a;color:white;border:1px solid #3166ab}.stock-view{display:none}.stock-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:15px 0}.stock-toolbar input{flex:1;min-width:220px;max-width:550px;background:#07182c;color:#fff;padding:12px;border:1px solid #45627e;border-radius:9px}.stock-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.stock-fields label{font-weight:700;font-size:12px;color:#cad7ea}.stock-fields input{width:100%;margin-top:6px;padding:11px;background:#07182c;color:#fff;border:1px solid #45627e;border-radius:9px}.stock-table{overflow-x:auto}.stock-table button{padding:7px 10px;border:1px solid #4d6b91;border-radius:7px;background:#213e60;color:white;cursor:pointer}.stock-table td{vertical-align:middle}.stock-table .muted{color:#9babc2}.stock-badge{display:inline-block;padding:3px 8px;border-radius:20px;background:#164c3c;color:#a9ffe3}.stock-badge.off{background:#51333b;color:#ffc8c8}.stock-note{font-size:12px;color:#b4c9e0}.stock-field-full{grid-column:1/-1}@media(max-width:1000px){.stock-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:690px){.stock-fields{grid-template-columns:1fr}.sidebar{display:block}.sidebar>div:nth-child(2){display:flex;gap:7px;flex-wrap:wrap}.nav-button{width:auto;font-size:12px}}
+.split-payment-panel{margin-top:16px;border:1px solid #37638b;background:#0c2947;border-radius:12px;padding:16px}.split-payment-row{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;align-items:end;margin:10px 0}.split-payment-row label{font-size:12px;font-weight:700;color:#cad7ea}.split-payment-row input,.split-payment-row select{display:block;width:100%;margin-top:5px;padding:11px;border-radius:9px;border:1px solid #45627e;background:#07182c;color:#fff}.split-payment-row button{padding:11px;border-radius:9px;color:white;border:1px solid #466184;background:#203d5a}.split-summary{display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap;margin-top:13px;padding:12px;background:#081d34;border-radius:9px}.split-payment-panel h3{margin:0 0 8px}@media(max-width:690px){.split-payment-row{grid-template-columns:1fr 1fr}.split-payment-row button{grid-column:1/-1}}.cash-summary{margin:15px 0;padding:17px;border-radius:13px;border:1px solid #47739a;background:linear-gradient(125deg,#0b2c4b,#11385d)}.cash-summary h3{margin:0 0 8px}.cash-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}.cash-metric{padding:12px;border:1px solid #38638d;background:#0c2541;border-radius:10px;min-width:0}.cash-metric span{display:block;font-size:12px;color:#c7d9ec;margin-bottom:7px}.cash-metric strong{display:block;font-size:20px;color:white;word-wrap:break-word}.cash-metric.highlight{border-color:#46aeda;background:#113f67}.cash-compare{background:#0b2541;border-radius:10px;padding:13px;border:1px solid #3d688e}.cash-compare-line{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #244768}.cash-compare-line b{font-size:16px}.cash-compare p{margin:8px 0}.cash-summary .sub{font-size:12px}@media(max-width:1050px){.cash-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:550px){.cash-grid{grid-template-columns:1fr}}
+
+#historyDetail table{min-width:0}#historyDetail .sub{margin:8px 0}#historyRows button{padding:7px 12px;background:#204a7a;border:1px solid #4b83b8;border-radius:8px;color:white}#historyReceipt{background:white;color:#111;padding:22px;font:13px/1.5 Arial,sans-serif;max-width:380px}#historyReceipt h2{text-align:center;margin:0 0 4px}#historyReceipt table{min-width:0;width:100%;color:#111;font-size:12px}#historyReceipt th,#historyReceipt td{color:#111;border-bottom:1px solid #ddd;padding:6px 3px}#historyReceipt .receipt-total{font-size:18px;font-weight:bold;text-align:right}#historyReceipt .receipt-divider{border-top:1px dashed #777;margin:12px 0}
+@media print{body{background:#fff!important}body *{visibility:hidden!important}#historyReceipt,#historyReceipt *{visibility:visible!important}#historyReceipt{display:block!important;position:absolute;left:0;top:0;width:100%;max-width:380px;margin:0;padding:10px;box-shadow:none!important}#historyReceipt table{min-width:0} @page{margin:8mm}}
+
+/* Identificacao explicita de vendas canceladas (inclusive na impressao). */
+.history-status{display:inline-block;padding:4px 9px;border-radius:7px;font-weight:800;background:#164b3b;color:#b3ffe4}
+.history-status.cancelled{background:#67212c;color:#fff;border:1px solid #ff7787}
+.history-cancel-alert{padding:14px;border:2px solid #e54d62;background:#4a1826;color:#fff;border-radius:10px;margin:12px 0;font-weight:800}
+#historyReceipt .receipt-cancelled{border:3px solid #111;color:#111;text-align:center;padding:12px 6px;font-size:22px;font-weight:900;margin:12px 0;letter-spacing:.5px}
+#historyReceipt .receipt-cancel-note{border-top:1px dashed #777;padding-top:9px;font-weight:bold;text-align:center}
+
+/* Relatórios em modo leitura, exclusivamente com vendas fictícias */
+.report-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0}
+.report-kpi{background:linear-gradient(135deg,#122c4a,#174476);border:1px solid #315e93;border-radius:12px;padding:16px}
+.report-kpi small{display:block;color:#c3d8f0}.report-kpi strong{display:block;font-size:23px;margin-top:6px}
+.report-filters{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.report-filters label{font-size:12px;font-weight:bold;color:#d2e1f5;display:grid;gap:5px}
+.report-filters input,.report-filters select{padding:11px;border-radius:9px;border:1px solid #45627e;background:#07182c;color:white}
+.report-columns{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
+.report-table{overflow-x:auto}.report-table table{min-width:440px}.report-warn{background:#422b1d;border:1px solid #d28b3b;border-radius:10px;padding:12px;color:#ffe0ac}
+@media(max-width:980px){.report-grid{grid-template-columns:repeat(2,1fr)}.report-columns{grid-template-columns:1fr}}
+@media(max-width:520px){.report-grid{grid-template-columns:1fr}}
+
+/* Oculta de fato todos os outros modulos durante a impressao,
+   evitando paginas extras criadas por elementos apenas invisiveis. */
+@media print {
+  body.printing-report .app{display:block!important;min-height:0!important;height:auto!important}
+  body.printing-report .sidebar{display:none!important}
+  body.printing-report .main{display:block!important;max-width:none!important;width:100%!important;min-height:0!important;padding:0!important;margin:0!important;overflow:visible!important}
+  body.printing-report .main > :not(#reportsPrintArea){display:none!important}
+  body.printing-report #reportsPrintArea{position:static!important;display:block!important;width:100%!important;max-width:100%!important;height:auto!important}
+  body.printing-report #reportsPrintArea table{break-inside:auto}
+  body.printing-report #reportsPrintArea tr{break-inside:avoid;page-break-inside:avoid}
+  body.printing-report #reportsPrintArea h2{break-after:avoid;page-break-after:avoid}
+}
+/* Impressão exclusiva do relatório, sem modificar a impressão de comprovantes */
+@media print {
+ body.printing-report,body.printing-report *{visibility:hidden!important}
+ body.printing-report #historyReceipt,body.printing-report #historyReceipt *{visibility:hidden!important;display:none!important}
+ body.printing-report #reportsPrintArea,body.printing-report #reportsPrintArea *{visibility:visible!important}
+ body.printing-report #reportsPrintArea{display:block!important;position:static!important;top:auto;left:auto;width:100%;padding:0;margin:0;color:#111!important;background:white!important;font-family:Arial,sans-serif;font-size:11px}
+ body.printing-report #reportsPrintArea h1{font-size:20px;margin:0 0 8px;color:#111}
+ body.printing-report #reportsPrintArea h2{font-size:14px;color:#111;margin:15px 0 6px}
+ body.printing-report #reportsPrintArea p{margin:6px 0;color:#111}
+ body.printing-report #reportsPrintArea table{border-collapse:collapse;min-width:0;width:100%;font-size:10px;margin:5px 0 12px}
+ body.printing-report #reportsPrintArea th,body.printing-report #reportsPrintArea td{border:1px solid #888;padding:5px;color:#111;text-align:left}
+ body.printing-report #reportsPrintArea .print-totals{border:1px solid #888;padding:8px;margin:10px 0}
+ body.printing-report #reportsPrintArea .print-warning{font-weight:bold;border:2px solid black;padding:8px}
+ @page{size:A4;margin:12mm}
+}
+
+.return-panel{border:1px solid #3b759f;background:linear-gradient(145deg,#112a47,#0d233d)}
+.return-panel .stock-table input[type=number]{width:90px;max-width:100%;padding:9px;background:#07182c;color:#fff;border:1px solid #45627e;border-radius:8px}
+.return-panel .stock-table input[type=checkbox]{width:20px;height:20px;accent-color:#238afa}
+.return-panel table{min-width:700px}.return-panel .stock-table td{vertical-align:middle}
+</style></head><body><div class="app"><aside class="sidebar"><div class="logo">CASA <span>DOS</span><br>ACESSÓRIOS</div><div><button type="button" class="nav nav-button" id="navDashboard">▣ Painel geral</button><button type="button" class="nav2 nav-button" id="navCashier" style="display:none">▤ Frente de caixa</button><button type="button" class="nav2 nav-button" id="navStock" style="display:none">▦ Produtos / Estoque</button><button type="button" class="nav2 nav-button" id="navHistory" style="display:none">🧾 Histórico de Vendas</button><button type="button" class="nav2 nav-button" id="navReports" style="display:none">📊 Relatórios de Vendas</button><button type="button" class="nav2 nav-button" id="navClients" style="display:none">🚗 Garagens / Fiado</button></div></aside><main class="main"><div class="top"><div><h1>Painel administrativo</h1><p class="sub">Resumo das vendas da loja • Dados do Supabase</p></div><span class="tag">AMBIENTE DE TESTES — NÃO UTILIZAR PARA VENDAS REAIS</span></div><div class="notice">O resumo financeiro é apenas de consulta. Produtos e cancelamentos fictícios podem ser modificados por administradores na área de estoque. Por padrão, vendas marcadas como TESTE não entram no faturamento.</div><section class="login" id="loginPanel"><h2>🔐 Acesso ao sistema</h2><p class="sub">Use somente a chave pública <code>sb_publishable_</code>. Nunca insira chave secreta ou senha do banco.</p><div class="form"><label>Project URL<input id="url" type="url" value="https://xzayqfwmoqcerfzxipse.supabase.co" placeholder="https://seuprojeto.supabase.co" autocomplete="url"></label><label>Publishable key<input id="key" placeholder="sb_publishable_..." spellcheck="false" autocomplete="off"></label><label>E-mail de acesso<input id="email" type="email" placeholder="seu@email.com" autocomplete="username"></label><label>Senha do Supabase Auth<input id="password" type="password" autocomplete="current-password" placeholder="Sua senha de usuário"></label></div><div class="actions"><button class="btn" id="login">Entrar e consultar</button><button class="btn secondary" id="forgotPassword" type="button">Esqueci minha senha</button><button class="btn secondary" id="logout" style="display:none">Sair</button><span id="userName"></span></div><div class="msg" id="msg" role="status"></div></section><section id="recoveryPanel" class="recovery-panel" aria-labelledby="recoveryTitle">
+<h2 id="recoveryTitle">🔐 Definir nova senha</h2>
+<p>Você chegou pelo e-mail de recuperação. Informe a chave <strong>pública</strong> do projeto e escolha uma nova senha. A senha não será guardada neste site.</p>
+<label>Project URL<input id="recoverUrl" type="url" spellcheck="false" autocomplete="url" value="https://xzayqfwmoqcerfzxipse.supabase.co"></label>
+<label>Publishable key<input id="recoverKey" spellcheck="false" autocomplete="off" placeholder="sb_publishable_..."></label>
+<label>Nova senha<input id="recoverPassword" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres"></label>
+<label>Confirmar nova senha<input id="recoverConfirm" type="password" autocomplete="new-password" placeholder="Digite a mesma senha"></label>
+<div class="actions"><button id="recoverSubmit" type="button" class="btn">Salvar nova senha</button></div>
+<div id="recoverMessage" class="message" role="status"></div>
+<p class="hint">Use somente a chave <code>sb_publishable_</code>. Nunca insira <code>sb_secret_</code>, <code>service_role</code> ou senha do banco. Se o link expirou, solicite um novo no painel de login.</p>
+</section><section id="employeePanel" class="login" style="display:none" aria-label="Caixa de testes do funcionário"><h2>🛒 Frente de caixa — Funcionário (TESTE)</h2><p class="sub">Apenas vendas fictícias. Nenhuma operação altera estoque, fiado ou caixa real.</p><div class="form"><label>Valor (R$)<input type="text" id="employeeValue" inputmode="decimal" placeholder="Ex.: 1,00" autocomplete="off"></label><label>Pagamento<select id="employeePayment"><option value="pix">Pix</option><option value="dinheiro">Dinheiro</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="transferencia">Transferência</option></select></label><label style="grid-column:1/-1">Observações<input id="employeeNotes" maxlength="200" placeholder="Venda fictícia" autocomplete="off"></label></div><div class="actions"><button class="btn" id="employeeSubmit">Registrar venda de TESTE</button><button class="btn secondary" id="employeeNew">Nova operação</button></div><div class="msg" role="status" id="employeeMsg">Nenhuma venda enviada.</div><p class="foot">Se ocorrer um erro de rede, confira o registro antes de tentar novamente. O identificador da operação é mantido para evitar duplicidade.</p><div class="panel" id="cartPanel" style="margin-top:18px"><h3>🛒 Carrinho de produtos — TESTE</h3><p class="sub">Produtos fictícios ativos. O banco confirma o preço, registra a venda e desconta o estoque de TESTE automaticamente.</p><div class="stock-toolbar"><input id="cartSearch" placeholder="Buscar produto por nome, código ou barras" autocomplete="off"><button type="button" class="btn secondary" id="cartRefresh">↻ Atualizar produtos</button></div><div class="form"><label>Produto<select id="cartProduct"><option value="">Carregando produtos...</option></select></label><label>Quantidade<input id="cartQty" type="number" min="1" max="100" step="1" value="1"></label></div><div class="actions"><button type="button" class="btn secondary" id="cartAdd">+ Adicionar ao carrinho</button></div><div class="stock-table"><table><thead><tr><th>Produto</th><th>Quantidade</th><th>Preço estimado</th><th>Subtotal</th><th>Ação</th></tr></thead><tbody id="cartRows"><tr><td colspan="5">Carrinho vazio.</td></tr></tbody></table></div><h3 style="margin:16px 0">Total estimado: <span id="cartTotal">R$ 0,00</span></h3><div class="form"><label>Tipo de pagamento<select id="cartPaymentMode"><option value="single">Pagamento único</option><option value="split">Pagamento dividido</option><option value="fiado">Fiado — garagem parceira (TESTE)</option></select></label><label id="cartSinglePayLabel">Forma de pagamento<select id="cartPayment"><option value="pix">Pix</option><option value="dinheiro">Dinheiro</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="transferencia">Transferência</option></select></label></div><div id="cartFiadoPanel" class="split-payment-panel" style="display:none">
+<h3>🚗 Venda fiada — GARAGEM (TESTE)</h3><p class="sub">A dívida fica no nome da garagem. Quem retirou é opcional. Se a aprovação administrativa estiver ativada, o pedido aguardará aprovação e o estoque só será baixado depois.</p>
+<div class="form"><label>Garagem autorizada *<select id="cartFiadoGarage"><option value="">Carregando garagens...</option></select></label>
+<label>Quem retirou a mercadoria (opcional)<select id="cartFiadoRetiranteTipo"><option value="nenhum">Não informar</option><option value="cadastrado">Selecionar funcionário cadastrado</option><option value="livre">Informar nome livre (quando permitido)</option></select></label>
+<label id="cartFiadoStaffLabel" style="display:none">Funcionário autorizado<select id="cartFiadoStaff"><option value="">Selecione...</option></select></label>
+<label id="cartFiadoNameLabel" style="display:none">Nome de quem retirou<input id="cartFiadoName" maxlength="160" autocomplete="off" placeholder="Nome do funcionário"></label></div>
+<div class="actions"><button type="button" class="btn secondary" id="cartFiadoRefresh">↻ Atualizar garagens</button></div>
+<p class="msg" id="cartFiadoMsg" role="status">Selecione uma garagem liberada pelo administrador.</p>
+</div><div id="cartSplitPanel" class="split-payment-panel" style="display:none"><h3>💳 Dividir pagamento — TESTE</h3><p class="sub">Selecione de 2 a 5 parcelas. Os valores devem somar exatamente o total estimado do carrinho; o banco confere o total verdadeiro na finalização.</p><div id="cartSplitRows"></div><div class="actions"><button type="button" class="btn secondary" id="cartSplitAdd">+ Outra forma</button></div><div class="split-summary"><span>Total informado: <b id="cartSplitPaid">R$ 0,00</b></span><span>Diferença para o carrinho: <b id="cartSplitDifference">R$ 0,00</b></span></div><div class="msg" id="cartSplitMessage" role="status"></div></div><div class="actions"><button type="button" class="btn" id="cartCheckout">Registrar carrinho de TESTE</button><button type="button" class="btn secondary" id="cartNew">Novo carrinho</button></div><div class="msg" id="cartMsg" role="status">Faça login como funcionário para carregar produtos.</div><p class="foot">Somente produtos TESTE. A conclusão desconta o estoque fictício. Se houver falha de rede, mantenha a operação para consultar ou reenviar com o mesmo identificador.</p></div><div class="panel return-panel" id="employeeReturnPanel" style="margin-top:18px">
+ <h3>↩️ Devolução de mercadorias — TESTE</h3>
+ <p class="sub">Selecione a garagem, a venda fiada original e as quantidades. Só devolva ao estoque itens em condições de revenda. Nenhuma transferência Pix é feita pelo sistema.</p>
+ <div class="form"><label>Garagem parceira<select id="employeeReturnGarage"><option value="">Selecione...</option></select></label>
+ <label>Venda fiada original<select id="employeeReturnSale"><option value="">Selecione a garagem primeiro</option></select></label></div>
+ <div class="stock-table"><table><thead><tr><th>Produto</th><th>Disponível para devolução</th><th>Quantidade a devolver</th><th>Retornar ao estoque?</th><th>Subtotal</th></tr></thead><tbody id="employeeReturnItems"><tr><td colspan="5">Escolha uma venda.</td></tr></tbody></table></div>
+ <div class="form"><label>Destino do valor excedente<select id="employeeReturnDestination"><option value="credito">Crédito para compras futuras</option><option value="reembolso">Reembolso externo já realizado</option></select></label>
+ <label id="employeeReturnMethodLabel" style="display:none">Forma do reembolso<select id="employeeReturnMethod"><option value="pix">Pix</option><option value="dinheiro">Dinheiro</option><option value="transferencia">Transferência</option></select></label>
+ <label style="grid-column:1/-1">Motivo da devolução<input id="employeeReturnReason" maxlength="500" placeholder="Ex.: Peça não utilizada, em boas condições"></label></div>
+ <p class="msg">Total selecionado: <strong id="employeeReturnTotal">R$ 0,00</strong></p>
+ <div class="actions"><button type="button" class="btn" id="employeeReturnSubmit">Solicitar devolução de TESTE</button><button type="button" class="btn secondary" id="employeeReturnRefresh">↻ Atualizar vendas</button><button type="button" class="btn secondary" id="employeeReturnNew">Nova devolução</button></div>
+ <p class="msg" id="employeeReturnMsg" role="status">Faça login e selecione uma garagem.</p>
+ <p class="foot">O banco confere a venda, o saldo já devolvido e a permissão do usuário. Após falha de rede, consulte o histórico antes de criar uma nova operação.</p>
+ </div></section><section id="stockView" class="stock-view" aria-labelledby="stockTitle"><div class="top"><div><h2 id="stockTitle" style="margin:0">📦 Cadastro de produtos</h2><p class="sub">Acesso exclusivo do administrador • Ambiente de testes</p></div><button type="button" class="btn secondary" id="stockBack">← Voltar ao painel</button></div><div class="notice">Cadastros feitos aqui são gravados na tabela <b>produtos</b> do Supabase. <b>Não utilizar como estoque real</b> até finalizar a validação do sistema.</div><div class="panel"><h3 id="stockFormTitle">Novo produto</h3><div class="stock-fields"><label>Nome do produto *<input id="prod_nome" type="text" maxlength="160" autocomplete="off"></label><label>Código interno<input id="prod_codigo" type="text" maxlength="160" autocomplete="off"></label><label>Código de barras<input id="prod_codigo_barras" type="text" maxlength="160" autocomplete="off"></label><label>Categoria<input id="prod_categoria" type="text" maxlength="160" autocomplete="off"></label><label>Marca<input id="prod_marca" type="text" maxlength="160" autocomplete="off"></label><label>Modelo do veículo<input id="prod_modelo_veiculo" type="text" maxlength="160" autocomplete="off"></label><label>Ano do veículo<input id="prod_ano_veiculo" type="text" maxlength="160" autocomplete="off"></label><label>Referência<input id="prod_referencia" type="text" maxlength="160" autocomplete="off"></label><label>Localização no estoque<input id="prod_localizacao" type="text" maxlength="160" autocomplete="off"></label><label>Preço de custo (R$)<input id="prod_preco_custo" type="number" step="0.01" min="0" autocomplete="off"></label><label>Preço de venda (R$) *<input id="prod_preco_venda" type="number" step="0.01" min="0" autocomplete="off"></label><label>Quantidade *<input id="prod_quantidade" type="number" step="1" min="0" autocomplete="off"></label><label>Estoque mínimo *<input id="prod_estoque_minimo" type="number" step="1" min="0" autocomplete="off"></label></div><div class="actions"><button type="button" class="btn" id="stockSave">Salvar produto</button><button type="button" class="btn secondary" id="stockCancel">Limpar / Novo produto</button><span class="stock-note">* Campos obrigatórios</span></div><div id="stockMsg" class="msg" role="status"></div></div><div class="panel" style="margin-top:16px" id="stockEntryPanel"><h3>📥 Entrada de mercadorias — TESTE</h3><p class="sub">Somente administrador. Esta operação altera o estoque do produto fictício selecionado e registra o histórico. Use somente produtos fictícios. Cada tentativa mantém seu identificador para evitar duplicidades, mesmo após recarregar a página.</p><div class="form"><label>Produto de TESTE<select id="entryProduct"><option value="">Escolha um produto de teste</option></select></label><label>Quantidade para adicionar<input type="number" id="entryQty" value="3" min="1" max="1000" step="1"></label><label style="grid-column:1/-1">Observações<input id="entryNotes" type="text" maxlength="160" value="Entrada fictícia para validação"></label></div><div class="actions"><button type="button" class="btn" id="entrySubmit">Registrar entrada de TESTE</button><button type="button" class="btn secondary" id="entryCheck">↻ Consultar estoque</button><button type="button" class="btn secondary" id="entryNew">Nova entrada</button></div><div id="entryMsg" class="msg" role="status">Selecione um produto fictício. A operação será preservada até você clicar em Nova entrada.</div><div class="stock-table"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Data</th><th>Observação</th></tr></thead><tbody id="entryRows"><tr><td colspan="5">Histórico não carregado.</td></tr></tbody></table></div></div><div class="panel" style="margin-top:16px" id="stockExitPanel">
+<h3>📤 Saída manual de mercadorias — TESTE</h3>
+<p class="sub">Somente administrador. Retirada fictícia separada das vendas. A saída reduz o estoque, registra histórico e usa um identificador único para evitar reenvio duplicado. Nenhuma venda é criada.</p>
+<div class="form">
+<label>Produto de TESTE<select id="exitProduct"><option value="">Selecione um produto de teste</option></select></label>
+<label>Quantidade para retirar<input id="exitQty" type="number" value="1" min="1" max="1000" step="1"></label>
+<label style="grid-column:1/-1">Motivo / observações<input id="exitNotes" type="text" maxlength="160" value="Retirada manual fictícia para validação"></label>
+</div>
+<div class="actions">
+<button type="button" class="btn" id="exitSubmit">Registrar saída de TESTE</button>
+<button type="button" class="btn secondary" id="exitCheck">↻ Consultar estoque</button>
+<button type="button" class="btn secondary" id="exitNew">Nova saída</button>
+</div>
+<div id="exitMsg" class="msg" role="status">Selecione um produto fictício. Não clique em Nova saída se houver uma operação com resultado incerto.</div>
+<div class="stock-table"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Data</th><th>Observação</th></tr></thead><tbody id="exitRows"><tr><td colspan="5">Histórico de saídas não carregado.</td></tr></tbody></table></div>
+</div><div class="panel" style="margin-top:16px"><h3>Produtos cadastrados</h3><div class="stock-toolbar"><input id="stockSearch" placeholder="Buscar por nome, código ou barras" aria-label="Buscar produtos"><button id="stockRefresh" class="btn secondary" type="button">↻ Atualizar</button><span id="stockTotal" class="stock-note"></span></div><div class="stock-table"><table><thead><tr><th>Produto</th><th>Código / barras</th><th>Preço de venda</th><th>Estoque</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="stockRows"><tr><td colspan="6">Faça login como administrador para consultar produtos.</td></tr></tbody></table></div><p class="foot">Desativar não apaga o histórico. O acesso é verificado pelas políticas RLS do Supabase; a tela não substitui as regras do banco.</p></div>
+<div class="panel" id="cancelTestPanel" style="margin-top:16px">
+<h3>↩ Cancelamento de venda com devolução de estoque — TESTE</h3>
+<p class="sub">Somente administrador ativo. O cancelamento altera o status da venda fictícia e devolve os produtos ao estoque; não realiza estorno financeiro. Consulte primeiro, depois confirme uma única vez.</p>
+<div class="form"><label>Número da venda de TESTE<input id="cancelSaleNumber" type="number" min="1" step="1" value="5" autocomplete="off"></label><label>Motivo do cancelamento<input id="cancelSaleReason" maxlength="500" value="Cancelamento fictício para validar devolução de estoque" autocomplete="off"></label></div>
+<div class="actions"><button type="button" class="btn secondary" id="cancelSaleCheck">Consultar venda</button><button type="button" class="btn" id="cancelSaleConfirm" disabled>Confirmar cancelamento de TESTE</button></div>
+<div class="msg" id="cancelSaleMsg" role="status">Consulte a venda fictícia antes de cancelar.</div>
+<div id="cancelSalePreview" class="stock-table"></div>
+</div>
+<div class="panel" id="cashTestPanel" style="margin-top:16px">
+<h3>💰 Abertura e fechamento de caixa — TESTE</h3>
+<p class="sub">Exclusivo para administrador. Os registros são fictícios e não representam dinheiro real. Resumo de vendas calculado automaticamente para conferência. O saldo final é informado manualmente; este teste ainda não realiza fechamento financeiro automático.</p>
+<div class="actions"><button type="button" class="btn secondary" id="cashRefresh">↻ Consultar caixa</button></div>
+<div class="msg" id="cashMsg" role="status">Consulte o caixa após entrar como administrador.</div>
+<div id="cashCurrent" class="stock-table"></div>
+<div class="cash-summary" id="cashSummary" aria-live="polite">
+ <h3>📊 Resumo automático do caixa — TESTE</h3>
+ <p class="sub" id="cashSummaryMsg">Abra um caixa de TESTE ou clique em Consultar caixa para carregar o resumo.</p>
+ <div class="cash-grid" id="cashSummaryGrid" style="display:none">
+  <div class="cash-metric"><span>💵 Vendas em dinheiro</span><strong id="cashSalesCash">—</strong></div>
+  <div class="cash-metric"><span>📱 Pix recebido</span><strong id="cashSalesPix">—</strong></div>
+  <div class="cash-metric"><span>💳 Cartão (crédito + débito)</span><strong id="cashSalesCard">—</strong></div>
+  <div class="cash-metric"><span>🏦 Transferências</span><strong id="cashSalesTransfer">—</strong></div>
+  <div class="cash-metric"><span>🧾 Total vendido</span><strong id="cashSalesTotal">—</strong></div>
+  <div class="cash-metric"><span>➕ Suprimentos</span><strong id="cashSupply">—</strong></div>
+  <div class="cash-metric"><span>➖ Sangrias</span><strong id="cashWithdraw">—</strong></div>
+  <div class="cash-metric highlight"><span>💰 Dinheiro esperado na gaveta</span><strong id="cashExpected">—</strong></div>
+ </div>
+ <div class="cash-compare" id="cashCompare" style="display:none">
+   <strong>Conferência antes do fechamento</strong>
+   <p class="sub">O dinheiro esperado considera o saldo inicial + vendas em dinheiro + suprimentos − sangrias. Pix e cartão não entram na gaveta.</p>
+   <div class="cash-compare-line"><span>Dinheiro contado (campo abaixo)</span><b id="cashCounted">—</b></div>
+   <div class="cash-compare-line"><span>Diferença (contado − esperado)</span><b id="cashDifference">—</b></div>
+   <p class="sub" id="cashDifferenceMsg"></p>
+ </div>
+ <p class="sub">Valores obtidos do Supabase. Somente vendas finalizadas vinculadas ao caixa são somadas; canceladas ficam fora. Fechamento de TESTE continua manual.</p>
+</div>
+<div class="panel" id="cashMovementPanel" style="margin-top:14px;padding:16px;border:1px solid rgba(112,186,255,.35)">
+ <h3>💸 Sangrias e suprimentos — TESTE</h3>
+ <p class="sub">Exclusivo para administrador, com caixa fictício aberto. Nenhum dinheiro real é movimentado. A operação ficará registrada no Supabase.</p>
+ <div class="form">
+  <label>Tipo de movimentação<select id="cashMoveType"><option value="sangria">Sangria — retirar dinheiro</option><option value="suprimento">Suprimento — colocar dinheiro</option></select></label>
+  <label>Valor fictício (R$)<input id="cashMoveAmount" value="30,00" inputmode="decimal" autocomplete="off"></label>
+  <label>Motivo da movimentação<input id="cashMoveReason" value="Teste de movimentação de caixa" maxlength="200" autocomplete="off"></label>
+ </div>
+ <div class="actions"><button type="button" class="btn" id="cashMoveBtn" disabled>Registrar movimentação de TESTE</button><button type="button" class="btn secondary" id="cashMoveReview" disabled>Consultar movimentações</button></div>
+ <div class="msg" id="cashMoveMsg" role="status">Abra e consulte um caixa de TESTE antes de registrar uma movimentação.</div>
+ <div id="cashMoveHistory" class="stock-table"></div>
+ <p class="sub">Se ocorrer erro de rede, clique em Consultar movimentações e confira o histórico antes de tentar novamente. Não clique repetidamente.</p>
+</div>
+<div class="form" style="margin-top:14px"><label>Saldo inicial fictício (R$)<input id="cashOpenAmount" inputmode="decimal" value="100,00" autocomplete="off"></label><label>Saldo final conferido fictício (R$)<input id="cashCloseAmount" inputmode="decimal" value="100,00" autocomplete="off"></label></div>
+<div class="actions"><button type="button" class="btn" id="cashOpenBtn" disabled>Abrir caixa de TESTE</button><button type="button" class="btn secondary" id="cashCloseBtn" disabled>Fechar caixa de TESTE</button></div>
+<p class="sub">Se houver erro de rede depois de clicar, consulte o caixa antes de tentar outra operação. Sangrias e suprimentos ficam registrados no histórico pelo módulo de TESTE abaixo. O valor final continua sendo lançado manualmente.</p>
+</div></section><section id="historyView" class="stock-view" aria-label="Histórico de Vendas de TESTE">
+<div class="top"><div><h2 style="margin:0">🧾 Histórico de Vendas — TESTE</h2><p class="sub">Consulta administrativa de vendas fictícias. Nenhum registro é alterado.</p></div><button type="button" class="btn secondary" id="historyBack">← Voltar ao painel</button></div>
+<div class="notice">Comprovantes de TESTE não têm valor fiscal. Não representam nota fiscal, recibo de pagamento real nem estorno.</div>
+<div class="panel"><div class="stock-toolbar"><input id="historySearch" type="search" placeholder="Pesquisar pelo número da venda" aria-label="Número da venda de teste"><select id="historyStatus" aria-label="Filtrar por situação" style="padding:12px;background:#07182c;color:white;border:1px solid #45627e;border-radius:9px"><option value="">Todos os status</option><option value="finalizada">Finalizadas</option><option value="cancelada">Canceladas</option></select><button type="button" class="btn secondary" id="historyRefresh">↻ Atualizar histórico</button></div><p id="historyMsg" class="msg" role="status">Faça login como administrador para consultar o histórico.</p><div class="stock-table"><table><thead><tr><th>Nº</th><th>Data / hora</th><th>Funcionário</th><th>Status</th><th>Total</th><th>Ação</th></tr></thead><tbody id="historyRows"><tr><td colspan="6">Histórico não carregado.</td></tr></tbody></table></div><p class="foot">Últimas 100 vendas fictícias do carrinho, ordenadas da mais recente. Acesso sujeito às permissões do Supabase.</p></div>
+<div id="historyDetailPanel" class="panel" style="margin-top:16px;display:none"><h3>Detalhes da venda</h3><div id="historyDetail"></div><div class="actions"><button type="button" class="btn" id="historyPrint" disabled>🖨️ Imprimir / Salvar PDF</button></div></div>
+<div id="historyReceipt" style="display:none"></div></section><section id="reportsView" class="stock-view" aria-label="Relatórios de vendas de TESTE" style="display:none">
+<div class="top"><div><h2 style="margin:0">📊 Relatórios de Vendas — TESTE</h2><p class="sub">Apenas vendas fictícias do carrinho. Consultas somente de leitura.</p></div><button type="button" class="btn secondary" id="reportsBack">← Voltar ao painel</button></div>
+<div class="notice">SIMULAÇÃO: valores não representam faturamento real, recebimento bancário ou documento fiscal. Vendas canceladas ficam fora do faturamento.</div>
+<div class="panel"><div class="report-filters"><label>De<input id="reportsFrom" type="date"></label><label>Até<input id="reportsTo" type="date"></label><label>Funcionário<select id="reportsEmployee"><option value="">Todos</option></select></label><button type="button" class="btn secondary" id="reportsRefresh">↻ Atualizar dados</button><button type="button" class="btn secondary" id="reportsClear">Limpar filtros</button><button type="button" class="btn" id="reportsExcel" disabled>📊 Exportar Excel (.xlsx)</button><button type="button" class="btn" id="reportsPdf" disabled>📄 Imprimir / Salvar PDF</button></div><p id="reportsMsg" class="msg" role="status">Faça login como administrador para consultar os relatórios.</p></div>
+<div class="report-grid"><div class="report-kpi"><small>💰 Total vendido (finalizadas)</small><strong id="reportsRevenue">—</strong></div><div class="report-kpi"><small>🧾 Vendas finalizadas</small><strong id="reportsCount">—</strong></div><div class="report-kpi"><small>📉 Vendas canceladas (não somadas)</small><strong id="reportsCancelled">—</strong></div><div class="report-kpi"><small>📊 Ticket médio (finalizadas)</small><strong id="reportsTicket">—</strong></div></div>
+<div class="report-columns"><div class="panel report-table"><h3>Vendas por dia</h3><table><thead><tr><th>Data</th><th>Vendas</th><th>Total</th></tr></thead><tbody id="reportsDaily"></tbody></table></div><div class="panel report-table"><h3>Vendas por funcionário</h3><table><thead><tr><th>Funcionário</th><th>Vendas</th><th>Total</th></tr></thead><tbody id="reportsByEmployee"></tbody></table></div></div>
+<div class="report-columns"><div class="panel report-table"><h3>Pagamentos por forma</h3><table><thead><tr><th>Forma</th><th>Valor</th></tr></thead><tbody id="reportsPayment"></tbody></table><p class="foot">Pagamentos relacionados somente a vendas finalizadas. Pagamento dividido é somado por forma.</p></div><div class="panel report-table"><h3>Produtos mais vendidos</h3><table><thead><tr><th>Produto</th><th>Unidades</th><th>Valor</th></tr></thead><tbody id="reportsProducts"></tbody></table><p class="foot">Produtos de vendas finalizadas; canceladas não entram.</p></div></div>
+<p class="foot">Fuso horário: São Paulo. Dados lidos do Supabase; sem modificações em vendas, estoque ou caixa.</p>
+</section><section id="clientsView" class="stock-view" style="display:none" aria-label="Cadastro de revendas parceiras">
+  <div class="top"><div><h2>🚗 Revendas parceiras — TESTE</h2><p class="sub">Cadastre garagens de veículos usados e seus retirantes. O nome do funcionário é sempre opcional na futura venda fiada.</p></div><button class="btn secondary" id="clientsBack" type="button">← Voltar</button></div>
+  <div class="notice">Ambiente de TESTES: cadastro, fiado, pagamentos e devoluções fictícias. Apenas o administrador libera fiado. Não utilize com mercadorias ou dinheiro reais.</div>
+  <div class="panel"><h3 id="clientFormTitle">Nova garagem / revenda</h3>
+    <div class="stock-fields">
+      <label>Nome da garagem / revenda *<input id="clientName" maxlength="160" autocomplete="off" placeholder="Ex.: AutoCar Veículos"></label>
+      <label>Proprietário / responsável<input id="clientOwner" maxlength="160" autocomplete="off" placeholder="Nome do responsável"></label>
+      <label>WhatsApp / telefone<input id="clientPhone" maxlength="30" autocomplete="off" inputmode="tel"></label>
+      <label>CNPJ (opcional)<input id="clientCnpj" maxlength="18" autocomplete="off" inputmode="numeric"></label>
+      <label>CPF do responsável (opcional)<input id="clientCpf" maxlength="14" autocomplete="off" inputmode="numeric"></label>
+      <label>Data combinada de cobrança<input id="clientDue" type="date"></label>
+      <label>Fiado liberado para a garagem<select id="clientCredit"><option value="false">Não autorizado</option><option value="true">Autorizado — sem limite definido</option></select></label>
+      <label>Se identificar quem retirou a peça<select id="clientPolicy"><option value="cadastrados">Somente retirantes cadastrados/autorizados</option><option value="livre">Aceitar nome informado no caixa</option></select></label>
+      <label style="grid-column:1/-1">Endereço<input id="clientAddress" maxlength="240" autocomplete="off"></label>
+      <label style="grid-column:1/-1">Observações<input id="clientNotes" maxlength="500" autocomplete="off" placeholder="Acordos com a revenda, contatos etc."></label>
+    </div>
+    <p class="sub" style="margin-top:10px">O campo <strong>“retirado por” será opcional</strong> nas vendas, inclusive para garagens configuradas como “somente cadastrados”. Se for preenchido, respeitará a regra escolhida.</p>
+    <div class="actions"><button class="btn" type="button" id="clientSave">Salvar garagem</button><button class="btn secondary" type="button" id="clientReset">Limpar / Nova garagem</button></div>
+    <p class="msg" id="clientMsg" role="status">Cadastre uma garagem fictícia para começar.</p>
+  </div>
+  <div class="panel" style="margin-top:15px"><h3>Garagens cadastradas</h3>
+    <div class="stock-toolbar"><input id="clientSearch" placeholder="Buscar garagem, responsável ou telefone" aria-label="Buscar garagens"><button class="btn secondary" type="button" id="clientRefresh">↻ Atualizar</button></div>
+    <div class="stock-table"><table><thead><tr><th>Garagem</th><th>Responsável</th><th>Telefone</th><th>Fiado</th><th>Identificação da retirada</th><th>Cobrança</th><th>Ações</th></tr></thead><tbody id="clientRows"><tr><td colspan="7">Entre como administrador.</td></tr></tbody></table></div>
+  </div>
+  <div class="panel" style="margin-top:15px" id="retirantesPanel"><div class="top"><div><h3>👤 Retirantes da garagem (opcional)</h3><p class="sub" id="retirantesSubtitle">Selecione “Funcionários” em uma garagem para cadastrar ou editar seus retirantes.</p></div><button class="btn secondary" type="button" id="retirantesRefresh" disabled>↻ Atualizar</button></div>
+    <div class="stock-fields"><label>Nome do funcionário / retirante<input id="retiranteName" maxlength="160" disabled autocomplete="off" placeholder="Ex.: João"></label><label>Telefone (opcional)<input id="retirantePhone" maxlength="30" disabled autocomplete="off" inputmode="tel"></label><label>Autorização do retirante<select id="retiranteAllowed" disabled><option value="true">Autorizado</option><option value="false">Não autorizado</option></select></label></div>
+    <div class="actions"><button class="btn" type="button" id="retiranteSave" disabled>Salvar retirante</button><button class="btn secondary" type="button" id="retiranteReset" disabled>Limpar / Novo retirante</button></div>
+    <p class="msg" id="retiranteMsg" role="status">O cadastro de funcionários não é obrigatório para vender fiado.</p>
+    <div class="stock-table"><table><thead><tr><th>Nome</th><th>Telefone</th><th>Situação</th><th>Ação</th></tr></thead><tbody id="retiranteRows"><tr><td colspan="4">Nenhuma garagem selecionada.</td></tr></tbody></table></div>
+  </div>
+  <div class="panel" style="margin-top:15px" id="fiadoAdminPanel"><h3>🧾 Fiado — pedidos, cobranças e extrato (TESTE)</h3>
+   <div class="notice">Fiado e devoluções são registrados em tabelas de TESTE separadas das vendas comuns. Reembolso é apenas registro de pagamento externo já realizado. Não utilizar para operações reais.</div>
+   <label class="toggle"><input type="checkbox" id="fiadoRequireApproval" checked> Exigir aprovação do administrador em cada fiado de funcionário</label>
+   <div class="actions"><button type="button" class="btn secondary" id="fiadoSaveApproval">Salvar configuração</button><button type="button" class="btn secondary" id="fiadoAdminRefresh">↻ Atualizar fiado</button></div>
+   <p class="msg" id="fiadoAdminMsg">Carregue os dados após entrar como administrador.</p>
+   <h3>Pedidos aguardando aprovação</h3><p class="msg" id="fiadoPendingDetail">Clique em Ver itens para conferir os produtos antes de aprovar.</p><div class="stock-table"><table><thead><tr><th>Data</th><th>Garagem</th><th>Valor</th><th>Retirado por</th><th>Ações</th></tr></thead><tbody id="fiadoPendingRows"><tr><td colspan="5">Nenhum pedido carregado.</td></tr></tbody></table></div>
+   <h3 style="margin-top:18px">Saldos das garagens</h3><div class="stock-table"><table><thead><tr><th>Garagem</th><th>Compras</th><th>Pagamentos</th><th>Saldo / crédito</th><th>Próxima cobrança</th></tr></thead><tbody id="fiadoBalanceRows"><tr><td colspan="5">Nenhum dado carregado.</td></tr></tbody></table></div>
+   <h3 style="margin-top:18px">Registrar pagamento parcial ou total (TESTE)</h3><div class="form">
+    <label>Garagem<select id="fiadoPayGarage"><option value="">Selecione...</option></select></label>
+    <label>Valor recebido (R$)<input id="fiadoPayValue" placeholder="Ex.: 100,00" inputmode="decimal"></label>
+    <label>Forma de recebimento<select id="fiadoPayMethod"><option value="pix">Pix</option><option value="dinheiro">Dinheiro</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="transferencia">Transferência</option></select></label>
+   </div><div class="actions"><button class="btn" type="button" id="fiadoPaySubmit">Registrar pagamento de TESTE</button></div>
+   <p class="msg" id="fiadoPayMsg">Pagamento reduz o saldo da garagem, sem alterar o caixa de vendas normais.</p>
+   <h3 style="margin-top:18px">Extrato da garagem</h3><div class="form"><label>Selecionar garagem<select id="fiadoLedgerGarage"><option value="">Selecione...</option></select></label></div>
+   <div class="stock-table"><table><thead><tr><th>Data</th><th>Tipo</th><th>Valor</th><th>Forma</th></tr></thead><tbody id="fiadoLedgerRows"><tr><td colspan="4">Selecione uma garagem.</td></tr></tbody></table></div>
+  </div>
+<div class="panel return-panel" id="adminReturnPanel" style="margin-top:18px">
+ <h3>↩️ Devolução de mercadorias — TESTE</h3>
+ <p class="sub">Selecione a garagem, a venda fiada original e as quantidades. Só devolva ao estoque itens em condições de revenda. Nenhuma transferência Pix é feita pelo sistema.</p>
+ <div class="form"><label>Garagem parceira<select id="adminReturnGarage"><option value="">Selecione...</option></select></label>
+ <label>Venda fiada original<select id="adminReturnSale"><option value="">Selecione a garagem primeiro</option></select></label></div>
+ <div class="stock-table"><table><thead><tr><th>Produto</th><th>Disponível para devolução</th><th>Quantidade a devolver</th><th>Retornar ao estoque?</th><th>Subtotal</th></tr></thead><tbody id="adminReturnItems"><tr><td colspan="5">Escolha uma venda.</td></tr></tbody></table></div>
+ <div class="form"><label>Destino do valor excedente<select id="adminReturnDestination"><option value="credito">Crédito para compras futuras</option><option value="reembolso">Reembolso externo já realizado</option></select></label>
+ <label id="adminReturnMethodLabel" style="display:none">Forma do reembolso<select id="adminReturnMethod"><option value="pix">Pix</option><option value="dinheiro">Dinheiro</option><option value="transferencia">Transferência</option></select></label>
+ <label style="grid-column:1/-1">Motivo da devolução<input id="adminReturnReason" maxlength="500" placeholder="Ex.: Peça não utilizada, em boas condições"></label></div>
+ <p class="msg">Total selecionado: <strong id="adminReturnTotal">R$ 0,00</strong></p>
+ <div class="actions"><button type="button" class="btn" id="adminReturnSubmit">Registrar devolução de TESTE</button><button type="button" class="btn secondary" id="adminReturnRefresh">↻ Atualizar vendas</button><button type="button" class="btn secondary" id="adminReturnNew">Nova devolução</button></div>
+ <p class="msg" id="adminReturnMsg" role="status">Faça login e selecione uma garagem.</p>
+ <p class="foot">O banco confere a venda, o saldo já devolvido e a permissão do usuário. Após falha de rede, consulte o histórico antes de criar uma nova operação.</p>
+ </div>
+<div class="panel" style="margin-top:16px" id="returnsAdminPanel">
+ <h3>⚙️ Configuração e aprovações de devoluções — TESTE</h3>
+ <label class="toggle"><input type="checkbox" id="returnRequireApproval" checked> Exigir aprovação do administrador nas devoluções solicitadas por funcionários</label>
+ <p><label class="toggle"><input type="checkbox" id="returnEmployeeRefund"> Permitir que funcionários registrem reembolsos externos (não envia dinheiro)</label></p>
+ <div class="actions"><button type="button" class="btn secondary" id="returnSaveSettings">Salvar configurações</button><button type="button" class="btn secondary" id="returnAdminRefresh">↻ Atualizar devoluções</button></div>
+ <p class="msg" id="returnAdminMsg">Carregue as devoluções após o login.</p>
+ <h3>Solicitações aguardando aprovação</h3><div class="stock-table"><table><thead><tr><th>Data</th><th>Garagem</th><th>Valor</th><th>Destino</th><th>Ações</th></tr></thead><tbody id="returnPendingRows"><tr><td colspan="5">Nenhuma solicitação carregada.</td></tr></tbody></table></div>
+ <p class="msg" id="returnPendingDetail">Use “Ver itens” antes de aprovar.</p>
+ <h3>Últimas devoluções</h3><div class="stock-table"><table><thead><tr><th>Data</th><th>Garagem</th><th>Valor</th><th>Reembolsado</th><th>Status</th></tr></thead><tbody id="returnHistoryRows"><tr><td colspan="5">Nenhuma devolução carregada.</td></tr></tbody></table></div>
+ </div>
+  </section><section id="reportsPrintArea" aria-label="Relatório para impressão" style="display:none"></section><div id="dashboard"><div class="top"><div><h2 style="margin:0;font-size:20px">Resumo financeiro</h2><p class="sub" id="updateTime">—</p></div><div class="actions" style="margin:0"><label class="toggle"><input type="checkbox" id="showTests">Incluir vendas de TESTE</label><button class="btn" id="refresh">↻ Atualizar</button></div></div><div class="cards"><div class="card blue"><small>💰 Vendas de hoje</small><strong id="salesValue">—</strong><small>Valor das vendas finalizadas</small></div><div class="card"><small>🧾 Quantidade de vendas hoje</small><strong id="salesCount">—</strong><small>Vendas finalizadas</small></div><div class="card green"><small>💳 Pagamentos registrados hoje</small><strong id="paidValue">—</strong><small>Pagamentos associados às vendas</small></div><div class="card orange"><small>📝 Fiado (contas a receber)</small><strong id="fiadoDashboardTotal">—</strong><small>Saldo a receber do fiado (TESTE)</small><small id="fiadoDashboardCredit">Créditos: —</small></div></div><div class="section"><div class="panel"><h3>Vendas dos últimos 7 dias</h3><div class="bars" id="bars"></div></div><div class="panel"><h3>Pagamentos de hoje</h3><div class="payments" id="payments"></div><p class="foot">A soma de pagamentos pode diferir do valor das vendas se houver lançamentos pendentes ou inconsistentes.</p></div></div><div class="panel" style="margin-top:15px"><h3>Últimas vendas registradas</h3><table><thead><tr><th>Nº</th><th>Data / hora</th><th>Valor</th><th>Status</th><th>Observação</th></tr></thead><tbody id="rows"></tbody></table></div><p class="foot">Horários no fuso de São Paulo. Vendas fictícias de teste são excluídas pelos campos de observações contendo a palavra “TESTE”. Operações reais não devem ser lançadas neste ambiente.</p></div></main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script><script>
+(()=>{'use strict';let client=null,loaded=[],payRows=[];const $=id=>document.getElementById(id),money=x=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(x)||0),msg=t=>{$('msg').textContent=t},escape=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function isTest(v){return /\bTESTE\b/i.test(String(v.observacoes||''))}function dateSP(instant){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(instant))}function showDate(instant){return new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(instant))}function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}async function fetchAll(table,columns,queryFn){let all=[],from=0;for(;;){let q=client.from(table).select(columns).range(from,from+499);if(queryFn)q=queryFn(q);let {data,error}=await q;if(error)throw new Error(table+': '+error.message);all.push(...data);if(data.length<500)break;from+=500;if(from>20000)throw new Error('Volume muito alto para consulta no navegador.');}return all}
+async function load(){if(!client)return;msg('Carregando dados...');$('refresh').disabled=true;try{const today=dateSP(new Date());const start=new Date(today+'T00:00:00-03:00');start.setUTCDate(start.getUTCDate()-6);const startIso=start.toISOString();loaded=await fetchAll('vendas','id,numero,total,status,observacoes,criada_em',q=>q.gte('criada_em',startIso).order('criada_em',{ascending:false}));const ids=loaded.filter(v=>v.status==='finalizada').map(v=>v.id);payRows=[];for(let i=0;i<ids.length;i+=150){const {data,error}=await client.from('pagamentos').select('venda_id,forma,valor').in('venda_id',ids.slice(i,i+150));if(error)throw Error('pagamentos: '+error.message);payRows.push(...data)}render(today);msg('✅ Dados consultados com sucesso.')}catch(e){msg('⚠️ Não foi possível consultar: '+e.message)}finally{$('refresh').disabled=false}}
+function render(today){const include=$('showTests').checked;const subset=loaded.filter(v=>include||!isTest(v));const valid=subset.filter(v=>v.status==='finalizada');const todaySales=valid.filter(v=>dateSP(v.criada_em)===today);const todayIds=new Set(todaySales.map(v=>v.id));const payments=payRows.filter(p=>todayIds.has(p.venda_id));$('salesValue').textContent=money(todaySales.reduce((a,v)=>a+Number(v.total||0),0));$('salesCount').textContent=todaySales.length;$('paidValue').textContent=money(payments.reduce((a,p)=>a+Number(p.valor||0),0));const map={};const keys=[];const date=new Date(today+'T12:00:00-03:00');for(let i=6;i>=0;i--){const d=new Date(date);d.setUTCDate(d.getUTCDate()-i);const k=dateSP(d);keys.push(k);map[k]=0}valid.forEach(v=>{const k=dateSP(v.criada_em);if(k in map)map[k]+=Number(v.total||0)});const max=Math.max(1,...Object.values(map));$('bars').innerHTML=keys.map(k=>`<div class="barwrap"><b>${escape(money(map[k]))}</b><div class="bar" style="height:${Math.max(2,Math.round(125*map[k]/max))}px"></div><small>${escape(k.slice(8,10)+'/'+k.slice(5,7))}</small></div>`).join('');const totals={};for(const p of payments){totals[p.forma]=(totals[p.forma]||0)+Number(p.valor||0)}$('payments').innerHTML=Object.entries(totals).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="pay"><span>${escape(({pix:'Pix',credito:'Cartão de crédito',debito:'Cartão de débito',dinheiro:'Dinheiro',transferencia:'Transferência'})[k]||k)}</span><b>${escape(money(v))}</b></div>`).join('')||'<p class="sub">Nenhum pagamento no período.</p>';$('rows').innerHTML=subset.slice(0,20).map(v=>`<tr><td>${escape(v.numero)}</td><td>${escape(showDate(v.criada_em))}</td><td>${escape(money(v.total))}</td><td>${escape(v.status)}</td><td>${escape(v.observacoes||'—')}</td></tr>`).join('')||'<tr><td colspan="5">Nenhuma venda encontrada. Marque “Incluir vendas de TESTE” para visualizar a venda fictícia.</td></tr>';$('updateTime').textContent='Atualizado em '+new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}).format(new Date())}
+
+// Gestão de produtos: apenas administrador autenticado. A autorização real é aplicada pelo RLS no Supabase.
+let stockItems=[],stockEditing=null,adminAccess=false;
+const stockCols='id,codigo,codigo_barras,nome,categoria,marca,modelo_veiculo,ano_veiculo,referencia,localizacao,preco_custo,preco_venda,quantidade,estoque_minimo,ativo';
+const stockFields=['nome','codigo','codigo_barras','categoria','marca','modelo_veiculo','ano_veiculo','referencia','localizacao','preco_custo','preco_venda','quantidade','estoque_minimo'];
+const stockText=t=>{$('stockMsg').textContent=t};
+function stockShow(show){$('clientsView').style.display='none';$('navClients').classList.remove('selected');if(!adminAccess||!client)return; $('employeePanel').style.display='none';$('historyView').style.display='none';$('reportsView').style.display='none';$('navHistory').classList.remove('selected');$('navReports').classList.remove('selected');$('dashboard').style.display=show?'none':'block';$('stockView').style.display=show?'block':'none';$('navDashboard').classList.toggle('selected',!show);$('navStock').classList.toggle('selected',show);$('navCashier').classList.remove('selected');if(show){stockLoad().then(async()=>{await entryHistory();await exitHistory()});cashLoad()}}
+function cashierShow(){$('clientsView').style.display='none';$('navClients').classList.remove('selected');if(!client)return; $('dashboard').style.display='none';$('stockView').style.display='none';$('historyView').style.display='none';$('navHistory').classList.remove('selected');$('employeePanel').style.display='block';$('navCashier').classList.add('selected');$('navDashboard').classList.remove('selected');$('navStock').classList.remove('selected');window.dispatchEvent(new Event('pdv-cart-login'));$('employeePanel').scrollIntoView({behavior:'smooth',block:'start'})}
+function stockReset(){stockEditing=null;for(const f of stockFields)$('prod_'+f).value='';$('stockFormTitle').textContent='Novo produto';$('stockSave').textContent='Salvar produto';stockText('')}
+function stockRender(){const term=$('stockSearch').value.trim().toLocaleLowerCase('pt-BR');const rows=stockItems.filter(p=>[p.nome,p.codigo,p.codigo_barras,p.marca,p.categoria].some(x=>String(x??'').toLocaleLowerCase('pt-BR').includes(term)));$('stockTotal').textContent=rows.length+' de '+stockItems.length+' produto(s)';$('stockRows').innerHTML=rows.map(p=>{const low=Number(p.quantidade||0)<=Number(p.estoque_minimo||0);return `<tr><td><b>${escape(p.nome)}</b><br><span class="muted">${escape(p.marca||p.categoria||'—')}</span></td><td>${escape(p.codigo||'—')}<br><span class="muted">${escape(p.codigo_barras||'—')}</span></td><td>${escape(money(p.preco_venda))}</td><td>${escape(p.quantidade)} ${low?'⚠️':''}</td><td><span class="stock-badge ${p.ativo===false?'off':''}">${p.ativo===false?'Inativo':'Ativo'}</span></td><td><button type="button" data-stock-action="edit" data-id="${escape(p.id)}">Editar</button> <button type="button" data-stock-action="toggle" data-id="${escape(p.id)}">${p.ativo===false?'Ativar':'Desativar'}</button></td></tr>`}).join('')||'<tr><td colspan="6">Nenhum produto encontrado.</td></tr>'}
+async function stockLoad(){if(!client||!adminAccess)return;$('stockRefresh').disabled=true;stockText('Consultando produtos...');try{let items=[],start=0;while(true){const {data,error}=await client.from('produtos').select(stockCols).order('nome',{ascending:true}).range(start,start+499);if(error)throw error;items.push(...data);if(data.length<500)break;start+=500;if(start>20000)throw Error('Muitos produtos para carregar na tela.')}stockItems=items;stockRender();entryListRefresh();exitListRefresh();stockText('✅ Produtos carregados.')}catch(e){stockText('⚠️ Consulta: '+e.message)}finally{$('stockRefresh').disabled=false}}
+// Cancelamento administrativo de venda fictícia: pré-visualização e RPC protegida no banco.
+let cancelPreview=null,cancelBusy=false;
+function cancelMessage(t){$('cancelSaleMsg').textContent=t}
+function cancelInvalidate(){cancelPreview=null;$('cancelSaleConfirm').disabled=true;$('cancelSalePreview').replaceChildren()}
+$('cancelSaleNumber').addEventListener('input',cancelInvalidate);
+$('cancelSaleReason').addEventListener('input',()=>{$('cancelSaleConfirm').disabled=!cancelPreview||cancelBusy});
+$('cancelSaleCheck').addEventListener('click',async()=>{
+ if(!adminAccess||!client){cancelMessage('Acesso exclusivo do administrador.');return}
+ const n=Number($('cancelSaleNumber').value);
+ cancelInvalidate();
+ if(!Number.isSafeInteger(n)||n<=0){cancelMessage('Informe um número de venda válido.');return}
+ const btn=$('cancelSaleCheck');btn.disabled=true;cancelMessage('Consultando venda e itens no Supabase...');
+ try{
+  const {data:venda,error}=await client.from('vendas').select('id,numero,total,status,observacoes').eq('numero',n).maybeSingle();
+  if(error)throw error;
+  if(!venda){cancelMessage('Venda não encontrada.');return}
+  if(venda.observacoes!=='TESTE - CARRINHO ESTOQUE FICTICIO'){cancelMessage('Esta venda não pertence ao carrinho com baixa automática de TESTE. Cancelamento bloqueado.');return}
+  const {data:items,error:err}=await client.from('itens_venda').select('descricao,quantidade,produto_id').eq('venda_id',venda.id);
+  if(err)throw err;
+  const rows=items||[];
+  const table=document.createElement('table');
+  const head=document.createElement('thead'),hrow=document.createElement('tr');
+  for(const col of ['Produto','Quantidade a devolver']){const th=document.createElement('th');th.textContent=col;hrow.append(th)}
+  head.append(hrow);table.append(head);
+  const body=document.createElement('tbody');
+  for(const i of rows){const tr=document.createElement('tr');for(const value of [i.descricao,i.quantidade]){const td=document.createElement('td');td.textContent=String(value??'—');tr.append(td)}body.append(tr)}
+  table.append(body);$('cancelSalePreview').replaceChildren(table);
+  if(venda.status==='cancelada'){cancelMessage('Venda nº '+n+' já está cancelada. Nenhuma devolução adicional será realizada.');return}
+  if(venda.status!=='finalizada'||!rows.length){cancelMessage('Venda sem itens ou com status que não permite cancelamento.');return}
+  cancelPreview={numero:n,id:venda.id,total:Number(venda.total),items:rows};
+  $('cancelSaleConfirm').disabled=false;
+  cancelMessage('Venda nº '+n+' finalizada. Total: '+money(venda.total)+'. '+rows.length+' linha(s) de produtos. Confirme somente se deseja cancelar e devolver ao estoque FICTÍCIO.');
+ }catch(e){cancelMessage('⚠️ Consulta: '+(e.message||e))}
+ finally{btn.disabled=false}
+});
+$('cancelSaleConfirm').addEventListener('click',async()=>{
+ if(!adminAccess||!client||cancelBusy||!cancelPreview)return;
+ const n=Number($('cancelSaleNumber').value),reason=$('cancelSaleReason').value.trim();
+ if(n!==cancelPreview.numero){cancelInvalidate();cancelMessage('O número foi alterado. Consulte novamente.');return}
+ if(reason.length<5||reason.length>500){cancelMessage('Informe um motivo entre 5 e 500 caracteres.');return}
+ const summary=cancelPreview.items.map(i=>String(i.quantidade)+' × '+i.descricao).join('\n');
+ if(!confirm('CANCELAR DEFINITIVAMENTE A VENDA FICTÍCIA Nº '+n+'?\n\n'+summary+'\n\nOs produtos serão devolvidos ao estoque de teste. Isso NÃO estorna dinheiro.'))return;
+ cancelBusy=true;$('cancelSaleConfirm').disabled=true;$('cancelSaleCheck').disabled=true;
+ cancelMessage('Enviando cancelamento protegido ao Supabase...');
+ try{
+  const {data,error}=await client.rpc('cancelar_venda_estoque_teste',{p_numero:n,p_motivo:reason});
+  if(error)throw error;
+  cancelInvalidate();
+  cancelMessage('✅ '+(data?.ja_cancelada?'Venda já estava cancelada, nenhuma nova devolução.':'Venda nº '+n+' cancelada. Unidades devolvidas: '+(data?.quantidade_devolvida??'—')+'.')+' Confira o estoque e o histórico no Supabase.');
+  await stockLoad();await entryHistory();await exitHistory();await load();
+ }catch(e){cancelInvalidate();cancelMessage('⚠️ '+(e.message||e)+'. Resultado incerto: consulte a venda e o estoque antes de tentar novamente.')}
+ finally{cancelBusy=false;$('cancelSaleCheck').disabled=false}
+});
+
+// Relatórios de TESTE: apenas leitura e sem dados reais; filtros e agregações locais.
+let reportsSales=[],reportsPayments=[],reportsItems=[],reportsNames={},reportsBusy=false,reportsComplete=false;
+const reportsPayLabels={dinheiro:'Dinheiro',pix:'Pix',credito:'Crédito',debito:'Débito',transferencia:'Transferência'};
+function reportsShow(){$('clientsView').style.display='none';$('navClients').classList.remove('selected');
+ if(!client||!adminAccess)return;
+ for(const id of ['dashboard','stockView','employeePanel','historyView'])$(id).style.display='none';
+ $('reportsView').style.display='block';
+ for(const id of ['navDashboard','navStock','navCashier','navHistory'])$(id).classList.remove('selected');
+ $('navReports').classList.add('selected');
+ reportsLoad();$('reportsView').scrollIntoView({block:'start'});
+}
+function reportsRows(id,rows,columns){
+ $(id).innerHTML=rows.map(row=>'<tr>'+row.map(c=>'<td>'+escape(c)+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="'+columns+'">Sem dados no período.</td></tr>';
+}
+function reportsAccumulate(map,key,amount=0,qty=1){const v=map.get(key)||{qty:0,total:0};v.qty+=qty;v.total+=amount;map.set(key,v)}
+function reportsRender(){
+ if(!adminAccess||!client)return;
+ const from=$('reportsFrom').value,to=$('reportsTo').value,employee=$('reportsEmployee').value;
+ if(from&&to&&from>to){$('reportsMsg').textContent='⚠️ A data inicial deve ser anterior à data final.';return}
+ const sales=reportsSales.filter(v=>{const d=dateSP(v.criada_em);return(!from||d>=from)&&(!to||d<=to)&&(!employee||v.funcionario_id===employee)});
+ const finalSales=sales.filter(v=>v.status==='finalizada'),cancelled=sales.filter(v=>v.status==='cancelada');
+ const total=finalSales.reduce((n,v)=>n+Number(v.total||0),0);
+ $('reportsRevenue').textContent=money(total);$('reportsCount').textContent=String(finalSales.length);
+ $('reportsCancelled').textContent=String(cancelled.length)+' ('+money(cancelled.reduce((n,v)=>n+Number(v.total||0),0))+')';
+ $('reportsTicket').textContent=money(finalSales.length?total/finalSales.length:0);
+ const byDay=new Map(),byEmployee=new Map(),byPay=new Map(),byProduct=new Map();
+ for(const v of finalSales){reportsAccumulate(byDay,dateSP(v.criada_em),Number(v.total));reportsAccumulate(byEmployee,reportsNames[v.funcionario_id]||'Funcionário não disponível',Number(v.total))}
+ const selected=new Set(finalSales.map(v=>v.id));
+ for(const p of reportsPayments)if(selected.has(p.venda_id))reportsAccumulate(byPay,reportsPayLabels[p.forma]||p.forma,Number(p.valor),0);
+ for(const i of reportsItems)if(selected.has(i.venda_id))reportsAccumulate(byProduct,i.descricao||'Produto sem descrição',Number(i.total),Number(i.quantidade));
+ reportsRows('reportsDaily',[...byDay.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([k,v])=>[k.split('-').reverse().join('/'),v.qty,money(v.total)]),3);
+ reportsRows('reportsByEmployee',[...byEmployee.entries()].sort((a,b)=>b[1].total-a[1].total).map(([k,v])=>[k,v.qty,money(v.total)]),3);
+ reportsRows('reportsPayment',[...byPay.entries()].sort((a,b)=>b[1].total-a[1].total).map(([k,v])=>[k,money(v.total)]),2);
+ reportsRows('reportsProducts',[...byProduct.entries()].sort((a,b)=>b[1].qty-a[1].qty).map(([k,v])=>[k,v.qty,money(v.total)]),3);
+ if(!reportsBusy)$('reportsMsg').textContent='✅ '+sales.length+' venda(s) fictícia(s) no filtro, '+finalSales.length+' finalizada(s), '+cancelled.length+' cancelada(s).'+(reportsComplete?'':' ⚠️ Limite de consulta atingido; alguns registros podem não estar incluídos.');
+}
+async function reportsGet(table,cols,configure){
+ let results=[];const cap=5000;
+ for(let start=0;start<cap;start+=500){
+  let q=client.from(table).select(cols);q=configure(q);
+  const {data,error}=await q.range(start,start+499);if(error)throw error;
+  results.push(...(data||[]));if(!data||data.length<500)return {rows:results,complete:true};
+ }
+ return {rows:results,complete:false};
+}
+async function reportsGetDetails(table,cols,ids){
+ let rows=[];for(let pos=0;pos<ids.length;pos+=100){
+  const {data,error}=await client.from(table).select(cols).in('venda_id',ids.slice(pos,pos+100)).limit(1000);
+  if(error)throw error;
+  if((data||[]).length===1000)throw new Error('Muitos detalhes para a consulta segura. Reduza o conjunto de vendas.');
+  rows.push(...(data||[]));
+ }
+ return rows;
+}
+async function reportsLoad(){
+ if(!client||!adminAccess||reportsBusy)return;
+ reportsBusy=true;$('reportsRefresh').disabled=true;$('reportsExcel').disabled=true;$('reportsPdf').disabled=true;$('reportsMsg').textContent='Consultando apenas as vendas fictícias...';
+ try{
+  const result=await reportsGet('vendas','id,numero,criada_em,status,total,funcionario_id',q=>q.eq('observacoes','TESTE - CARRINHO ESTOQUE FICTICIO').order('criada_em',{ascending:false}));
+  const sales=result.rows,ids=sales.map(v=>v.id),eids=[...new Set(sales.map(v=>v.funcionario_id).filter(Boolean))];
+  let names={};if(eids.length){const {data,error}=await client.from('funcionarios').select('id,nome').in('id',eids);if(error)throw error;for(const f of data||[])names[f.id]=f.nome}
+  const [payments,items]=await Promise.all([reportsGetDetails('pagamentos','venda_id,forma,valor',ids),reportsGetDetails('itens_venda','venda_id,descricao,quantidade,total',ids)]);
+  reportsSales=sales;reportsPayments=payments;reportsItems=items;reportsNames=names;reportsComplete=result.complete;
+  const old=$('reportsEmployee').value;$('reportsEmployee').replaceChildren(new Option('Todos',''));
+  for(const id of eids)$('reportsEmployee').add(new Option(names[id]||'Funcionário não disponível',id));
+  $('reportsEmployee').value=eids.includes(old)?old:'';
+  reportsBusy=false;$('reportsExcel').disabled=!reportsComplete;$('reportsPdf').disabled=!reportsComplete;reportsRender();
+ }catch(e){$('reportsExcel').disabled=true;$('reportsPdf').disabled=true;$('reportsMsg').textContent='⚠️ Erro ao consultar relatórios: '+(e.message||e)}
+ finally{reportsBusy=false;$('reportsRefresh').disabled=false}
+}
+
+// Exportação local: usa os mesmos filtros e agregações da tela, sem gravar no Supabase.
+function reportsFiltered(){
+ const from=$('reportsFrom').value,to=$('reportsTo').value,employee=$('reportsEmployee').value;
+ if(from&&to&&from>to)throw new Error('A data inicial deve ser anterior à data final.');
+ return reportsSales.filter(v=>{const d=dateSP(v.criada_em);return(!from||d>=from)&&(!to||d<=to)&&(!employee||v.funcionario_id===employee)});
+}
+function reportsExportReady(){
+ if(!adminAccess||!client||reportsBusy||!reportsComplete)throw new Error('Atualize o relatório e verifique se todos os dados foram carregados antes de exportar.');
+}
+function reportsExportData(){
+ reportsExportReady();const sales=reportsFiltered();
+ const valid=sales.filter(v=>v.status==='finalizada'),cancelled=sales.filter(v=>v.status==='cancelada');
+ const total=valid.reduce((n,v)=>n+Number(v.total||0),0);
+ const selected=new Set(valid.map(v=>v.id)),allSelected=new Set(sales.map(v=>v.id));
+ const byDay=new Map(),byEmployee=new Map(),byPay=new Map(),byProduct=new Map();
+ for(const v of valid){reportsAccumulate(byDay,dateSP(v.criada_em),Number(v.total));reportsAccumulate(byEmployee,reportsNames[v.funcionario_id]||'Funcionário não disponível',Number(v.total));}
+ for(const p of reportsPayments)if(selected.has(p.venda_id))reportsAccumulate(byPay,reportsPayLabels[p.forma]||p.forma,Number(p.valor),0);
+ for(const i of reportsItems)if(selected.has(i.venda_id))reportsAccumulate(byProduct,i.descricao||'Produto sem descrição',Number(i.total),Number(i.quantidade));
+ const paymentsBySale=new Map();for(const p of reportsPayments)if(allSelected.has(p.venda_id)){const a=paymentsBySale.get(p.venda_id)||[];a.push((reportsPayLabels[p.forma]||p.forma)+' '+money(p.valor));paymentsBySale.set(p.venda_id,a)}
+ const sections=[
+  {name:'Vendas por dia',headers:['Data','Vendas','Total'],rows:[...byDay.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([k,v])=>[k.split('-').reverse().join('/'),v.qty,money(v.total)])},
+  {name:'Vendas por funcionário',headers:['Funcionário','Vendas','Total'],rows:[...byEmployee.entries()].sort((a,b)=>b[1].total-a[1].total).map(([k,v])=>[k,v.qty,money(v.total)])},
+  {name:'Pagamentos por forma (somente finalizadas)',headers:['Forma','Valor'],rows:[...byPay.entries()].sort((a,b)=>b[1].total-a[1].total).map(([k,v])=>[k,money(v.total)])},
+  {name:'Produtos mais vendidos (somente finalizadas)',headers:['Produto','Unidades','Total'],rows:[...byProduct.entries()].sort((a,b)=>b[1].qty-a[1].qty).map(([k,v])=>[k,v.qty,money(v.total)])},
+  {name:'Vendas individuais (inclui canceladas)',headers:['Nº','Data/hora','Funcionário','Status','Valor original','Pagamentos originais'],rows:sales.map(v=>[v.numero,showDate(v.criada_em),reportsNames[v.funcionario_id]||'Funcionário não disponível',v.status,money(v.total),(paymentsBySale.get(v.id)||[]).join(' + ')])}
+ ];
+ const period=($('reportsFrom').value||'Início')+' a '+($('reportsTo').value||'Hoje');
+ const staff=$('reportsEmployee').selectedOptions[0]?.textContent||'Todos';
+ const summaries=[['Vendas finalizadas',valid.length],['Total vendido (sem canceladas)',money(total)],['Ticket médio',money(valid.length?total/valid.length:0)],['Vendas canceladas',cancelled.length],['Valor original das canceladas (não somado)',money(cancelled.reduce((n,v)=>n+Number(v.total||0),0))]];
+ return {sections,period,staff,summaries};
+}
+// XLSX autocontido: quatro abas, sem bibliotecas externas e sem enviar dados a terceiros.
+function xlsxEscape(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'')}
+function xlsxMoney(v){if(typeof v==='number')return v;let n=String(v??'').replace(/R\$\s*/g,'').trim().replace(/\./g,'').replace(',','.');return n!==''&&Number.isFinite(Number(n))?Number(n):null}
+function xlsxCol(n){let s='';while(n){n--;s=String.fromCharCode(65+n%26)+s;n=Math.floor(n/26)}return s}
+function xlsxCell(v,r,c,sty){const ref=xlsxCol(c)+r,s=` s="${sty}"`;if(typeof v==='number'&&Number.isFinite(v))return `<c r="${ref}"${s}><v>${v}</v></c>`;return `<c r="${ref}"${s} t="inlineStr"><is><t xml:space="preserve">${xlsxEscape(v)}</t></is></c>`}
+function xlsxSheetXml(rows,widths){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0" showGridLines="0"/></sheetViews><sheetFormatPr defaultRowHeight="18"/><cols>';
+ widths.forEach((w,i)=>x+=`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`);x+='</cols><sheetData>';
+ rows.forEach((row,i)=>{const n=i+1;const kind=row.kind||'body';const height=kind==='title'?30:kind==='header'?23:20;x+=`<row r="${n}" ht="${height}" customHeight="1">`;const values=kind==='title'?[...row.values,...Array(Math.max(0,widths.length-row.values.length)).fill('')]:row.values;values.forEach((v,j)=>{let sty=kind==='title'?1:kind==='header'?2:kind==='note'?4:kind==='total'?(row.moneyCols||[]).includes(j)?6:2:typeof v==='number'?(row.moneyCols||[]).includes(j)?3:5:0;x+=xlsxCell(v,n,j+1,sty)});x+='</row>'});x+='</sheetData>';if(widths.length>1)x+=`<mergeCells count="2"><mergeCell ref="A1:${xlsxCol(widths.length)}1"/><mergeCell ref="A2:${xlsxCol(widths.length)}2"/></mergeCells>`;return x+'<pageMargins left="0.3" right="0.3" top="0.5" bottom="0.5" header="0.2" footer="0.2"/></worksheet>'}
+function xlsxWriteU16(a,n){a.push(n&255,(n>>>8)&255)}function xlsxWriteU32(a,n){a.push(n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255)}
+const xlsxCrcTable=(()=>{let a=[];for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?0xEDB88320^(c>>>1):c>>>1;a[i]=c>>>0}return a})();
+function xlsxCrc32(data){let crc=0xFFFFFFFF;for(const b of data)crc=xlsxCrcTable[(crc^b)&255]^(crc>>>8);return (crc^0xFFFFFFFF)>>>0}
+function xlsxZip(files){const encoder=new TextEncoder(),out=[],central=[];let offset=0;
+ for(const [name,body] of files){const n=encoder.encode(name),d=encoder.encode(body),crc=xlsxCrc32(d),h=[];xlsxWriteU32(h,0x04034B50);xlsxWriteU16(h,20);xlsxWriteU16(h,0x0800);xlsxWriteU16(h,0);xlsxWriteU16(h,0);xlsxWriteU16(h,0);xlsxWriteU32(h,crc);xlsxWriteU32(h,d.length);xlsxWriteU32(h,d.length);xlsxWriteU16(h,n.length);xlsxWriteU16(h,0);out.push(new Uint8Array(h),n,d);const c=[];xlsxWriteU32(c,0x02014B50);xlsxWriteU16(c,20);xlsxWriteU16(c,20);xlsxWriteU16(c,0x0800);xlsxWriteU16(c,0);xlsxWriteU16(c,0);xlsxWriteU16(c,0);xlsxWriteU32(c,crc);xlsxWriteU32(c,d.length);xlsxWriteU32(c,d.length);xlsxWriteU16(c,n.length);xlsxWriteU16(c,0);xlsxWriteU16(c,0);xlsxWriteU16(c,0);xlsxWriteU16(c,0);xlsxWriteU32(c,0);xlsxWriteU32(c,offset);central.push(new Uint8Array(c),n);offset+=h.length+n.length+d.length}
+ const start=offset;for(const arr of central){out.push(arr);offset+=arr.length}const end=[];xlsxWriteU32(end,0x06054B50);xlsxWriteU16(end,0);xlsxWriteU16(end,0);xlsxWriteU16(end,files.length);xlsxWriteU16(end,files.length);xlsxWriteU32(end,offset-start);xlsxWriteU32(end,start);xlsxWriteU16(end,0);out.push(new Uint8Array(end));return new Blob(out,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})}
+function reportsBuildXlsx(r){
+ const section=name=>r.sections.find(s=>s.name.startsWith(name));
+ const resumo=[{kind:'title',values:['CASA DOS ACESSÓRIOS — RELATÓRIO DE VENDAS (TESTE)']},{kind:'note',values:['SIMULAÇÃO — SEM VALOR FISCAL. Não representa faturamento real.']},{values:['Período',r.period]},{values:['Funcionário',r.staff]},{values:['Exportado em',new Date().toLocaleString('pt-BR')]},{values:[]},{kind:'header',values:['INDICADOR','VALOR']}];
+ for(const [k,v] of r.summaries){const currency=typeof v==='string'&&v.includes('R$');resumo.push({values:[k,currency?xlsxMoney(v):v],moneyCols:currency?[1]:[]});}
+ for(const title of ['Vendas por dia','Vendas por funcionário']){const s=section(title);resumo.push({values:[]},{kind:'header',values:s.headers});for(const row of s.rows)resumo.push({values:row.map((v,i)=>i===row.length-1?xlsxMoney(v):v),moneyCols:[row.length-1]})}
+ const venda=section('Vendas individuais'),pgt=section('Pagamentos por forma'),prd=section('Produtos mais vendidos');
+ const table=(title,sec,moneyIndexes)=>[{kind:'title',values:[title]},{kind:'note',values:['Somente TESTE | Período: '+r.period+' | Funcionário: '+r.staff]},{values:[]},{kind:'header',values:sec.headers},...sec.rows.map(row=>({values:row.map((v,i)=>moneyIndexes.includes(i)?xlsxMoney(v):v),moneyCols:moneyIndexes}))];
+ const pagamentos=table('PAGAMENTOS — SOMENTE VENDAS FINALIZADAS',pgt,[1]);
+ const totalPagamentos=pgt.rows.reduce((s,row)=>s+(xlsxMoney(row[1])||0),0);
+ pagamentos.push({values:[]},{kind:'total',values:['TOTAL GERAL',Math.round(totalPagamentos*100)/100],moneyCols:[1]});
+ const sheets=[['Resumo',resumo,[54,27,21]],['Vendas',table('VENDAS INDIVIDUAIS — INCLUI CANCELADAS',venda,[4]),[12,22,29,17,20,54]],['Pagamentos',pagamentos,[48,22]],['Produtos',table('PRODUTOS MAIS VENDIDOS — SOMENTE FINALIZADAS',prd,[2]),[44,16,20]]];
+ const head='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+ const content=head+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+sheets.map((_,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')+'</Types>';
+ const rootRels=head+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+ const workbook=head+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map(([name],i)=>`<sheet name="${xlsxEscape(name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')+'</sheets></workbook>';
+ const workbookRels=head+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((_,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')+`<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+ const styles=head+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="&quot;R$&quot; #,##0.00"/></numFmts><fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="15"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF123458"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FF24639C"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="7"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="2" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="164" fontId="2" fillId="3" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/></cellXfs></styleSheet>';
+ return xlsxZip([['[Content_Types].xml',content],['_rels/.rels',rootRels],['xl/workbook.xml',workbook],['xl/_rels/workbook.xml.rels',workbookRels],['xl/styles.xml',styles],...sheets.map(([name,rows,widths],i)=>[`xl/worksheets/sheet${i+1}.xml`,xlsxSheetXml(rows,widths)])]);
+}
+$('reportsExcel').addEventListener('click',()=>{
+ try{const r=reportsExportData(),blob=reportsBuildXlsx(r),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Casa_dos_Acessorios_Relatorio_TESTE_'+new Date().toISOString().slice(0,10)+'.xlsx';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);$('reportsMsg').textContent='✅ Arquivo Excel .xlsx gerado com 4 abas: Resumo, Vendas, Pagamentos e Produtos.'}
+ catch(e){$('reportsMsg').textContent='⚠️ Excel XLSX: '+e.message}
+});
+$('reportsPdf').addEventListener('click',()=>{
+ try{
+  const r=reportsExportData();const table=(headers,rows)=>'<table><thead><tr>'+headers.map(h=>'<th>'+escape(h)+'</th>').join('')+'</tr></thead><tbody>'+ (rows.length?rows.map(row=>'<tr>'+row.map(cell=>'<td>'+escape(cell)+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+headers.length+'">Sem dados no período</td></tr>')+'</tbody></table>';
+  $('reportsPrintArea').innerHTML='<h1>CASA DOS ACESSÓRIOS</h1><p><b>RELATÓRIO DE VENDAS — TESTE</b></p><p class="print-warning">SIMULAÇÃO — SEM VALOR FISCAL. Vendas canceladas não entram no faturamento.</p><p><b>Período:</b> '+escape(r.period)+' | <b>Funcionário:</b> '+escape(r.staff)+'</p><p><b>Emitido em:</b> '+escape(new Date().toLocaleString('pt-BR'))+'</p><div class="print-totals">'+r.summaries.map(([k,v])=>'<p><b>'+escape(k)+':</b> '+escape(v)+'</p>').join('')+'</div>'+r.sections.map(s=>'<h2>'+escape(s.name)+'</h2>'+table(s.headers,s.rows)).join('')+'<p>Documento gerado em ambiente de TESTES. Não representa nota fiscal nem comprovante bancário.</p>';
+  document.body.classList.add('printing-report');
+  window.addEventListener('afterprint',()=>{document.body.classList.remove('printing-report');$('reportsPrintArea').replaceChildren()},{once:true});
+  window.print();
+ }catch(e){$('reportsMsg').textContent='⚠️ PDF: '+e.message;document.body.classList.remove('printing-report')}
+});
+
+$('navReports').addEventListener('click',reportsShow);
+$('reportsBack').addEventListener('click',()=>stockShow(false));
+$('reportsRefresh').addEventListener('click',reportsLoad);
+$('reportsClear').addEventListener('click',()=>{$('reportsFrom').value='';$('reportsTo').value='';$('reportsEmployee').value='';reportsRender()});
+for(const id of ['reportsFrom','reportsTo','reportsEmployee'])$(id).addEventListener('change',reportsRender);
+
+$('navDashboard').addEventListener('click',()=>{if(adminAccess)stockShow(false)});$('navCashier').addEventListener('click',cashierShow);$('navStock').addEventListener('click',()=>stockShow(true));$('navHistory').addEventListener('click',historyShow);$('historyBack').addEventListener('click',()=>stockShow(false));$('stockBack').addEventListener('click',()=>stockShow(false));$('stockRefresh').addEventListener('click',stockLoad);$('stockSearch').addEventListener('input',stockRender);$('stockCancel').addEventListener('click',stockReset);
+$('stockRows').addEventListener('click',async ev=>{const btn=ev.target.closest('button[data-stock-action]');if(!btn||!adminAccess||!client)return;const p=stockItems.find(x=>x.id===btn.dataset.id);if(!p)return;if(btn.dataset.stockAction==='edit'){stockEditing=p.id;for(const f of stockFields)$('prod_'+f).value=p[f]??'';$('stockFormTitle').textContent='Editando: '+p.nome;$('stockSave').textContent='Salvar alterações';stockText('Alterando produto existente.');$('stockView').scrollIntoView({behavior:'smooth'});return}if(!confirm((p.ativo===false?'Ativar':'Desativar')+' o produto '+p.nome+'?'))return;btn.disabled=true;try{const {error}=await client.from('produtos').update({ativo:p.ativo===false}).eq('id',p.id);if(error)throw error;await stockLoad();stockText('✅ Situação atualizada.')}catch(e){stockText('⚠️ '+e.message)}finally{btn.disabled=false}});
+$('stockSave').addEventListener('click',async()=>{if(!adminAccess||!client){stockText('Faça login como administrador.');return}const item={};for(const f of stockFields){let v=$('prod_'+f).value.trim();if(['preco_custo','preco_venda','quantidade','estoque_minimo'].includes(f)){if(v===''){if(f==='preco_venda'||f==='quantidade'||f==='estoque_minimo'){stockText('Preencha preço de venda, quantidade e estoque mínimo.');return}v='0'}const n=Number(v);if(!Number.isFinite(n)||n<0||((f==='quantidade'||f==='estoque_minimo')&&!Number.isInteger(n))){stockText('Verifique os valores numéricos.');return}if(f.startsWith('preco')&&!/^\d+(?:\.\d{1,2})?$/.test(v)){stockText('Preços devem ter no máximo duas casas decimais.');return}item[f]=n}else item[f]=v||null}if(!item.nome){stockText('Informe o nome do produto.');return}if(item.preco_venda<=0){stockText('O preço de venda deve ser maior que zero.');return}const btn=$('stockSave');btn.disabled=true;stockText('Salvando produto...');try{const q=stockEditing?client.from('produtos').update(item).eq('id',stockEditing):client.from('produtos').insert(item);const {error}=await q;if(error)throw error;stockReset();await stockLoad();stockText('✅ Produto salvo no Supabase.')}catch(e){stockText('⚠️ Não foi possível salvar: '+e.message)}finally{btn.disabled=false}});
+// Entrada fictícia de estoque: não cria atalhos para usuários não administradores.
+let entryBusy=false;
+function entryMsg(s){$('entryMsg').textContent=s}
+function entryListRefresh(){
+  const sel=$('entryProduct'), old=sel.value;
+  const test=stockItems.filter(p=>String(p.nome||'').toUpperCase().includes('TESTE')&&String(p.codigo_barras||'').startsWith('TESTE'));
+  sel.replaceChildren(new Option('Selecione o produto de teste',''));
+  for(const p of test) sel.add(new Option(p.nome+' — estoque: '+p.quantidade,p.id));
+  if(test.some(p=>p.id===old))sel.value=old;
+}
+async function entryHistory(){
+ if(!client||!adminAccess)return;
+ const body=$('entryRows');
+ try{
+   const {data,error}=await client.from('movimentacoes_estoque').select('produto_id,tipo,quantidade,observacoes,criado_em').order('criado_em',{ascending:false}).limit(15);
+   if(error)throw error;
+   body.replaceChildren();
+   if(!(data||[]).length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5;td.textContent='Nenhuma movimentação registrada.';tr.append(td);body.append(tr);return}
+   for(const m of data){
+     const tr=document.createElement('tr'),p=stockItems.find(x=>x.id===m.produto_id);
+     for(const s of [p?.nome||'Produto '+String(m.produto_id).slice(0,8),m.tipo,m.quantidade, m.criado_em?new Date(m.criado_em).toLocaleString('pt-BR'):'—',m.observacoes||'—']){
+        const td=document.createElement('td');td.textContent=String(s);tr.append(td)
+     }body.append(tr)
+   }
+ }catch(e){body.replaceChildren();const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5;td.textContent='Não foi possível consultar histórico: '+e.message;tr.append(td);body.append(tr)}
+}
+// Identificador da operação fica no navegador para reenvio seguro após recarga.
+const ENTRY_STORAGE_KEY='casa_acessorios_entrada_teste_pendente_v2';
+let entryOperation=null;
+try { const saved=JSON.parse(localStorage.getItem(ENTRY_STORAGE_KEY)||'null');
+ if(saved&&typeof saved.id==='string'&&typeof saved.productId==='string'&&Number.isInteger(saved.quantity))entryOperation=saved;
+} catch(_) { /* armazenamento pode estar indisponível */ }
+function saveEntryOperation(value){entryOperation=value;try{if(value)localStorage.setItem(ENTRY_STORAGE_KEY,JSON.stringify(value));else localStorage.removeItem(ENTRY_STORAGE_KEY)}catch(_) {}}
+$('entryNew').addEventListener('click',()=>{
+ if(entryBusy)return;
+ if(entryOperation&&!confirm('Iniciar uma NOVA entrada? Se a operação anterior estiver incerta, consulte o estoque e o histórico antes de continuar.'))return;
+ saveEntryOperation(null);$('entrySubmit').disabled=false;entryMsg('Nova entrada preparada. Selecione o produto e confirme somente uma vez.');
+});
+$('entrySubmit').addEventListener('click',async()=>{
+ if(entryBusy||!client||!adminAccess){entryMsg('Acesso exclusivo do administrador conectado.');return}
+ const product=stockItems.find(p=>p.id===$('entryProduct').value),q=Number($('entryQty').value),notes=$('entryNotes').value.trim().slice(0,160);
+ if(!product||!String(product.nome||'').toUpperCase().includes('TESTE')||!String(product.codigo_barras||'').startsWith('TESTE')){entryMsg('Selecione um produto identificado como TESTE.');return}
+ if(!Number.isInteger(q)||q<1||q>1000){entryMsg('Informe uma quantidade inteira entre 1 e 1000.');return}
+ if(entryOperation){
+  if(entryOperation.productId!==product.id||entryOperation.quantity!==q||entryOperation.notes!==notes){entryMsg('Já existe uma operação em andamento com outros dados. Restaure os dados anteriores para consultar/repetir a MESMA operação ou clique em Nova entrada (após conferir o histórico).');return}
+  if(entryOperation.done){entryMsg('✅ Esta entrada já foi confirmada. Para outra movimentação, clique em Nova entrada.');return}
+ } else {
+  if(!confirm('CONFIRMAR entrada fictícia de '+q+' unidade(s) em '+product.nome+'?\nEstoque informado antes: '+product.quantidade+'\nEm caso de falha, não crie uma nova entrada antes de conferir o histórico.'))return;
+  if(!crypto?.randomUUID){entryMsg('Seu navegador não suporta identificadores seguros. Atualize o navegador.');return}
+  saveEntryOperation({id:crypto.randomUUID(),productId:product.id,quantity:q,notes,done:false});
+ }
+ entryBusy=true;$('entrySubmit').disabled=true;
+ entryMsg('Enviando entrada fictícia com identificador único.');
+ try{
+   const {data,error}=await client.rpc('entrada_estoque_teste_segura',{p_operacao_id:entryOperation.id,p_produto_id:product.id,p_quantidade:q,p_observacoes:notes});
+   if(error)throw error;
+   saveEntryOperation({...entryOperation,done:true});
+   entryMsg('✅ '+(data.duplicada?'Operação já registrada — sem somar novamente. ':'Entrada registrada. ')+ 'Estoque atual: '+(data.quantidade_atual??data.estoque_atual)+'. Para outra entrada, clique em Nova entrada.');
+   await stockLoad();await entryHistory();
+ }catch(e){entryMsg('⚠️ '+e.message+' — identificador preservado. Consulte o estoque e histórico. Se for necessário reenviar, use os mesmos dados e o mesmo botão.');await stockLoad().catch(()=>{});await entryHistory()}
+ finally{entryBusy=false;$('entrySubmit').disabled=Boolean(entryOperation?.done)}
+});
+$('entryCheck').addEventListener('click',async()=>{if(!adminAccess||!client)return;await stockLoad();await entryHistory()});
+// Saída manual fictícia: sessão de administrador, RPC com operação persistida contra reenvio.
+const EXIT_STORAGE_KEY='casa_acessorios_saida_teste_pendente_v1';
+let exitBusy=false, exitOperation=null;
+function exitMsg(t){$('exitMsg').textContent=t}
+try{
+ const saved=JSON.parse(localStorage.getItem(EXIT_STORAGE_KEY)||'null');
+ if(saved&&typeof saved.id==='string'&&typeof saved.productId==='string'&&Number.isInteger(saved.quantity))exitOperation=saved;
+}catch(_){}
+function saveExitOperation(v){exitOperation=v;try{if(v)localStorage.setItem(EXIT_STORAGE_KEY,JSON.stringify(v));else localStorage.removeItem(EXIT_STORAGE_KEY)}catch(_){}}
+function exitListRefresh(){
+ const sel=$('exitProduct'),old=sel.value;
+ const test=stockItems.filter(p=>String(p.nome||'').toUpperCase().includes('TESTE')&&String(p.codigo_barras||'').startsWith('TESTE'));
+ sel.replaceChildren(new Option('Selecione um produto de teste',''));
+ for(const p of test)sel.add(new Option(p.nome+' — estoque: '+p.quantidade,p.id));
+ if(test.some(p=>p.id===old))sel.value=old;
+ // Se a página foi recarregada durante a operação, restaurar dados para um reenvio com a mesma chave.
+ if(exitOperation&&test.some(p=>p.id===exitOperation.productId)){
+  sel.value=exitOperation.productId;$('exitQty').value=exitOperation.quantity;$('exitNotes').value=exitOperation.notes||'';
+  $('exitSubmit').disabled=Boolean(exitOperation.done);
+  exitMsg(exitOperation.done?'✅ Saída já confirmada. Para retirar mais, clique em Nova saída.':'⚠️ Operação anterior pendente. Consulte histórico antes de reenviar. A mesma chave será reutilizada.');
+ }
+}
+async function exitHistory(){
+ if(!client||!adminAccess)return;
+ const body=$('exitRows');
+ try{
+  const {data,error}=await client.from('movimentacoes_estoque').select('produto_id,tipo,quantidade,observacoes,criado_em').eq('tipo','saida').order('criado_em',{ascending:false}).limit(15);
+  if(error)throw error;
+  body.replaceChildren();
+  if(!data?.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5;td.textContent='Nenhuma saída registrada.';tr.append(td);body.append(tr);return}
+  for(const m of data){
+   const tr=document.createElement('tr'),p=stockItems.find(x=>x.id===m.produto_id);
+   for(const v of [p?.nome||'Produto '+String(m.produto_id).slice(0,8),m.tipo,m.quantidade,m.criado_em?new Date(m.criado_em).toLocaleString('pt-BR'):'—',m.observacoes||'—']){
+    const td=document.createElement('td');td.textContent=String(v);tr.append(td)
+   }body.append(tr)
+  }
+ }catch(e){body.replaceChildren();const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5;td.textContent='Não foi possível consultar saídas: '+e.message;tr.append(td);body.append(tr)}
+}
+$('exitNew').addEventListener('click',()=>{
+ if(exitBusy)return;
+ if(exitOperation&&!confirm('Preparar NOVA saída? Se não tiver certeza do resultado anterior, consulte o histórico antes de continuar.'))return;
+ saveExitOperation(null);$('exitSubmit').disabled=false;exitMsg('Nova saída preparada. Selecione o produto e confirme apenas uma vez.');
+});
+$('exitCheck').addEventListener('click',async()=>{if(!adminAccess||!client)return;await stockLoad();await exitHistory()});
+$('exitSubmit').addEventListener('click',async()=>{
+ if(exitBusy||!client||!adminAccess){exitMsg('Acesso exclusivo do administrador conectado.');return}
+ const product=stockItems.find(p=>p.id===$('exitProduct').value),q=Number($('exitQty').value),notes=$('exitNotes').value.trim().slice(0,160);
+ if(!product||!String(product.nome||'').toUpperCase().includes('TESTE')||!String(product.codigo_barras||'').startsWith('TESTE')){exitMsg('Selecione um produto identificado como TESTE.');return}
+ if(!Number.isInteger(q)||q<1||q>1000){exitMsg('Informe uma quantidade inteira entre 1 e 1000.');return}
+ if(exitOperation){
+  if(exitOperation.productId!==product.id||exitOperation.quantity!==q||exitOperation.notes!==notes){exitMsg('Existe uma operação anterior com dados diferentes. Não gere nova chave até conferir o histórico.');return}
+  if(exitOperation.done){exitMsg('✅ Saída já confirmada. Clique em Nova saída para outra operação.');return}
+ }else{
+  if(q>Number(product.quantidade)){exitMsg('Quantidade maior que o estoque informado. Atualize o estoque e tente novamente.');return}
+  if(!confirm('CONFIRMAR retirada manual de TESTE de '+q+' unidade(s) de '+product.nome+'?\nEstoque informado antes: '+product.quantidade+'\nEsta ação NÃO é uma venda. Em caso de falha, não crie outra operação sem conferir o histórico.'))return;
+  if(!globalThis.crypto?.randomUUID){exitMsg('Navegador não suporta identificadores seguros. Atualize o navegador.');return}
+  saveExitOperation({id:crypto.randomUUID(),productId:product.id,quantity:q,notes,done:false});
+ }
+ exitBusy=true;$('exitSubmit').disabled=true;exitMsg('Registrando retirada com identificador único...');
+ try{
+  const {data,error}=await client.rpc('saida_estoque_teste_segura',{p_operacao_id:exitOperation.id,p_produto_id:product.id,p_quantidade:q,p_observacoes:notes});
+  if(error)throw error;
+  saveExitOperation({...exitOperation,done:true});
+  exitMsg('✅ '+(data.duplicada?'Operação já existente — sem descontar novamente. ':'Saída registrada. ')+'Estoque atual: '+(data.quantidade_atual??data.estoque_atual)+'. Para outra retirada clique em Nova saída.');
+  await stockLoad();await exitHistory();await entryHistory();
+ }catch(e){exitMsg('⚠️ '+e.message+' — operação preservada. Consulte o histórico e estoque antes de tentar novamente com os mesmos dados.');await stockLoad().catch(()=>{});await exitHistory()}
+ finally{exitBusy=false;$('exitSubmit').disabled=Boolean(exitOperation?.done)}
+});
+
+// Caixa de TESTE: somente RPC autenticada, sem acesso direto de escrita via navegador.
+ let cashCurrentId=null,cashIsTest=false,cashBusy=false,cashExpectedAmount=null,cashSummaryId=null;
+const cashNotice=t=>{$('cashMsg').textContent=t};
+function cashParse(t){let s=String(t||'').trim().replace(/\s/g,'');if(!/^\d{1,7}(?:[,.]\d{1,2})?$/.test(s))return NaN;return Number(s.replace(',','.'))}
+function cashButtons(open){$('cashOpenBtn').disabled=cashBusy||!adminAccess||Boolean(open);$('cashCloseBtn').disabled=cashBusy||!adminAccess||!open||!cashIsTest;$('cashRefresh').disabled=cashBusy;if(typeof cashMoveControls==='function')cashMoveControls()}
+async function cashLoad(){
+ if(!adminAccess||!client){cashNotice('Acesso exclusivo do administrador.');return}
+ cashBusy=true;cashButtons(false);cashNotice('Consultando a situação do caixa...');
+ try{
+  const {data,error}=await client.from('caixas').select('id,saldo_inicial,saldo_final,status,observacoes,data_abertura,data_fechamento').order('data_abertura',{ascending:false}).limit(15);
+  if(error)throw error;
+  const active=(data||[]).find(c=>c.status==='aberto');
+  cashCurrentId=active?.id||null;cashIsTest=Boolean(active?.observacoes==='TESTE - Abertura pelo PDV');
+  const last=(data||[]).slice(0,5);
+  $('cashCurrent').innerHTML='<div style="overflow-x:auto"><table><thead><tr><th>Início</th><th>Status</th><th>Saldo inicial</th><th>Saldo final</th><th>Origem</th></tr></thead><tbody>'+last.map(c=>'<tr><td>'+escape(showDate(c.data_abertura))+'</td><td>'+escape(c.status)+'</td><td>'+escape(money(c.saldo_inicial))+'</td><td>'+escape(c.saldo_final==null?'—':money(c.saldo_final))+'</td><td>'+escape(c.observacoes||'—')+'</td></tr>').join('')+'</tbody></table></div>';
+  cashNotice(active?(cashIsTest?'✅ Caixa de TESTE aberto. Você pode fechá-lo após conferir o saldo.':'⚠️ Há um caixa aberto de outra origem. O teste não pode fechá-lo.'):'✅ Nenhum caixa aberto. Pode iniciar um caixa fictício.');
+   await cashLoadSummary(active);
+ }catch(e){cashCurrentId=null;cashIsTest=false;cashNotice('⚠️ Não foi possível consultar: '+(e.message||e)+'. Não execute uma operação até confirmar o estado.')}finally{cashBusy=false;cashButtons(cashCurrentId)}
+}
+ function cashClearSummary(message){
+  cashExpectedAmount=null;cashSummaryId=null;
+  $('cashSummaryGrid').style.display='none';$('cashCompare').style.display='none';
+  $('cashSummaryMsg').textContent=message;
+ }
+ function cashUpdateDifference(){
+  if(cashExpectedAmount===null||!cashSummaryId)return;
+  const counted=cashParse($('cashCloseAmount').value);
+  $('cashCounted').textContent=Number.isFinite(counted)?money(counted):'Valor inválido';
+  if(!Number.isFinite(counted)){
+   $('cashDifference').textContent='—';$('cashDifferenceMsg').textContent='Informe o dinheiro físico contado para comparar.';return;
+  }
+  const diff=Math.round((counted-cashExpectedAmount)*100)/100;
+  $('cashDifference').textContent=(diff>0?'+':'')+money(diff);
+  $('cashDifferenceMsg').textContent=Math.abs(diff)<0.005?'✅ Conferência sem diferença.':diff>0?'⚠️ Sobra de dinheiro em relação ao esperado.':'⚠️ Falta dinheiro em relação ao esperado.';
+ }
+ async function cashLoadSummary(active){
+  if(!active){cashClearSummary('Nenhum caixa aberto. Abra um caixa fictício para exibir o resumo.');return}
+  if(!cashIsTest){cashClearSummary('Existe um caixa de outra origem aberto. Este resumo é exclusivo do caixa de TESTE.');return}
+  cashClearSummary('Consultando recebimentos, sangrias e suprimentos...');
+  try{
+   const {data,error}=await client.from('resumo_caixa_teste').select('caixa_id,status,saldo_inicial,dinheiro,pix,cartao,transferencia,total_vendido,suprimentos,sangrias,saldo_esperado').eq('caixa_id',active.id).eq('status','aberto').maybeSingle();
+   if(error)throw error;
+   if(!data)throw Error('Nenhum resumo foi encontrado para o caixa aberto.');
+   const fields={cashSalesCash:'dinheiro',cashSalesPix:'pix',cashSalesCard:'cartao',cashSalesTransfer:'transferencia',cashSalesTotal:'total_vendido',cashSupply:'suprimentos',cashWithdraw:'sangrias',cashExpected:'saldo_esperado'};
+   for(const [element,field] of Object.entries(fields))$(element).textContent=money(data[field]);
+   cashExpectedAmount=Number(data.saldo_esperado);cashSummaryId=active.id;
+   $('cashSummaryGrid').style.display='grid';$('cashCompare').style.display='block';
+   $('cashSummaryMsg').textContent='✅ Resumo consultado diretamente no Supabase. Atualize após novas vendas.';
+   cashUpdateDifference();
+  }catch(e){cashClearSummary('⚠️ Não foi possível ler o resumo financeiro: '+(e.message||e)+'. Verifique as permissões de administrador e a view resumo_caixa_teste. O histórico do caixa permanece disponível.');}
+ }
+ $('cashCloseAmount').addEventListener('input',cashUpdateDifference);
+// Sangrias e suprimentos fictícios. O ID é mantido até a confirmação, evitando reenvios com IDs novos.
+let cashMoveBusy=false,cashMovePending=null;
+function cashMoveControls(){
+ const allowed=Boolean(adminAccess&&client&&cashCurrentId&&cashIsTest&&!cashBusy&&!cashMoveBusy);
+ $('cashMoveBtn').disabled=!allowed;
+ $('cashMoveReview').disabled=!adminAccess||!client||cashMoveBusy||cashBusy;
+}
+async function cashMoveHistory(){
+ if(!adminAccess||!client)return;
+ $('cashMoveMsg').textContent='Consultando histórico de movimentações...';
+ try{
+  const {data,error}=await client.from('movimentacoes_caixa')
+   .select('id,operacao_id,caixa_id,tipo,valor,motivo,criado_em')
+   .order('criado_em',{ascending:false}).limit(20);
+  if(error)throw error;
+  const found=(data||[]).filter(m=>m.caixa_id===cashCurrentId);
+  $('cashMoveHistory').innerHTML=found.length?'<div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Tipo</th><th>Valor</th><th>Motivo</th></tr></thead><tbody>'+found.map(m=>'<tr><td>'+escape(showDate(m.criado_em))+'</td><td>'+escape(m.tipo)+'</td><td>'+escape(money(m.valor))+'</td><td>'+escape(m.motivo||'—')+'</td></tr>').join('')+'</tbody></table></div>':'<p class="sub">Nenhuma movimentação registrada no caixa de TESTE atualmente aberto.</p>';
+  const pend=cashMovePending;
+  if(pend&&found.some(m=>m.operacao_id===pend.operacao_id)){
+   cashMovePending=null;
+   $('cashMoveMsg').textContent='✅ Movimentação anterior confirmada no histórico. Atualize o resumo do caixa.';
+  }else if(pend){
+   $('cashMoveMsg').textContent='⚠️ Operação anterior ainda não confirmada. Não inicie outra. Confira o status da rede e consulte novamente.';
+  }else{$('cashMoveMsg').textContent='✅ Histórico consultado. Movimentações exibidas: '+found.length+'.';}
+ }catch(e){$('cashMoveMsg').textContent='⚠️ Falha na consulta: '+(e.message||e)}
+}
+$('cashMoveReview').addEventListener('click',cashMoveHistory);
+$('cashMoveBtn').addEventListener('click',async()=>{
+ if(cashMoveBusy||cashBusy||!adminAccess||!client||!cashCurrentId||!cashIsTest)return;
+ if(cashMovePending){$('cashMoveMsg').textContent='⚠️ Existe uma operação sem confirmação. Consulte movimentações antes de tentar outra.';return}
+ const tipo=$('cashMoveType').value;
+ const valor=cashParse($('cashMoveAmount').value);
+ const motivo=$('cashMoveReason').value.trim();
+ if(!['sangria','suprimento'].includes(tipo)||!Number.isFinite(valor)||valor<=0||valor>100000||motivo.length<3||motivo.length>200){$('cashMoveMsg').textContent='⚠️ Confira o tipo, o valor positivo (até R$ 100 mil) e o motivo (3 a 200 caracteres).';return}
+ if(cashSummaryId!==cashCurrentId||cashExpectedAmount===null){$('cashMoveMsg').textContent='⚠️ Consulte o caixa para carregar o resumo antes de movimentar.';return}
+ if(tipo==='sangria'&&valor>cashExpectedAmount){$('cashMoveMsg').textContent='⚠️ Sangria superior ao dinheiro esperado. Verifique o valor.';return}
+ if(!confirm('Confirmar '+(tipo==='sangria'?'SANGRIA':'SUPRIMENTO')+' fictício de '+money(valor)+'? Motivo: '+motivo))return;
+ const operacao_id=crypto.randomUUID();
+ cashMovePending={operacao_id,caixa_id:cashCurrentId,tipo,valor,motivo};
+ cashMoveBusy=true;cashMoveControls();$('cashMoveMsg').textContent='Enviando movimentação fictícia...';
+ try{
+  const {data,error}=await client.rpc('movimentar_caixa_teste',{p_operacao_id:operacao_id,p_tipo:tipo,p_valor:valor,p_motivo:motivo});
+  if(error)throw error;
+  cashMovePending=null;
+  $('cashMoveMsg').textContent='✅ '+(tipo==='sangria'?'Sangria':'Suprimento')+' de '+money(valor)+' registrado'+(data?.duplicada?' (já existente)':'')+'.';
+  await cashLoad();
+  await cashMoveHistory();
+ }catch(e){$('cashMoveMsg').textContent='⚠️ Não foi possível confirmar: '+(e.message||e)+'. Consulte o histórico antes de tentar novamente.'}
+ finally{cashMoveBusy=false;cashMoveControls()}
+});
+
+$('cashRefresh').addEventListener('click',cashLoad);
+$('cashOpenBtn').addEventListener('click',async()=>{
+ if(cashBusy||!adminAccess||!client||cashCurrentId)return;
+ const amount=cashParse($('cashOpenAmount').value);
+ if(!Number.isFinite(amount)||amount<0||amount>1000000){cashNotice('Informe um saldo entre R$ 0,00 e R$ 1.000.000,00, com até duas casas decimais.');return}
+ if(!confirm('Abrir caixa FICTÍCIO com saldo inicial de '+money(amount)+'?'))return;
+ cashBusy=true;cashButtons(false);cashNotice('Enviando abertura de TESTE...');
+ try{const {data,error}=await client.rpc('abrir_caixa_teste',{p_saldo_inicial:amount});if(error)throw error;cashNotice('✅ Caixa fictício aberto: '+data?.caixa_id)}catch(e){cashNotice('⚠️ '+(e.message||e)+'. Consulte a situação do caixa antes de tentar novamente.')}finally{cashBusy=false;await cashLoad()}
+});
+$('cashCloseBtn').addEventListener('click',async()=>{
+ if(cashBusy||!adminAccess||!client||!cashCurrentId||!cashIsTest)return;
+ const amount=cashParse($('cashCloseAmount').value);if(!Number.isFinite(amount)||amount<0||amount>1000000){cashNotice('Informe um saldo final válido, com até duas casas decimais.');return}
+ const id=cashCurrentId;
+ if(!confirm('Fechar caixa fictício com '+money(amount)+' de dinheiro contado? '+(cashSummaryId===id&&cashExpectedAmount!==null?'Dinheiro esperado: '+money(cashExpectedAmount)+'. Diferença: '+money(amount-cashExpectedAmount)+'. ':'Resumo automático indisponível; confira o saldo manualmente. ')+'Este fechamento de TESTE calcula e grava a diferença no banco.'))return;
+ cashBusy=true;cashButtons(true);cashNotice('Enviando fechamento de TESTE...');
+ try{const {data,error}=await client.rpc('fechar_caixa_teste',{p_caixa_id:id,p_saldo_final:amount});if(error)throw error;cashNotice('✅ Caixa fictício fechado: '+data?.caixa_id)}catch(e){cashNotice('⚠️ '+(e.message||e)+'. Consulte a situação antes de tentar novamente.')}finally{cashBusy=false;await cashLoad()}
+});
+
+// Chave PUBLICÁVEL guardada localmente neste navegador (nunca armazenar senhas).
+try{const k=localStorage.getItem('casa_acessorios_public_key');if(k&&k.startsWith('sb_publishable_'))$('key').value=k}catch(_){}
+
+// Histórico administrativo: apenas leitura, limitado a vendas identificadas como TESTE.
+let historyRecords=[],historySelected=null,historyBusy=false;
+const historyMsg=t=>{$('historyMsg').textContent=t};
+const historyPayLabels={dinheiro:'Dinheiro',pix:'Pix',credito:'Crédito',debito:'Débito',transferencia:'Transferência'};
+function historyShow(){$('clientsView').style.display='none';$('navClients').classList.remove('selected');
+ if(!client||!adminAccess){historyMsg('Acesso exclusivo do administrador.');return}
+ $('dashboard').style.display='none';$('stockView').style.display='none';$('employeePanel').style.display='none';
+ $('historyView').style.display='block';$('reportsView').style.display='none';$('navReports').classList.remove('selected');
+ for(const id of ['navDashboard','navStock','navCashier'])$(id).classList.remove('selected');
+ $('navHistory').classList.add('selected');historyLoad();$('historyView').scrollIntoView({block:'start'});
+}
+function historyRender(){
+ const term=$('historySearch').value.trim(),status=$('historyStatus').value;
+ const found=historyRecords.filter(v=>(!term||String(v.numero).includes(term))&&(!status||v.status===status));
+ $('historyRows').innerHTML=found.map(v=>`<tr><td>${escape(v.numero)}</td><td>${escape(showDate(v.criada_em))}</td><td>${escape(v.funcionario_nome)}</td><td><span class="history-status ${v.status==='cancelada'?'cancelled':''}">${escape(v.status==='cancelada'?'CANCELADA':v.status)}</span></td><td>${escape(money(v.total))}</td><td><button type="button" data-history-id="${escape(v.id)}">Detalhes / comprovante</button></td></tr>`).join('')||'<tr><td colspan="6">Nenhuma venda encontrada.</td></tr>';
+}
+async function historyLoad(){
+ if(!client||!adminAccess||historyBusy)return;
+ historyBusy=true;$('historyRefresh').disabled=true;historyMsg('Consultando vendas fictícias...');
+ try{
+  const {data,error}=await client.from('vendas').select('id,numero,criada_em,status,total,subtotal,desconto,funcionario_id,observacoes').eq('observacoes','TESTE - CARRINHO ESTOQUE FICTICIO').order('criada_em',{ascending:false}).limit(100);
+  if(error)throw error;
+  const sales=data||[],ids=[...new Set(sales.map(v=>v.funcionario_id).filter(Boolean))];let names={};
+  if(ids.length){const res=await client.from('funcionarios').select('id,nome').in('id',ids);if(!res.error)for(const f of res.data||[])names[f.id]=f.nome}
+  historyRecords=sales.map(v=>({...v,funcionario_nome:names[v.funcionario_id]||'Funcionário não disponível'}));
+  historyRender();historyMsg('✅ '+historyRecords.length+' venda(s) fictícia(s) carregada(s).');
+ }catch(e){historyMsg('⚠️ Não foi possível consultar: '+(e.message||e))}
+ finally{historyBusy=false;$('historyRefresh').disabled=false}
+}
+function historyTable(headers,rows){return `<div class="stock-table"><table><thead><tr>${headers.map(h=>`<th>${escape(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(c=>`<td>${escape(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+$('historyRows').addEventListener('click',async ev=>{
+ const button=ev.target.closest('button[data-history-id]');if(!button||!adminAccess||!client)return;
+ const v=historyRecords.find(x=>x.id===button.dataset.historyId);if(!v)return;
+ const detail=$('historyDetail'),panel=$('historyDetailPanel');panel.style.display='block';$('historyPrint').disabled=true;historySelected=null;detail.textContent='Consultando itens e pagamentos...';button.disabled=true;
+ try{
+  const [itemRes,payRes]=await Promise.all([
+   client.from('itens_venda').select('descricao,quantidade,preco_unitario,total').eq('venda_id',v.id),
+   client.from('pagamentos').select('forma,valor').eq('venda_id',v.id)
+  ]);
+  if(itemRes.error)throw itemRes.error;if(payRes.error)throw payRes.error;
+  const items=itemRes.data||[],payments=payRes.data||[];
+  const isCancelled=v.status==='cancelada';
+  const base=`<p class="sub"><b>Venda nº ${escape(v.numero)}</b> • ${escape(showDate(v.criada_em))}<br>Funcionário: ${escape(v.funcionario_nome)}<br>Status: <span class="history-status ${isCancelled?'cancelled':''}">${escape(isCancelled?'CANCELADA':v.status)}</span></p>`+(isCancelled?'<div class="history-cancel-alert">⛔ VENDA CANCELADA — SEM VALIDADE<br><small>Valor apresentado apenas para histórico. Esta venda não entra no faturamento. O registro de pagamento original não significa que houve estorno.</small></div>':'');
+  const products=historyTable(['Produto','Qtd.','Preço unitário','Subtotal'],items.map(i=>[i.descricao,i.quantidade,money(i.preco_unitario),money(i.total)]));
+  const pays=historyTable(['Forma','Valor'],payments.map(p=>[historyPayLabels[p.forma]||p.forma,money(p.valor)]));
+  detail.innerHTML=base+'<h4>Produtos</h4>'+products+'<h4>Pagamentos registrados originalmente</h4>'+pays+`<p><b>${isCancelled?'Valor original da venda':'Total'}: ${escape(money(v.total))}</b></p>`;
+  // Comprovante textual, sem dados de cartão, sem alegação de validade fiscal.
+  const receipt=$('historyReceipt');
+  receipt.innerHTML=`<h2>CASA DOS ACESSÓRIOS</h2><p style="text-align:center"><b>${isCancelled?'REGISTRO DE VENDA CANCELADA':'COMPROVANTE DE TESTE'}</b><br>SEM VALOR FISCAL</p>${isCancelled?'<div class="receipt-cancelled">CANCELADO<br>SEM VALIDADE</div>':''}<div class="receipt-divider"></div><p>Venda nº ${escape(v.numero)}<br>Data: ${escape(showDate(v.criada_em))}<br>Atendente: ${escape(v.funcionario_nome)}<br>Situação: <b>${escape(isCancelled?'CANCELADA':v.status)}</b></p><div class="receipt-divider"></div><h3>Itens</h3>`+products+'<h3>Pagamentos registrados originalmente</h3>'+pays+`<div class="receipt-divider"></div><p class="receipt-total">${isCancelled?'VALOR ORIGINAL':'TOTAL'}: ${escape(money(v.total))}</p>${isCancelled?'<p class="receipt-cancel-note">VENDA CANCELADA — NÃO INTEGRA O FATURAMENTO.<br>Este documento não comprova pagamento ou estorno.</p>':''}<p style="text-align:center">APENAS SIMULAÇÃO — NENHUM PAGAMENTO REAL<br>Não é nota fiscal, cupom fiscal ou comprovante de transação financeira.</p>`;
+  historySelected=v.id;$('historyPrint').disabled=false;
+ }catch(e){detail.textContent='⚠️ Não foi possível consultar os detalhes: '+(e.message||e)}finally{button.disabled=false}
+});
+$('historyPrint').addEventListener('click',()=>{if(historySelected&&$('historyReceipt').innerHTML)window.print()});
+$('historyRefresh').addEventListener('click',historyLoad);
+$('historySearch').addEventListener('input',historyRender);
+$('historyStatus').addEventListener('change',historyRender);
+
+$('login').addEventListener('click',async()=>{const url=$('url').value.trim().replace(/\/+$/,''),key=$('key').value.trim(),email=$('email').value.trim(),password=$('password').value;if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)){msg('Confira a URL do Supabase: https://...supabase.co');return}if(!key.startsWith('sb_publishable_')){msg('Use apenas a chave pública sb_publishable_.');return}if(!email||!password){msg('Preencha seu e-mail e senha de usuário.');return}if(!window.supabase?.createClient){msg('Não foi possível carregar a biblioteca Supabase. Verifique a internet.');return}$('login').disabled=true;msg('Validando login...');try{client=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});let {data,error}=await client.auth.signInWithPassword({email,password});$('password').value='';if(error)throw error;try{localStorage.setItem('casa_acessorios_public_key',key)}catch(_){}let {data:isEmployee,error:employeeError}=await client.rpc('eh_funcionario_ativo');if(employeeError)throw new Error('Não foi possível verificar o perfil do funcionário: '+employeeError.message);if(isEmployee===true){$('userName').textContent='Conectado: Funcionário (TESTE)';window.dispatchEvent(new CustomEvent('pdv-client-session',{detail:{client,admin:false,employee:true}}));$('navCashier').style.display='block';$('navDashboard').style.display='none';$('navCashier').classList.add('selected');$('navDashboard').classList.remove('selected');$('employeePanel').style.display='block';window.dispatchEvent(new Event('pdv-cart-login'));$('logout').style.display='inline-block';$('login').style.display='none';msg('✅ Acesso de funcionário validado. Ambiente de testes.');return;}let {data:roles,error:roleError}=await client.from('funcionarios').select('nome,cargo,ativo').eq('id',data.user.id).maybeSingle();if(roleError)throw roleError;if(!roles||roles.cargo!=='administrador'||roles.ativo!==true)throw Error('Seu usuário não tem perfil de administrador ativo.');$('userName').textContent='Conectado: '+roles.nome;adminAccess=true;window.dispatchEvent(new CustomEvent('pdv-client-session',{detail:{client,admin:true}}));$('navStock').style.display='block';$('navHistory').style.display='block';$('navReports').style.display='block';$('navCashier').style.display='block';$('navDashboard').style.display='block';$('navDashboard').classList.add('selected');$('navCashier').classList.remove('selected');$('employeePanel').style.display='none';$('dashboard').style.display='block';$('logout').style.display='inline-block';$('login').style.display='none';await load()}catch(e){msg('⚠️ '+e.message);if(client){await client.auth.signOut().catch(()=>{});client=null}}finally{$('login').disabled=false}});$('logout').addEventListener('click',async()=>{if(client)await client.auth.signOut();client=null;window.dispatchEvent(new CustomEvent('pdv-client-session',{detail:{client:null,admin:false}}));loaded=[];payRows=[];adminAccess=false;cashCurrentId=null;cashIsTest=false;cashButtons(false);cashNotice('Faça login como administrador.');$('cashCurrent').replaceChildren();stockItems=[];stockReset();$('entryRows').replaceChildren();$('entryProduct').replaceChildren(new Option('Faça login como administrador',''));$('exitRows').replaceChildren();$('exitProduct').replaceChildren(new Option('Faça login como administrador',''));$('stockView').style.display='none';$('historyView').style.display='none';$('reportsView').style.display='none';$('navReports').style.display='none';$('navReports').classList.remove('selected');$('navHistory').style.display='none';$('navHistory').classList.remove('selected');$('navStock').style.display='none';$('navCashier').style.display='none';$('navCashier').classList.remove('selected');$('navDashboard').style.display='block';$('navDashboard').classList.add('selected');$('dashboard').style.display='none';$('employeePanel').style.display='none';window.dispatchEvent(new Event('pdv-cart-logout'));$('employeeMsg').textContent='Nenhuma venda enviada.';$('logout').style.display='none';$('login').style.display='inline-block';$('userName').textContent='';msg('Sessão encerrada.')});window.addEventListener('pdv-test-sale',async(event)=>{const d=event.detail;try{if(!client)throw Error('Sessão não autenticada');const {data,error}=await client.rpc('registrar_venda_funcionario_teste',{p_operacao_id:d.operationId,p_valor:d.value,p_forma:d.pay,p_observacoes:d.notes});d.resolve({data,error});}catch(e){d.reject(e)}});window.addEventListener('pdv-cart-action',async(event)=>{const d=event.detail;try{if(!client)throw Error('Sessão não autenticada');if(d.action==='list'){const {data,error}=await client.from('produtos').select('id,nome,codigo,codigo_barras,preco_venda,quantidade,ativo').eq('ativo',true).order('nome').limit(500);d.resolve({data,error});return}if(d.action==='fiado_garages'){d.resolve(await client.rpc('fiado_listar_garagens_teste'));return}
+if(d.action==='fiado_retirantes'){d.resolve(await client.rpc('fiado_listar_retirantes_teste',{p_cliente_id:d.garageId}));return}
+if(d.action==='fiado_submit'){d.resolve(await client.rpc('fiado_solicitar_venda_teste',{p_operacao_id:d.operationId,p_cliente_id:d.garageId,p_itens:d.items,p_retirante_id:d.retiranteId||null,p_retirante_nome:d.retiranteNome||null}));return}
+if(d.action==='submit'){const isSplit=Array.isArray(d.payments);const {data,error}=isSplit?await client.rpc('registrar_carrinho_dividido_teste',{p_operacao_id:d.operationId,p_itens:d.items,p_pagamentos:d.payments}):await client.rpc('registrar_carrinho_estoque_teste',{p_operacao_id:d.operationId,p_itens:d.items,p_forma:d.pay});d.resolve({data,error});return}throw Error('Ação inválida')}catch(e){d.reject(e)}});$('refresh').addEventListener('click',load);$('showTests').addEventListener('change',()=>{if(loaded.length)render(dateSP(new Date()))});})();
+</script>
+<script>
+// Registro apenas de TESTE via função RPC com validação de funcionário no banco.
+(()=>{'use strict';
+const $=id=>document.getElementById(id);let operationId=null,completed=false;
+const setMessage=t=>{$('employeeMsg').textContent=t};
+const parseBR=(text)=>{const v=text.trim();if(!/^\d{1,7}(?:[.,]\d{1,2})?$/.test(v))return NaN;return Number(v.replace(',','.'))};
+$('employeeSubmit').addEventListener('click',async()=>{
+ const value=parseBR($('employeeValue').value);const pay=$('employeePayment').value;
+ if(!Number.isFinite(value)||value<=0||value>1000000){setMessage('Digite um valor válido de até R$ 1.000.000,00, com no máximo 2 casas decimais.');return}
+ if(completed){setMessage('Essa venda já foi concluída. Clique em Nova operação para criar outra.');return}
+ if(!operationId)operationId=crypto.randomUUID();
+ const btn=$('employeeSubmit');btn.disabled=true;setMessage('Enviando venda fictícia ao Supabase...');
+ try{
+ // A sessão de login do painel é mantida no escopo original. Enviar o evento para essa sessão.
+ const reply=await new Promise((resolve,reject)=>{const detail={operationId,value,pay,notes:$('employeeNotes').value,resolve,reject};window.dispatchEvent(new CustomEvent('pdv-test-sale',{detail}));});
+ if(reply.error)throw reply.error;
+ completed=true;setMessage('✅ Venda de TESTE nº '+(reply.data?.numero??'—')+' registrada. Total: R$ '+value.toFixed(2).replace('.',',')+'.');
+ }catch(e){setMessage('⚠️ '+(e?.message||'Falha na operação')+'. Confira antes de tentar novamente; o identificador foi preservado.');}
+ finally{btn.disabled=false}
+});
+$('employeeNew').addEventListener('click',()=>{operationId=null;completed=false;$('employeeValue').value='';$('employeeNotes').value='';setMessage('Nova operação fictícia pronta.');});
+})();
+</script>
+<script>
+// Fluxo isolado de recuperação; não modifica a autenticação do painel administrativo.
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const hash=new URLSearchParams(location.hash.replace(/^#/,''));
+const query=new URLSearchParams(location.search);
+const isRecover=hash.get('type')==='recovery'||query.get('type')==='recovery'||hash.has('access_token')||query.has('token_hash')||query.has('error_code')||hash.has('error_code');
+const recoverMsg=t=>{$('recoverMessage').textContent=t};
+const normalize=s=>s.trim().replace(/\/+$/,'');
+const clearLink=()=>{const u=new URL(location.href);u.hash='';for(const p of ['access_token','refresh_token','token_hash','type','code','error','error_code','error_description'])u.searchParams.delete(p);history.replaceState(null,'',u.pathname+u.search)};
+function buildClient(url,key){if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url))throw Error('Informe uma URL Supabase válida, terminada em .supabase.co');if(!key.startsWith('sb_publishable_'))throw Error('Use somente a Publishable key (sb_publishable_).');if(!window.supabase?.createClient)throw Error('A biblioteca Supabase não carregou. Verifique a conexão.');return window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}})}
+if(isRecover){document.body.classList.add('recover-mode');const title=document.querySelector('.top h1');if(title)title.textContent='Recuperação de senha';
+const err=hash.get('error_description')||query.get('error_description');if(err)recoverMsg('Link inválido ou expirado: '+err+'. Solicite um novo link.');
+else if(!hash.get('access_token')&&!query.get('token_hash'))recoverMsg('O link de recuperação não contém os dados necessários. Solicite um novo e-mail.');
+else recoverMsg('Link identificado. Preencha a chave pública e escolha sua nova senha.');
+}
+$('recoverSubmit').addEventListener('click',async()=>{
+const btn=$('recoverSubmit'),pass=$('recoverPassword').value,confirm=$('recoverConfirm').value;
+if(pass.length<8){recoverMsg('A senha precisa ter pelo menos 8 caracteres.');return}
+if(pass!==confirm){recoverMsg('As duas senhas estão diferentes.');return}
+btn.disabled=true;recoverMsg('Validando link de recuperação...');let c=null;
+try{
+c=buildClient(normalize($('recoverUrl').value),$('recoverKey').value.trim());
+const access_token=hash.get('access_token'),refresh_token=hash.get('refresh_token'),token_hash=query.get('token_hash');
+let authResult;
+if(access_token&&refresh_token){authResult=await c.auth.setSession({access_token,refresh_token});}
+else if(token_hash){authResult=await c.auth.verifyOtp({token_hash,type:'recovery'});}
+else throw Error('Link incompleto ou expirado. Solicite outro e-mail de recuperação.');
+if(authResult.error)throw authResult.error;
+if(!authResult.data?.user)throw Error('Não foi possível validar a sessão de recuperação.');
+recoverMsg('Atualizando senha...');const {error}=await c.auth.updateUser({password:pass});if(error)throw error;
+$('recoverPassword').value='';$('recoverConfirm').value='';clearLink();
+recoverMsg('✅ Senha atualizada! Você já pode voltar ao login e entrar com a nova senha.');
+btn.disabled=true;
+}catch(e){recoverMsg('⚠️ '+(e?.message||String(e))+'. Se necessário, solicite outro link de recuperação.');btn.disabled=false;}
+finally{if(c)await c.auth.signOut().catch(()=>{});}
+});
+$('forgotPassword').addEventListener('click',async()=>{
+const url=normalize($('url').value),key=$('key').value.trim(),email=$('email').value.trim();
+if(!email){$('msg').textContent='Informe seu e-mail para receber a recuperação de senha.';return}
+const btn=$('forgotPassword');btn.disabled=true;
+try{const c=buildClient(url,key);const redirectTo=location.origin+location.pathname;
+const {error}=await c.auth.resetPasswordForEmail(email,{redirectTo});if(error)throw error;
+$('msg').textContent='Se o e-mail estiver cadastrado e o envio estiver disponível, você receberá um link para criar uma nova senha. Confira também o spam.';
+}catch(e){$('msg').textContent='⚠️ '+(e?.message||String(e));}
+finally{btn.disabled=false}
+});
+})();
+</script>
+<script>
+// Carrinho isolado: sessão é emprestada do módulo de autenticação por eventos internos.
+(()=>{'use strict';
+const $=id=>document.getElementById(id);const money=x=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(x)||0);const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let catalog=[],cart=[],operationId=null,completed=false,submitting=false, lockedPayment=null,fiadoGarages=[],fiadoStaff=[];
+let splitPayments=[{forma:'dinheiro',valor:''},{forma:'pix',valor:''}];
+const paymentNames={pix:'Pix',dinheiro:'Dinheiro',debito:'Débito',credito:'Crédito',transferencia:'Transferência'};
+const CART_STORAGE_KEY='casa_acessorios_carrinho_baixa_teste_pendente_v1';
+let storedOperation=null;
+try { const st=JSON.parse(localStorage.getItem(CART_STORAGE_KEY)||'null');if(st&&typeof st.operationId==='string'&&Array.isArray(st.items))storedOperation=st; } catch(_){}
+function storeOperation(st){storedOperation=st;try{if(st)localStorage.setItem(CART_STORAGE_KEY,JSON.stringify(st));else localStorage.removeItem(CART_STORAGE_KEY)}catch(_){}}
+const message=t=>$('cartMsg').textContent=t;
+function rpc(action,params={}){return new Promise((resolve,reject)=>window.dispatchEvent(new CustomEvent('pdv-cart-action',{detail:{action,...params,resolve,reject}})))}
+function cartCents(){return cart.reduce((s,p)=>s+Math.round(Number(p.preco_venda)*100)*p.quantidade,0)}
+function parseCents(raw){const t=String(raw).trim();if(!/^\d{1,7}(?:[,.]\d{1,2})?$/.test(t))return null;const n=Number(t.replace(',','.'));if(!Number.isFinite(n)||n<=0||n>1000000)return null;return Math.round(n*100)}
+function splitValidation(){const amounts=splitPayments.map(p=>parseCents(p.valor));const valid=splitPayments.length>=2&&splitPayments.length<=5&&amounts.every(n=>n!==null&&n>0)&&splitPayments.every(p=>Object.hasOwn(paymentNames,p.forma));const sum=amounts.reduce((s,n)=>s+(n||0),0),total=cartCents();return {valid,amounts,sum,total,match:valid&&sum===total}}
+function updateSplitSummary(){const r=splitValidation();$('cartSplitPaid').textContent=money(r.sum/100);$('cartSplitDifference').textContent=money((r.total-r.sum)/100);$('cartSplitMessage').textContent=!cart.length?'Adicione um produto ao carrinho.':!r.valid?'Preencha todos os valores com até duas casas decimais, maiores que zero.':!r.match?'⚠️ Os pagamentos ainda não somam o total estimado.':'✅ Valores conferidos com o total estimado. O Supabase validará novamente.';const locked=completed||submitting||Boolean(operationId);$('cartSplitAdd').disabled=locked||splitPayments.length>=5;}
+function renderSplitRows(){const locked=completed||submitting||Boolean(operationId);$('cartSplitRows').replaceChildren();splitPayments.forEach((p,i)=>{const line=document.createElement('div');line.className='split-payment-row';const lForma=document.createElement('label');lForma.textContent='Forma '+(i+1);const sel=document.createElement('select');sel.disabled=locked;for(const [value,label] of Object.entries(paymentNames))sel.add(new Option(label,value));sel.value=p.forma;sel.addEventListener('change',()=>{splitPayments[i].forma=sel.value;updateSplitSummary()});lForma.append(sel);const lValor=document.createElement('label');lValor.textContent='Valor (R$)';const input=document.createElement('input');input.type='text';input.inputMode='decimal';input.placeholder='Ex.: 20,00';input.autocomplete='off';input.value=p.valor;input.disabled=locked;input.addEventListener('input',()=>{splitPayments[i].valor=input.value;updateSplitSummary()});lValor.append(input);const del=document.createElement('button');del.type='button';del.textContent='Remover';del.disabled=locked||splitPayments.length<=2;del.addEventListener('click',()=>{if(splitPayments.length<=2)return;splitPayments.splice(i,1);renderSplitRows()});line.append(lForma,lValor,del);$('cartSplitRows').append(line)});updateSplitSummary()}
+async function loadFiadoGarages(){
+ $('cartFiadoMsg').textContent='Consultando garagens autorizadas...';
+ try{const {data,error}=await rpc('fiado_garages');if(error)throw error;fiadoGarages=data||[];
+ const selected=$('cartFiadoGarage').value; $('cartFiadoGarage').replaceChildren(new Option('Selecione uma garagem',''));
+ for(const g of fiadoGarages)$('cartFiadoGarage').add(new Option(g.nome,g.id));
+ if(fiadoGarages.some(g=>g.id===selected))$('cartFiadoGarage').value=selected;
+ $('cartFiadoMsg').textContent='✅ '+fiadoGarages.length+' garagem(ns) com fiado liberado.';
+ await loadFiadoStaff();
+ }catch(e){$('cartFiadoMsg').textContent='⚠️ Não foi possível consultar garagens: '+(e.message||e)+'. Confira se executou o SQL da Etapa 2.'}
+}
+async function loadFiadoStaff(){
+ const id=$('cartFiadoGarage').value;fiadoStaff=[];$('cartFiadoStaff').replaceChildren(new Option('Selecione um funcionário',''));
+ if(id){try{const {data,error}=await rpc('fiado_retirantes',{garageId:id});if(error)throw error;fiadoStaff=data||[];for(const r of fiadoStaff)$('cartFiadoStaff').add(new Option(r.nome,r.id));}catch(e){$('cartFiadoMsg').textContent='⚠️ Funcionários: '+(e.message||e)}}
+ renderFiadoFields();
+}
+function renderFiadoFields(){const g=fiadoGarages.find(x=>x.id===$('cartFiadoGarage').value);const type=$('cartFiadoRetiranteTipo').value;
+ $('cartFiadoStaffLabel').style.display=type==='cadastrado'?'':'none';$('cartFiadoNameLabel').style.display=type==='livre'?'':'none';
+ const freeAllowed=g?.politica_retirada==='livre';$('cartFiadoRetiranteTipo').querySelector('option[value="livre"]').disabled=!freeAllowed;
+ if(type==='livre'&&!freeAllowed){$('cartFiadoRetiranteTipo').value='nenhum';$('cartFiadoNameLabel').style.display='none'}
+}
+function render(){const selected=$('cartProduct').value;const term=$('cartSearch').value.trim().toLocaleLowerCase('pt-BR');const visible=catalog.filter(p=>[p.nome,p.codigo,p.codigo_barras].some(v=>String(v||'').toLocaleLowerCase('pt-BR').includes(term)));$('cartProduct').innerHTML='<option value="">Selecione um produto</option>'+visible.map(p=>`<option value="${escape(p.id)}">${escape(p.nome)} — ${escape(money(p.preco_venda))} (estoque informado: ${escape(p.quantidade)})</option>`).join('');if(visible.some(p=>p.id===selected))$('cartProduct').value=selected;$('cartRows').innerHTML=cart.length?cart.map(p=>`<tr><td>${escape(p.nome)}</td><td>${escape(p.quantidade)}</td><td>${escape(money(p.preco_venda))}</td><td>${escape(money(p.preco_venda*p.quantidade))}</td><td><button type="button" data-remove="${escape(p.id)}" ${completed||submitting||Boolean(operationId)?'disabled':''}>Remover</button></td></tr>`).join(''):'<tr><td colspan="5">Carrinho vazio.</td></tr>';$('cartTotal').textContent=money(cartCents()/100);const locked=completed||submitting||Boolean(operationId);$('cartCheckout').disabled=completed||submitting||!cart.length;$('cartCheckout').textContent=operationId&&!completed?'Consultar / Reenviar operação':'Registrar carrinho de TESTE';$('cartAdd').disabled=locked;$('cartPayment').disabled=locked;$('cartPaymentMode').disabled=locked;$('cartSinglePayLabel').style.display=$('cartPaymentMode').value==='single'?'':'none';$('cartSplitPanel').style.display=$('cartPaymentMode').value==='split'?'block':'none';$('cartFiadoPanel').style.display=$('cartPaymentMode').value==='fiado'?'block':'none';for(const id of ['cartFiadoGarage','cartFiadoRetiranteTipo','cartFiadoStaff','cartFiadoName'])$(id).disabled=locked;renderFiadoFields();renderSplitRows()}
+async function load(){message('Carregando produtos ativos...');$('cartRefresh').disabled=true;try{const {data,error}=await rpc('list');if(error)throw error;catalog=(data||[]).filter(p=>Number(p.preco_venda)>0);render();message('✅ '+catalog.length+' produto(s) disponível(is). Valores estimados: o banco recalcula na finalização.')}catch(e){message('⚠️ Produtos: '+(e.message||e))}finally{$('cartRefresh').disabled=false}}
+function reset(){cart=[];operationId=null;lockedPayment=null;completed=false;submitting=false;splitPayments=[{forma:'dinheiro',valor:''},{forma:'pix',valor:''}];storeOperation(null);$('cartQty').value='1';$('cartPaymentMode').value='single';$('cartFiadoRetiranteTipo').value='nenhum';$('cartFiadoName').value='';$('cartFiadoGarage').value='';render();message('Novo carrinho fictício pronto.');}
+$('cartPaymentMode').addEventListener('change',render);$('cartFiadoRefresh').addEventListener('click',loadFiadoGarages);$('cartFiadoGarage').addEventListener('change',loadFiadoStaff);$('cartFiadoRetiranteTipo').addEventListener('change',renderFiadoFields);
+$('cartSplitAdd').addEventListener('click',()=>{if(completed||submitting||operationId||splitPayments.length>=5)return;splitPayments.push({forma:'pix',valor:''});renderSplitRows()});
+$('cartRefresh').addEventListener('click',load);$('cartSearch').addEventListener('input',render);
+$('cartAdd').addEventListener('click',()=>{if(completed||operationId){message('A operação já está confirmada ou pendente. Consulte o resultado antes de criar novo carrinho.');return}const p=catalog.find(x=>x.id===$('cartProduct').value);const q=Number($('cartQty').value);if(!p||!Number.isInteger(q)||q<1||q>100){message('Selecione um produto e uma quantidade inteira de 1 a 100.');return}const prev=cart.find(x=>x.id===p.id);if(prev){if(prev.quantidade+q>100){message('Máximo de 100 unidades por produto.');return}prev.quantidade+=q}else if(cart.length<30)cart.push({...p,quantidade:q});else{message('O limite é de 30 produtos por carrinho.');return}render();message('✅ Produto adicionado.');});
+$('cartRows').addEventListener('click',ev=>{const b=ev.target.closest('button[data-remove]');if(!b||completed||submitting||operationId)return;cart=cart.filter(p=>p.id!==b.dataset.remove);render();message('Item removido.');});
+$('cartNew').addEventListener('click',()=>{if(operationId&&!confirm('A operação anterior pode ter sido concluída. Confira o painel e o estoque antes de criar OUTRO carrinho. Deseja iniciar uma nova operação?'))return;reset();});
+$('cartCheckout').addEventListener('click',async()=>{
+ if(!cart.length||completed||submitting)return;
+ if(!operationId){
+  const isSplit=$('cartPaymentMode').value==='split',isFiado=$('cartPaymentMode').value==='fiado';
+  const v=isSplit?splitValidation():null;
+  if(isFiado){const g=fiadoGarages.find(x=>x.id===$('cartFiadoGarage').value);if(!g){message('⚠️ Selecione uma garagem autorizada.');return}const type=$('cartFiadoRetiranteTipo').value;if(type==='cadastrado'&&!fiadoStaff.some(x=>x.id===$('cartFiadoStaff').value)){message('Selecione um funcionário autorizado ou deixe sem identificação.');return}if(type==='livre'&&(g.politica_retirada!=='livre'||$('cartFiadoName').value.trim().length<2)){message('Nome livre não permitido ou incompleto.');return}}
+  if(isSplit&&!v.match){message('⚠️ Os valores dos pagamentos devem somar exatamente o total estimado antes de continuar.');return}
+  const text=isFiado?'\nFIADO — '+fiadoGarages.find(x=>x.id===$('cartFiadoGarage').value).nome+' (pode exigir aprovação)':isSplit?'\nPagamentos: '+splitPayments.map((p,i)=>paymentNames[p.forma]+' '+money(v.amounts[i]/100)).join(' + '):'\nPagamento: '+paymentNames[$('cartPayment').value];
+  if(!confirm('Confirmar venda fictícia com BAIXA AUTOMÁTICA do estoque de teste?\nTotal estimado: '+money(cartCents()/100)+text+'\nO banco recalcula o total antes de confirmar.'))return;
+  if(!globalThis.crypto?.randomUUID){message('Atualize o navegador para gerar um identificador seguro.');return}
+  operationId=crypto.randomUUID();lockedPayment=$('cartPayment').value;
+  const payload={operationId,items:cart.map(x=>({produto_id:x.id,quantidade:x.quantidade})),completed:false};
+  if(isFiado){payload.mode='fiado';payload.garageId=$('cartFiadoGarage').value;const type=$('cartFiadoRetiranteTipo').value;payload.retiranteId=type==='cadastrado'?$('cartFiadoStaff').value:null;payload.retiranteNome=type==='livre'?$('cartFiadoName').value.trim():null;}
+  else if(isSplit)payload.payments=splitPayments.map((p,i)=>({forma:p.forma,valor:v.amounts[i]/100}));else payload.pay=lockedPayment;
+  storeOperation(payload);
+ }
+ submitting=true;render();message('Registrando venda fictícia e descontando estoque de TESTE...');
+ try{
+  const params={operationId,items:storedOperation.items};
+  if(storedOperation.mode==='fiado'){params.garageId=storedOperation.garageId;params.retiranteId=storedOperation.retiranteId;params.retiranteNome=storedOperation.retiranteNome;}
+  else if(Array.isArray(storedOperation.payments))params.payments=storedOperation.payments;else params.pay=storedOperation.pay;
+  const {data,error}=await rpc(storedOperation.mode==='fiado'?'fiado_submit':'submit',params);
+  if(error)throw error;
+  completed=true;storeOperation({...storedOperation,completed:true});
+  if(storedOperation.mode==='fiado')message(data?.status==='pendente'?'🕒 Pedido de fiado de TESTE enviado para aprovação. Total: '+money(data.total)+'. Estoque AINDA NÃO baixado.':'✅ Venda fiada de TESTE finalizada. Total: '+money(data.total)+'. Estoque fictício baixado.'+(data?.duplicada?' Operação reconhecida, sem nova baixa.':''));
+  else message('✅ Venda de TESTE nº '+(data?.numero??'—')+' registrada. Total confirmado: '+money(data?.total)+'. '+(Array.isArray(storedOperation.payments)?'Pagamento dividido em '+storedOperation.payments.length+' partes. ':'')+'Baixa do estoque fictício processada.'+(data?.duplicada?' Operação existente reconhecida, sem nova baixa.':''));
+  await load();
+ }catch(e){message('⚠️ '+(e?.message||'Falha de comunicação')+'. Não inicie novo carrinho sem conferir a venda e o estoque. Esta operação foi preservada para reenvio com o mesmo código.');}
+ finally{submitting=false;render()}
+ });
+ window.addEventListener('pdv-cart-login',async()=>{
+  await load();await loadFiadoGarages();
+  if(storedOperation){
+   operationId=storedOperation.operationId;lockedPayment=storedOperation.pay;completed=Boolean(storedOperation.completed);if(storedOperation.mode==='fiado'){$('cartPaymentMode').value='fiado';$('cartFiadoGarage').value=storedOperation.garageId||'';await loadFiadoStaff();if(storedOperation.retiranteId){$('cartFiadoRetiranteTipo').value='cadastrado';$('cartFiadoStaff').value=storedOperation.retiranteId}else if(storedOperation.retiranteNome){$('cartFiadoRetiranteTipo').value='livre';$('cartFiadoName').value=storedOperation.retiranteNome}}else if(Array.isArray(storedOperation.payments)){splitPayments=storedOperation.payments.map(p=>({forma:p.forma,valor:String(p.valor).replace('.',',')}));$('cartPaymentMode').value='split'}else{$('cartPaymentMode').value='single'}
+   cart=storedOperation.items.map(i=>{const p=catalog.find(x=>x.id===i.produto_id);return p?{...p,quantidade:i.quantidade}:null}).filter(Boolean);
+   if(lockedPayment)$('cartPayment').value=lockedPayment;
+   render();
+   message(completed?'✅ Última venda de teste já foi concluída. Clique em Novo carrinho para iniciar outra.':'⚠️ Operação anterior pendente/restaurada. Confira o histórico antes de reenviar. Se reenviar, será usada a MESMA identificação.');
+  }
+ });window.addEventListener('pdv-cart-logout',()=>{catalog=[];cart=[];operationId=null;lockedPayment=null;completed=false;render();message('Faça login como funcionário para carregar produtos.');});render();
+})();
+</script>
+<script>
+// Revendas parceiras (etapa de cadastro, TESTE). Não altera caixa, vendas ou estoque.
+(()=>{'use strict';
+ const $=id=>document.getElementById(id);
+ const escape=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ let db=null,garagens=[],retirantes=[],editingGarage=null,selectedGarage=null,editingRetirante=null,requestSeq=0;
+ const say=t=>$('clientMsg').textContent=t;
+ const sayStaff=t=>$('retiranteMsg').textContent=t;
+ const dateBR=d=>{if(!d)return 'A combinar';const p=String(d).split('-');return p.length===3?p.reverse().join('/'):String(d)};
+ function resetGarage(){editingGarage=null;for(const id of ['clientName','clientOwner','clientPhone','clientCpf','clientCnpj','clientAddress','clientDue','clientNotes'])$(id).value='';$('clientCredit').value='false';$('clientPolicy').value='cadastrados';$('clientFormTitle').textContent='Nova garagem / revenda'}
+ function resetStaff(){editingRetirante=null;for(const id of ['retiranteName','retirantePhone'])$(id).value='';$('retiranteAllowed').value='true'}
+ function staffControls(on){for(const id of ['retiranteName','retirantePhone','retiranteAllowed','retiranteSave','retiranteReset','retirantesRefresh'])$(id).disabled=!on}
+ function renderGarages(){const q=$('clientSearch').value.toLocaleLowerCase('pt-BR').trim();const matches=garagens.filter(g=>[g.nome,g.responsavel,g.telefone].some(v=>String(v||'').toLocaleLowerCase('pt-BR').includes(q)));
+  $('clientRows').innerHTML=matches.map(g=>`<tr><td><strong>${escape(g.nome)}</strong></td><td>${escape(g.responsavel||'—')}</td><td>${escape(g.telefone||'—')}</td><td>${g.fiado_autorizado?'🟢 Liberado':'🔴 Bloqueado'}</td><td>${g.politica_retirada==='livre'?'Nome livre':'Cadastrados (se informado)'}</td><td>${escape(dateBR(g.data_cobranca))}</td><td><button type="button" class="btn secondary" data-garage-edit="${escape(g.id)}">Editar</button> <button type="button" class="btn secondary" data-garage-staff="${escape(g.id)}">Funcionários</button></td></tr>`).join('')||'<tr><td colspan="7">Nenhuma garagem encontrada.</td></tr>'}
+ function renderStaff(){ $('retiranteRows').innerHTML=retirantes.map(r=>`<tr><td>${escape(r.nome)}</td><td>${escape(r.telefone||'—')}</td><td>${r.autorizado?'🟢 Autorizado':'🔴 Não autorizado'}</td><td><button type="button" class="btn secondary" data-staff-edit="${escape(r.id)}">Editar</button></td></tr>`).join('')||'<tr><td colspan="4">Nenhum retirante cadastrado. Isso não impede o fiado da garagem.</td></tr>'}
+ async function loadGarages(){if(!db)return;say('Carregando garagens...');const {data,error}=await db.from('clientes_pdv').select('id,nome,responsavel,telefone,cpf,cnpj,endereco,data_cobranca,fiado_autorizado,politica_retirada,observacoes').order('nome').limit(1000);
+  if(error){say('⚠️ '+error.message+' — execute o SQL desta atualização no Supabase de testes.');return}
+  garagens=data||[];renderGarages();say('✅ '+garagens.length+' garagem(ns) carregada(s).');if(selectedGarage){const g=garagens.find(x=>x.id===selectedGarage);if(g)$('retirantesSubtitle').textContent='Garagem selecionada: '+g.nome+' • identificação opcional na futura venda.';else{selectedGarage=null;staffControls(false);retirantes=[];renderStaff()}}}
+ async function loadStaff(){if(!db||!selectedGarage)return;const seq=++requestSeq;sayStaff('Carregando funcionários...');const id=selectedGarage;
+  const {data,error}=await db.from('retirantes_pdv').select('id,cliente_id,nome,telefone,autorizado').eq('cliente_id',id).order('nome').limit(1000);
+  if(seq!==requestSeq||id!==selectedGarage)return;
+  if(error){sayStaff('⚠️ '+error.message+' — execute o SQL desta atualização.');return}
+  retirantes=data||[];renderStaff();sayStaff('✅ '+retirantes.length+' retirante(s) cadastrado(s). O nome é opcional na venda.')}
+ function chooseGarage(id){const g=garagens.find(x=>x.id===id);if(!g)return;selectedGarage=id;retirantes=[];resetStaff();staffControls(true);$('retirantesSubtitle').textContent='Garagem selecionada: '+g.nome+' • identificação opcional na futura venda.';renderStaff();loadStaff();$('retirantesPanel').scrollIntoView({behavior:'smooth',block:'start'})}
+ function editGarage(id){const g=garagens.find(x=>x.id===id);if(!g)return;editingGarage=id;
+  for(const [id,value] of Object.entries({clientName:g.nome,clientOwner:g.responsavel,clientPhone:g.telefone,clientCpf:g.cpf,clientCnpj:g.cnpj,clientAddress:g.endereco,clientDue:g.data_cobranca,clientNotes:g.observacoes}))$(id).value=value||'';
+  $('clientCredit').value=String(g.fiado_autorizado);$('clientPolicy').value=g.politica_retirada||'cadastrados';$('clientFormTitle').textContent='Editar garagem / revenda';window.scrollTo({top:0,behavior:'smooth'})}
+ function show(){if(!db){alert('Entre como administrador primeiro.');return}for(const id of ['dashboard','stockView','employeePanel','historyView','reportsView'])$(id).style.display='none';$('clientsView').style.display='block';document.querySelectorAll('.nav-button').forEach(n=>n.classList.remove('selected'));$('navClients').classList.add('selected');loadGarages()}
+ $('navClients').addEventListener('click',show);
+ $('clientsBack').addEventListener('click',()=>{$('clientsView').style.display='none';$('dashboard').style.display='block';$('navClients').classList.remove('selected');$('navDashboard').classList.add('selected')});
+ $('clientRefresh').addEventListener('click',loadGarages);$('clientSearch').addEventListener('input',renderGarages);$('clientReset').addEventListener('click',resetGarage);
+ $('clientRows').addEventListener('click',e=>{const edit=e.target.closest('[data-garage-edit]');const staff=e.target.closest('[data-garage-staff]');if(edit)editGarage(edit.dataset.garageEdit);else if(staff)chooseGarage(staff.dataset.garageStaff)});
+ $('clientSave').addEventListener('click',async()=>{if(!db)return;const nome=$('clientName').value.trim();if(nome.length<2){say('Informe o nome da garagem.');return}
+  const cpf=$('clientCpf').value.replace(/\D/g,''),cnpj=$('clientCnpj').value.replace(/\D/g,'');if(cpf&&cpf.length!==11){say('CPF deve ter 11 dígitos ou ficar em branco.');return}if(cnpj&&cnpj.length!==14){say('CNPJ deve ter 14 dígitos ou ficar em branco.');return}
+  const obj={nome,responsavel:$('clientOwner').value.trim()||null,telefone:$('clientPhone').value.trim()||null,cpf:cpf||null,cnpj:cnpj||null,endereco:$('clientAddress').value.trim()||null,data_cobranca:$('clientDue').value||null,fiado_autorizado:$('clientCredit').value==='true',politica_retirada:$('clientPolicy').value,observacoes:$('clientNotes').value.trim()||null,atualizado_em:new Date().toISOString()};
+  const b=$('clientSave');b.disabled=true;say('Salvando garagem...');try{const query=editingGarage?db.from('clientes_pdv').update(obj).eq('id',editingGarage):db.from('clientes_pdv').insert(obj);const {error}=await query;if(error)throw error;resetGarage();await loadGarages();say('✅ Garagem salva.')}catch(e){say('⚠️ '+(e?.message||e))}finally{b.disabled=false}});
+ $('retirantesRefresh').addEventListener('click',loadStaff);$('retiranteReset').addEventListener('click',resetStaff);
+ $('retiranteRows').addEventListener('click',e=>{const b=e.target.closest('[data-staff-edit]');if(!b)return;const r=retirantes.find(x=>x.id===b.dataset.staffEdit);if(!r)return;editingRetirante=r.id;$('retiranteName').value=r.nome;$('retirantePhone').value=r.telefone||'';$('retiranteAllowed').value=String(r.autorizado);$('retiranteName').focus()});
+ $('retiranteSave').addEventListener('click',async()=>{if(!db||!selectedGarage)return;const nome=$('retiranteName').value.trim();if(nome.length<2){sayStaff('Informe o nome do retirante.');return}
+  const obj={cliente_id:selectedGarage,nome,telefone:$('retirantePhone').value.trim()||null,autorizado:$('retiranteAllowed').value==='true',atualizado_em:new Date().toISOString()};
+  const b=$('retiranteSave');b.disabled=true;sayStaff('Salvando retirante...');try{const query=editingRetirante?db.from('retirantes_pdv').update(obj).eq('id',editingRetirante).eq('cliente_id',selectedGarage):db.from('retirantes_pdv').insert(obj);const {error}=await query;if(error)throw error;resetStaff();await loadStaff();sayStaff('✅ Retirante salvo. Seu preenchimento continuará opcional nas futuras vendas.')}catch(e){sayStaff('⚠️ '+(e?.message||e))}finally{b.disabled=false}});
+ window.addEventListener('pdv-client-session',e=>{db=e.detail?.admin?e.detail?.client:null;$('navClients').style.display=db?'block':'none';if(!db){$('clientsView').style.display='none';garagens=[];retirantes=[];selectedGarage=null;requestSeq++;resetGarage();resetStaff();staffControls(false)}});
+})();
+</script>
+<script>
+// Fiado TESTE: painel do administrador; todas as mutacoes financeiras via RPC no banco.
+(()=>{'use strict';const $=id=>document.getElementById(id);const money=x=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(x)||0);
+const escape=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateBR=d=>d?String(d).split('-').reverse().join('/'):'A combinar';
+let db=null,garages=[],movements=[],orders=[],busy=false,paymentOperation=null;
+const note=t=>$('fiadoAdminMsg').textContent=t;
+async function refresh(){if(!db)return;note('Carregando fiado...');$('fiadoAdminRefresh').disabled=true;
+try{const [c,g,m,o]=await Promise.all([db.from('fiado_config_teste').select('exigir_aprovacao').eq('id',1).single(),db.from('clientes_pdv').select('id,nome,data_cobranca').order('nome').limit(1000),db.from('fiado_movimentos_teste').select('id,cliente_id,pedido_id,tipo,valor,forma,criado_em').order('criado_em',{ascending:false}).limit(2000),db.from('fiado_pedidos_teste').select('id,cliente_id,total,status,retirante_nome,retirante_id,criada_em').order('criada_em',{ascending:false}).limit(1000)]);
+for(const r of [c,g,m,o])if(r.error)throw r.error;if((m.data||[]).length>=2000)throw Error('Limite de 2.000 movimentações atingido; não é seguro calcular saldo sem paginação.');
+$('fiadoRequireApproval').checked=c.data?.exigir_aprovacao!==false;garages=g.data||[];movements=m.data||[];orders=o.data||[];
+const selectedPay=$('fiadoPayGarage').value,selectedLedger=$('fiadoLedgerGarage').value;
+for(const id of ['fiadoPayGarage','fiadoLedgerGarage']){const sel=$(id);sel.replaceChildren(new Option('Selecione uma garagem',''));for(const x of garages)sel.add(new Option(x.nome,x.id))}
+$('fiadoPayGarage').value=selectedPay;$('fiadoLedgerGarage').value=selectedLedger;
+const names=Object.fromEntries(garages.map(x=>[x.id,x.nome]));
+$('fiadoPendingRows').innerHTML=orders.filter(x=>x.status==='pendente').map(x=>`<tr><td>${escape(new Date(x.criada_em).toLocaleString('pt-BR'))}</td><td>${escape(names[x.cliente_id]||'—')}</td><td>${escape(money(x.total))}</td><td>${escape(x.retirante_nome||'Opcional / não informado')}</td><td><button type="button" class="btn secondary" data-fiado-view="${escape(x.id)}">Ver itens</button> <button type="button" class="btn secondary" data-fiado-decision="approve" data-id="${escape(x.id)}">Aprovar</button> <button type="button" class="btn secondary" data-fiado-decision="reject" data-id="${escape(x.id)}">Recusar</button></td></tr>`).join('')||'<tr><td colspan="5">Nenhuma aprovação pendente.</td></tr>';
+$('fiadoBalanceRows').innerHTML=garages.map(g=>{const arr=movements.filter(x=>x.cliente_id===g.id),buy=arr.filter(x=>x.tipo==='compra').reduce((a,x)=>a+Number(x.valor),0),pay=arr.filter(x=>x.tipo==='pagamento').reduce((a,x)=>a+Number(x.valor),0),ret=arr.filter(x=>x.tipo==='devolucao').reduce((a,x)=>a+Number(x.valor),0),refund=arr.filter(x=>x.tipo==='reembolso').reduce((a,x)=>a+Number(x.valor),0),balance=Math.round((buy+refund-pay-ret)*100)/100;return `<tr><td>${escape(g.nome)}</td><td>${escape(money(buy))}</td><td>${escape(money(pay))}</td><td><b>${balance<0?'Crédito: '+escape(money(-balance)):escape(money(balance))}</b></td><td>${escape(dateBR(g.data_cobranca))}</td></tr>`}).join('')||'<tr><td colspan="5">Nenhuma garagem cadastrada.</td></tr>';
+const perGarage={};for(const x of movements){perGarage[x.cliente_id]=(perGarage[x.cliente_id]||0)+(['compra','reembolso'].includes(x.tipo)?Number(x.valor):-Number(x.valor))}const balances=Object.values(perGarage);$('fiadoDashboardTotal').textContent=money(balances.reduce((a,b)=>a+Math.max(0,b),0));$('fiadoDashboardCredit').textContent='Créditos disponíveis: '+money(balances.reduce((a,b)=>a+Math.max(0,-b),0));renderLedger();note('✅ '+orders.filter(x=>x.status==='pendente').length+' pedido(s) pendente(s). '+movements.length+' movimento(s) carregado(s).');
+}catch(e){note('⚠️ '+(e.message||e)+'. Confira o SQL da Etapa 2.')}finally{$('fiadoAdminRefresh').disabled=false}}
+function renderLedger(){const id=$('fiadoLedgerGarage').value;const rows=movements.filter(x=>x.cliente_id===id);$('fiadoLedgerRows').innerHTML=rows.map(x=>`<tr><td>${escape(new Date(x.criado_em).toLocaleString('pt-BR'))}</td><td>${(({compra:'Compra fiada',pagamento:'Pagamento',devolucao:'Devolução',reembolso:'Reembolso externo'})[x.tipo]||escape(x.tipo))}</td><td>${escape(money(x.valor))}</td><td>${escape(x.forma||'—')}</td></tr>`).join('')||'<tr><td colspan="4">Nenhuma movimentação para esta garagem.</td></tr>'}
+$('fiadoLedgerGarage').addEventListener('change',renderLedger);$('fiadoAdminRefresh').addEventListener('click',refresh);
+$('fiadoSaveApproval').addEventListener('click',async()=>{if(!db||busy)return;if(!confirm('Alterar exigência de aprovação de fiado? Essa regra será aplicada no Supabase.'))return;busy=true;try{const {error}=await db.rpc('fiado_configurar_aprovacao_teste',{p_exigir_aprovacao:$('fiadoRequireApproval').checked});if(error)throw error;note('✅ Configuração salva no Supabase.')}catch(e){note('⚠️ '+e.message)}finally{busy=false}});
+$('fiadoPendingRows').addEventListener('click',async e=>{const v=e.target.closest('[data-fiado-view]');if(v&&db){const {data,error}=await db.from('fiado_itens_teste').select('descricao,quantidade,preco_unitario,subtotal').eq('pedido_id',v.dataset.fiadoView);$('fiadoPendingDetail').textContent=error?'⚠️ '+error.message:(data||[]).map(x=>x.quantidade+'x '+x.descricao+' • '+money(x.subtotal)).join(' | ')||'Nenhum item encontrado.';return}const b=e.target.closest('[data-fiado-decision]');if(!b||!db||busy)return;const yes=b.dataset.fiadoDecision==='approve';if(!confirm(yes?'Aprovar fiado de TESTE e baixar estoque fictício?':'Recusar esta solicitação de TESTE?'))return;busy=true;b.disabled=true;try{const {error}=await db.rpc('fiado_decidir_pedido_teste',{p_pedido_id:b.dataset.id,p_aprovar:yes});if(error)throw error;await refresh();note(yes?'✅ Fiado aprovado, estoque fictício baixado.':'✅ Pedido recusado; estoque não alterado.')}catch(err){note('⚠️ '+(err.message||err))}finally{busy=false;b.disabled=false}});
+$('fiadoPaySubmit').addEventListener('click',async()=>{if(!db||busy)return;const id=$('fiadoPayGarage').value;const str=$('fiadoPayValue').value.trim();if(!id||!/^\d{1,7}(?:[,.]\d{1,2})?$/.test(str)){ $('fiadoPayMsg').textContent='Selecione a garagem e informe valor válido.';return}const value=Number(str.replace(',','.'));if(value<=0){$('fiadoPayMsg').textContent='Valor precisa ser positivo.';return}
+if(!paymentOperation){if(!confirm('Registrar pagamento de TESTE de '+money(value)+'? Não movimenta o caixa normal.'))return;paymentOperation=crypto.randomUUID()}
+busy=true;try{const {data,error}=await db.rpc('fiado_registrar_pagamento_teste',{p_operacao_id:paymentOperation,p_cliente_id:id,p_valor:value,p_forma:$('fiadoPayMethod').value});if(error)throw error;paymentOperation=null;$('fiadoPayValue').value='';await refresh();$('fiadoPayMsg').textContent='✅ Pagamento de TESTE registrado.'+(data?.duplicada?' Operação anterior reconhecida.':'')}catch(e){$('fiadoPayMsg').textContent='⚠️ '+(e.message||e)+'. Se houve falha de rede, confira o extrato antes de tentar outra operação.'}finally{busy=false}});
+window.addEventListener('pdv-client-session',e=>{db=e.detail?.admin?e.detail.client:null;if(db)refresh();else{garages=[];orders=[];movements=[];paymentOperation=null}});
+$('navClients').addEventListener('click',()=>{if(db)refresh()});window.addEventListener('pdv-fiado-refresh',()=>{if(db)refresh()});
+})();
+</script>
+<script>
+// ETAPA 3: devolucoes de fiado ficticio. Alteracoes SOMENTE por RPC no Supabase.
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v)||0);
+let db=null,isAdmin=false,permissionRefund=false,adminBusy=false,returns=[];
+const names={};
+function dateTime(s){return s?new Date(s).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'}):'—'}
+function setupForm(prefix){
+ let garages=[],sales=[],items=[],busy=false,opId=null,seq=0;
+ const say=t=>$(prefix+'Msg').textContent=t;
+ const total=()=>{
+  let cents=0;
+  for(const i of items){const el=document.querySelector(`#${prefix}Items input[data-return-qty="${i.id}"]`);const qty=Number(el?.value||0);if(Number.isInteger(qty)&&qty>0&&qty<=i.disponivel)cents+=Math.round(Number(i.preco_unitario)*100)*qty}
+  $(prefix+'Total').textContent=brl(cents/100);return cents;
+ };
+ function clearItems(){items=[];$(prefix+'Items').innerHTML='<tr><td colspan="5">Selecione uma venda fiada.</td></tr>';total()}
+ function newOperation(){opId=null;$(prefix+'Reason').value='';$(prefix+'Destination').value='credito';$(prefix+'Method').value='pix';showMethod();clearItems();if($(prefix+'Sale').value)loadItems();say('Nova operação pronta.');}
+ function showMethod(){const show=$(prefix+'Destination').value==='reembolso';$(prefix+'MethodLabel').style.display=show?'block':'none'}
+ async function loadGarages(){if(!db)return;const stamp=++seq;say('Carregando garagens...');
+  const {data,error}=await db.rpc('fiado_listar_garagens_teste');if(stamp!==seq)return;
+  if(error){say('⚠️ '+error.message);return}garages=data||[];
+  const old=$(prefix+'Garage').value;$(prefix+'Garage').replaceChildren(new Option('Selecione uma garagem',''));
+  for(const g of garages)$(prefix+'Garage').add(new Option(g.nome,g.id));$(prefix+'Garage').value=garages.some(g=>g.id===old)?old:'';
+  if($(prefix+'Garage').value)await loadSales();else{clearItems();$(prefix+'Sale').replaceChildren(new Option('Selecione a garagem primeiro',''));say('Selecione uma garagem parceira.')}}
+ async function loadSales(){const id=$(prefix+'Garage').value;const stamp=++seq;clearItems();sales=[];
+  $(prefix+'Sale').replaceChildren(new Option(id?'Carregando vendas...':'Selecione uma garagem',''));
+  if(!id)return;
+  const {data,error}=await db.rpc('fiado_listar_vendas_devolucao_teste',{p_cliente_id:id});if(stamp!==seq)return;
+  if(error){say('⚠️ '+error.message);return}sales=data||[];
+  $(prefix+'Sale').replaceChildren(new Option('Selecione a venda original',''));
+  for(const s of sales)$(prefix+'Sale').add(new Option(`${dateTime(s.criada_em)} — ${brl(s.total)} — ${s.id.slice(0,8)}`,s.id));
+  say(sales.length?`${sales.length} venda(s) fiada(s) disponível(is).`:'Nenhuma venda fiada finalizada para esta garagem.');}
+ async function loadItems(){const id=$(prefix+'Sale').value;const stamp=++seq;clearItems();if(!id)return;
+  const {data,error}=await db.rpc('fiado_listar_itens_devolucao_teste',{p_pedido_id:id});if(stamp!==seq)return;
+  if(error){say('⚠️ '+error.message);return}items=data||[];
+  $(prefix+'Items').innerHTML=items.map(i=>`<tr><td>${esc(i.descricao)}<br><small>${esc(brl(i.preco_unitario))} / unidade</small></td><td>${esc(i.disponivel)} de ${esc(i.quantidade)}</td><td><input aria-label="Quantidade de ${esc(i.descricao)}" type="number" min="0" max="${esc(i.disponivel)}" step="1" value="0" data-return-qty="${esc(i.id)}" ${i.disponivel<=0?'disabled':''}></td><td><input aria-label="Retornar ${esc(i.descricao)} ao estoque" type="checkbox" data-return-stock="${esc(i.id)}" checked ${i.disponivel<=0?'disabled':''}></td><td data-return-subtotal="${esc(i.id)}">${brl(0)}</td></tr>`).join('')||'<tr><td colspan="5">Venda sem itens.</td></tr>';
+  total();say('Informe a quantidade de cada item devolvido e se volta ao estoque.');}
+ $(prefix+'Garage').addEventListener('change',()=>{opId=null;loadSales()});
+ $(prefix+'Sale').addEventListener('change',()=>{opId=null;loadItems()});
+ $(prefix+'Destination').addEventListener('change',showMethod);
+ $(prefix+'Items').addEventListener('input',()=>{for(const i of items){const el=document.querySelector(`#${prefix}Items input[data-return-qty="${i.id}"]`);const qty=Number(el?.value||0);const subtotal=Number.isInteger(qty)&&qty>=0&&qty<=i.disponivel?Math.round(Number(i.preco_unitario)*100)*qty:0;const td=document.querySelector(`#${prefix}Items [data-return-subtotal="${i.id}"]`);if(td)td.textContent=brl(subtotal/100)}total()});
+ $(prefix+'Refresh').addEventListener('click',()=>{if(!db)return;opId=null;loadGarages()});
+ $(prefix+'New').addEventListener('click',newOperation);
+ $(prefix+'Submit').addEventListener('click',async()=>{
+  if(!db||busy)return;
+  const pedido=$(prefix+'Sale').value,reason=$(prefix+'Reason').value.trim();
+  const selected=[];for(const i of items){const input=document.querySelector(`#${prefix}Items input[data-return-qty="${i.id}"]`);const q=Number(input?.value||0);
+   if(!Number.isInteger(q)||q<0||q>i.disponivel){say('⚠️ Confira as quantidades: não podem exceder o saldo da venda.');return}
+   if(q>0){const stock=document.querySelector(`#${prefix}Items input[data-return-stock="${i.id}"]`);selected.push({item_id:i.id,quantidade:q,retornar_estoque:!!stock?.checked})}}
+  if(!pedido||!selected.length||reason.length<5){say('⚠️ Selecione a venda, ao menos um item e informe o motivo (mínimo 5 caracteres).');return}
+  const dest=$(prefix+'Destination').value,method=dest==='reembolso'?$(prefix+'Method').value:null;
+  if(dest==='reembolso'&&!permissionRefund){say('⚠️ Seu perfil não tem permissão para registrar reembolso. Escolha crédito.');return}
+  if(!opId){const explanation=dest==='reembolso'?'ATENÇÃO: esta opção registra que o reembolso externo já foi efetivamente pago. O PDV NÃO transfere dinheiro. Se houver excedente, confirma que o reembolso correspondente foi realizado fora do sistema?':'O valor devolvido abate a dívida e o excedente vira crédito para futuras compras.';
+   if(!confirm('Confirmar devolução fictícia de '+brl(total()/100)+'?\n'+explanation))return;opId=crypto.randomUUID()}
+  busy=true;$(prefix+'Submit').disabled=true;say('Registrando devolução no Supabase...');
+  try{const {data,error}=await db.rpc('fiado_solicitar_devolucao_teste',{p_operacao_id:opId,p_pedido_id:pedido,p_itens:selected,p_motivo:reason,p_destino_excedente:dest,p_forma_reembolso:method});if(error)throw error;
+   const status=data?.status==='pendente'?'⏳ Solicitação pendente de aprovação.':'✅ Devolução concluída.';
+   const suffix=Number(data?.reembolso)>0?' Reembolso externo registrado: '+brl(data.reembolso)+'.':'';
+   opId=null;await loadItems();say(status+suffix+(data?.duplicada?' Operação já registrada anteriormente.':''));
+   window.dispatchEvent(new Event('pdv-fiado-refresh'));if(isAdmin)refreshAdmin();
+  }catch(e){say('⚠️ '+(e.message||e)+' — operação preservada. Consulte o histórico antes de clicar em Nova devolução.')}finally{busy=false;$(prefix+'Submit').disabled=false}
+ });
+ return {loadGarages,reset:()=>{garages=[];sales=[];items=[];opId=null;seq++;$(prefix+'Garage').replaceChildren(new Option('Selecione...',''));$(prefix+'Sale').replaceChildren(new Option('Selecione...',''));clearItems();say('Faça login para utilizar.')}};
+}
+const employeeForm=setupForm('employeeReturn'),adminForm=setupForm('adminReturn');
+const note=t=>$('returnAdminMsg').textContent=t;
+async function refreshAdmin(){if(!db||!isAdmin)return;
+ note('Carregando devoluções...');$('returnAdminRefresh').disabled=true;
+ try{const [conf,dev,gar]=await Promise.all([
+  db.from('fiado_config_teste').select('exigir_aprovacao_devolucao,permitir_reembolso_funcionario').eq('id',1).single(),
+  db.from('fiado_devolucoes_teste').select('id,cliente_id,pedido_id,total,valor_reembolsado,status,destino_excedente,forma_reembolso,criada_em').order('criada_em',{ascending:false}).limit(500),
+  db.from('clientes_pdv').select('id,nome').limit(1000)
+ ]);for(const r of [conf,dev,gar])if(r.error)throw r.error;
+ $('returnRequireApproval').checked=conf.data?.exigir_aprovacao_devolucao!==false;
+ $('returnEmployeeRefund').checked=conf.data?.permitir_reembolso_funcionario===true;
+ permissionRefund=true;returns=dev.data||[];for(const g of gar.data||[])names[g.id]=g.nome;
+ $('returnPendingRows').innerHTML=returns.filter(r=>r.status==='pendente').map(r=>`<tr><td>${esc(dateTime(r.criada_em))}</td><td>${esc(names[r.cliente_id]||'—')}</td><td>${esc(brl(r.total))}</td><td>${r.destino_excedente==='credito'?'Crédito':'Reembolso '+esc(r.forma_reembolso||'')}</td><td><button type="button" class="btn secondary" data-return-view="${esc(r.id)}">Ver itens</button> <button type="button" class="btn secondary" data-return-decision="approve" data-id="${esc(r.id)}">Aprovar</button> <button type="button" class="btn secondary" data-return-decision="reject" data-id="${esc(r.id)}">Recusar</button></td></tr>`).join('')||'<tr><td colspan="5">Nenhuma devolução aguardando aprovação.</td></tr>';
+ $('returnHistoryRows').innerHTML=returns.map(r=>`<tr><td>${esc(dateTime(r.criada_em))}</td><td>${esc(names[r.cliente_id]||'—')}</td><td>${esc(brl(r.total))}</td><td>${esc(brl(r.valor_reembolsado))}</td><td>${esc(({pendente:'Pendente',concluida:'Concluída',recusada:'Recusada'})[r.status]||r.status)}</td></tr>`).join('')||'<tr><td colspan="5">Nenhuma devolução.</td></tr>';
+ note('✅ '+returns.length+' devolução(ões) carregada(s). '+returns.filter(r=>r.status==='pendente').length+' pendente(s).');
+ }catch(e){note('⚠️ '+(e.message||e)+' — execute o SQL da Etapa 3 no Supabase de TESTE.')}finally{$('returnAdminRefresh').disabled=false}
+}
+$('returnAdminRefresh').addEventListener('click',refreshAdmin);
+$('returnSaveSettings').addEventListener('click',async()=>{if(!db||!isAdmin||adminBusy)return;
+ if(!confirm('Salvar permissões de devolução no Supabase de TESTE?'))return;
+ adminBusy=true;try{const {error}=await db.rpc('fiado_configurar_devolucoes_teste',{p_exigir_aprovacao:$('returnRequireApproval').checked,p_permitir_reembolso_funcionario:$('returnEmployeeRefund').checked});if(error)throw error;await refreshAdmin();note('✅ Permissões de devolução salvas.')}catch(e){note('⚠️ '+e.message)}finally{adminBusy=false}
+});
+$('returnPendingRows').addEventListener('click',async e=>{
+ const view=e.target.closest('[data-return-view]');if(view&&db){const {data,error}=await db.from('fiado_devolucao_itens_teste').select('quantidade,subtotal,retornar_estoque,item_id').eq('devolucao_id',view.dataset.returnView);
+  if(error){$('returnPendingDetail').textContent='⚠️ '+error.message;return}
+  const items=data||[];const ids=items.map(x=>x.item_id);const details=ids.length?await db.from('fiado_itens_teste').select('id,descricao').in('id',ids):{data:[]};
+  const map=Object.fromEntries((details.data||[]).map(i=>[i.id,i.descricao]));
+  $('returnPendingDetail').textContent=items.map(i=>`${i.quantidade}x ${map[i.item_id]||'Item'} — ${brl(i.subtotal)} — ${i.retornar_estoque?'volta ao estoque':'sem retorno ao estoque'}`).join(' | ')||'Nenhum item.';return}
+ const b=e.target.closest('[data-return-decision]');if(!b||!db||!isAdmin||adminBusy)return;
+ const r=returns.find(x=>x.id===b.dataset.id);if(!r)return;const approve=b.dataset.returnDecision==='approve';
+ const text=approve?(r.destino_excedente==='reembolso'?'ATENÇÃO: o sistema NÃO envia dinheiro. Confirme apenas se o reembolso externo necessário já foi realizado. Aprovar devolução fictícia?':'Aprovar devolução fictícia, abater dívida e atualizar estoque?'):'Recusar esta devolução fictícia?';
+ if(!confirm(text))return;adminBusy=true;b.disabled=true;
+ try{const {data,error}=await db.rpc('fiado_decidir_devolucao_teste',{p_devolucao_id:r.id,p_aprovar:approve});if(error)throw error;
+  await refreshAdmin();window.dispatchEvent(new Event('pdv-fiado-refresh'));
+  note(approve?'✅ Devolução aprovada. Reembolso externo registrado: '+brl(data?.reembolso||0):'✅ Solicitação recusada.');
+ }catch(err){note('⚠️ '+(err.message||err))}finally{adminBusy=false;b.disabled=false}
+});
+window.addEventListener('pdv-client-session',async e=>{
+ db=e.detail?.client||null;isAdmin=!!e.detail?.admin;permissionRefund=isAdmin;
+ if(!db){employeeForm.reset();adminForm.reset();returns=[];return}
+ try{const {data,error}=await db.rpc('fiado_pode_reembolsar_teste');if(!error)permissionRefund=!!data}catch(_){}
+ for(const prefix of ['employeeReturn','adminReturn']){
+  const option=$(prefix+'Destination').querySelector('option[value="reembolso"]');option.disabled=!permissionRefund;
+  if(!permissionRefund&&$(prefix+'Destination').value==='reembolso')$(prefix+'Destination').value='credito';
+ }
+ if(isAdmin){adminForm.loadGarages();refreshAdmin()}else employeeForm.loadGarages();
+});
+window.addEventListener('pdv-fiado-refresh',()=>{if(isAdmin)refreshAdmin()});
+$('navClients').addEventListener('click',()=>{if(isAdmin){adminForm.loadGarages();refreshAdmin()}});
+})();
+
+</script></body></html>

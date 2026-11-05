@@ -1,0 +1,21 @@
+CASA DOS ACESSÓRIOS — PDV (AMBIENTE DE TESTES)
+
+ARQUIVO PRINCIPAL: index.html
+
+COMO PUBLICAR PELO SITE DO GITHUB
+1. Abra o repositório casa-dos-acessorios-pdv.
+2. Clique no link "uploading an existing file" (ou Add file > Upload files).
+3. Envie o arquivo index.html (não o ZIP) e clique em "Commit changes".
+4. Vá em Settings > Pages.
+5. Em Build and deployment, escolha "Deploy from a branch".
+6. Escolha branch "main" e pasta "/ (root)"; clique em Save.
+7. Aguarde a publicação e abra o endereço que aparecer em GitHub Pages.
+
+OBSERVAÇÕES IMPORTANTES
+- Este pacote é apenas uma cópia estática do HTML recebido. Não executa SQL nem modifica o Supabase.
+- Dados de produtos, vendas e fiado existentes permanecem no Supabase, desde que o aplicativo se conecte ao mesmo projeto.
+- O arquivo contém a URL pública do projeto Supabase e solicita a chave publishable no login. Não publique credenciais secretas.
+- Antes de usar em produção, é necessário auditar as políticas RLS, funções RPC, permissões e regras de autenticação do Supabase.
+- Se a recuperação de senha não funcionar no novo endereço, configure o URL de redirecionamento do GitHub Pages no Supabase Auth.
+- GitHub Pages é hospedagem estática; não é substituto para o banco de dados Supabase.
+- Não apague seu site anterior nem o projeto Supabase para realizar esta publicação.
