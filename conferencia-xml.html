@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Casa dos Acessórios | Conferência de XML — TESTE</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,Segoe UI,Arial,sans-serif}*{box-sizing:border-box}body{background:#07111f;color:#f2f7ff;margin:0;padding:24px}main{max-width:1200px;margin:auto}a{color:#92c6ff}.panel{background:#101f37;border:1px solid #304661;border-radius:16px;padding:20px;margin:16px 0}h1{font-size:26px}h2{font-size:19px}.sub{color:#b3c9dd}.warn{background:#33281a;border-color:#805b25;color:#ffe0a6}.ok{color:#9bf1c8}.err{color:#ffc3bd}input[type=file]{display:block;padding:12px;width:100%;background:#091a2e;border:1px solid #45627e;border-radius:10px;color:white}button{padding:12px;background:#237cfa;border:0;border-radius:9px;color:#fff;font-weight:700;cursor:pointer}button:disabled{opacity:.5}table{width:100%;border-collapse:collapse;min-width:750px;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid #344964}th{background:#182b44}.scroll{overflow:auto}.stats{display:flex;gap:20px;flex-wrap:wrap}.stats strong{font-size:21px}code{color:#fbd39a}footer{font-size:12px;color:#b3c9dd;margin-top:18px}
+</style></head><body><main>
+<p><a href="./index.html">← Voltar ao PDV</a></p>
+<h1>📦 Conferência de mercadorias por XML</h1>
+<p class="sub">Pré-visualização de NF-e de entrada • ambiente de testes</p>
+<section class="panel warn"><strong>Somente conferência — nenhuma entrada é registrada.</strong> O XML é lido localmente neste navegador; esta página não envia o arquivo ao Supabase, não cria produtos e não modifica o estoque. Confira os dados antes de qualquer futura importação.</section>
+<section class="panel"><h2>1. Selecionar arquivo</h2><label for="xmlFile">XML de uma NF-e autorizada ou arquivo de teste</label><input id="xmlFile" type="file" accept=".xml,text/xml,application/xml"><p id="status" class="sub" role="status">Nenhum arquivo selecionado.</p></section>
+<section class="panel" id="preview" hidden><h2>2. Conferir dados da nota</h2><div class="stats"><p><span class="sub">Número</span><br><strong id="number"></strong></p><p><span class="sub">Série</span><br><strong id="serie"></strong></p><p><span class="sub">Itens</span><br><strong id="items"></strong></p><p><span class="sub">Total de produtos</span><br><strong id="sum"></strong></p></div><p><strong>Emitente:</strong> <span id="issuer"></span></p><p><strong>Chave de acesso:</strong> <span id="key"></span></p><p><strong>Situação:</strong> <span id="authorization"></span></p><p class="sub">Quantidades e códigos são os informados pelo fornecedor. O código do fornecedor pode ser diferente do código interno do PDV. Não há correspondência automática nesta etapa.</p>
+<div class="scroll"><table><thead><tr><th>Item</th><th>Código do fornecedor</th><th>EAN</th><th>Descrição</th><th>NCM</th><th>Unidade</th><th>Qtde.</th><th>Valor unitário</th><th>Total</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<footer>Não substitui validação fiscal da nota. Não use a prévia para atualizar estoque real.</footer>
+</main><script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const status=$('status'),preview=$('preview');
+const text=(parent,name)=>{if(!parent)return '';const node=parent.getElementsByTagNameNS('*',name)[0];return node?(node.textContent||'').trim():''};
+const first=(parent,name)=>parent?parent.getElementsByTagNameNS('*',name)[0]:null;
+const fmt=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v)||0);
+const addCell=(tr,value)=>{const td=document.createElement('td');td.textContent=String(value??'');tr.appendChild(td)};
+function fail(message){preview.hidden=true;status.className='err';status.textContent='⚠️ '+message}
+$('xmlFile').addEventListener('change',async()=>{
+ const file=$('xmlFile').files?.[0];preview.hidden=true;
+ if(!file){status.textContent='Nenhum arquivo selecionado.';return}
+ if(file.size>15*1024*1024){fail('Arquivo acima de 15 MB.');return}
+ try{
+  status.className='sub';status.textContent='Lendo XML localmente...';
+  const raw=await file.text();
+  if(/<!DOCTYPE|<!ENTITY/i.test(raw))throw Error('XML com DTD ou entidades não é permitido.');
+  const xml=new DOMParser().parseFromString(raw,'application/xml');
+  if(xml.getElementsByTagName('parsererror').length)throw Error('XML inválido ou malformado.');
+  const inf=first(xml,'infNFe');
+  if(!inf)throw Error('Não foi encontrado infNFe. Selecione um XML de NF-e (modelo 55), não um PDF.');
+  const ide=first(inf,'ide'),emit=first(inf,'emit'),total=first(inf,'ICMSTot');
+  const modelo=text(ide,'mod');
+  if(modelo!=='55')throw Error('Esta etapa aceita somente NF-e modelo 55. Modelo encontrado: '+(modelo||'não informado'));
+  const details=Array.from(inf.getElementsByTagNameNS('*','det'));
+  if(!details.length)throw Error('A nota não contém itens de produtos.');
+  const rows=$('rows');rows.replaceChildren();
+  for(const det of details){
+   const prod=first(det,'prod');
+   if(!prod)throw Error('Item sem informações de produto.');
+   const tr=document.createElement('tr');
+   [det.getAttribute('nItem')||'',text(prod,'cProd'),text(prod,'cEAN'),text(prod,'xProd'),text(prod,'NCM'),text(prod,'uCom'),text(prod,'qCom'),fmt(text(prod,'vUnCom')),fmt(text(prod,'vProd'))].forEach(v=>addCell(tr,v));
+   rows.appendChild(tr);
+  }
+  const protocol=first(xml,'protNFe'),statusCode=text(protocol,'cStat');
+  $('number').textContent=text(ide,'nNF')||'—';
+  $('serie').textContent=text(ide,'serie')||'—';
+  $('items').textContent=details.length;
+  $('sum').textContent=fmt(text(total,'vProd'));
+  $('issuer').textContent=text(emit,'xNome')||'—';
+  $('key').textContent=(inf.getAttribute('Id')||'').replace(/^NFe/,'')||'—';
+  $('authorization').textContent=statusCode==='100'?'Protocolo de autorização informado (cStat 100)':'Autorização não confirmada neste arquivo; verifique com o contador/SEFAZ';
+  status.className='ok';status.textContent='✅ XML interpretado. Confira os dados abaixo; nenhuma informação foi gravada.';
+  preview.hidden=false;
+ }catch(err){fail(err.message||'Não foi possível ler o arquivo.')}
+});
+})();
+</script></body></html>
