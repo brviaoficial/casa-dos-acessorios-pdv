@@ -407,19 +407,14 @@ async function xmlEntryTestCheck(){
  xmlEntryTestReady=false;$('xmlEntryTestSubmit').disabled=true;
  $('xmlEntryTestCheck').disabled=true;$('xmlEntryTestStatus').textContent='Verificando produto fictício e importação anterior...';
  try{
-  const [p,n]=await Promise.all([
-   sessionClient.from('produtos').select('id,nome,codigo,quantidade,ativo').eq('codigo','TESTE-XML-001').limit(2),
-   sessionClient.from('xml_entradas_teste').select('id').eq('chave_nfe',xmlEntryTestKey).limit(1)
-  ]);
+  const p=await sessionClient.from('produtos').select('id,nome,codigo,quantidade,ativo').eq('codigo','TESTE-XML-001').limit(2);
   if(p.error)throw Error('Produto: '+p.error.message);
-  // Uma resposta sem linhas não garante ausência por causa do RLS; o índice UNIQUE protege no servidor.
-  if(n.error)throw Error('Consulta de importações: '+n.error.message);
+  // A tabela de importações não permite SELECT. A chave UNIQUE impede duplicidade no servidor.
   if(sessionClient!==client||!adminAccess)throw Error('Sessão alterada.');
   const products=p.data||[];
   if(products.length!==1||products[0].nome!=='TESTE XML - CALOTA FICTICIA'||products[0].ativo!==true)
    throw Error('Produto fictício ausente, duplicado ou modificado.');
   const qty=Number(products[0].quantidade);
-  if(n.data?.length){$('xmlEntryTestStatus').textContent='✅ Entrada de teste já registrada. Estoque atual: '+qty+'. Não será repetida.';return}
   if(qty!==0)throw Error('Estoque inicial não é zero ('+qty+'). Consulte histórico antes de continuar.');
   // Não confiar na lista vazia sob RLS: a chave UNIQUE no servidor fornece idempotência.
   xmlEntryTestReady=true;$('xmlEntryTestSubmit').disabled=false;
