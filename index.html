@@ -415,6 +415,7 @@ async function xmlEntryTestCheck(){
   if(products.length!==1||products[0].nome!=='TESTE XML - CALOTA FICTICIA'||products[0].ativo!==true)
    throw Error('Produto fictício ausente, duplicado ou modificado.');
   const qty=Number(products[0].quantidade);
+  if(qty===3){$('xmlEntryTestStatus').textContent='✅ Estoque do produto fictício em 3 unidades. Entrada de teste possivelmente concluída; confirme no SQL Editor. Nenhum novo registro será permitido pela tela.';return}
   if(qty!==0)throw Error('Estoque inicial não é zero ('+qty+'). Consulte histórico antes de continuar.');
   // Não confiar na lista vazia sob RLS: a chave UNIQUE no servidor fornece idempotência.
   xmlEntryTestReady=true;$('xmlEntryTestSubmit').disabled=false;
