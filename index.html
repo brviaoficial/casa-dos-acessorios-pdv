@@ -162,6 +162,7 @@ body.recover-mode #recoveryPanel{display:block}
 <div id="xmlCompareResults" hidden>
 <p class="sub" id="xmlCompareNote"></p>
 <p class="sub" id="xmlCompareSummary"></p>
+<div class="actions"><button type="button" class="btn secondary" id="xmlPrepare">🔎 Preparar prévia de entrada</button></div><p id="xmlPrepareStatus" class="msg" role="status">A prévia apenas valida os dados: não grava produtos, notas ou estoque.</p>
 <div class="stock-table"><table><thead><tr><th>Produto da nota</th><th>Código / EAN</th><th>Qtde. na nota</th><th>Recebido (manual)</th><th>Diferença</th><th>Correspondência no PDV</th><th>Estoque PDV</th></tr></thead><tbody id="xmlCompareRows"></tbody></table></div>
 <p class="foot">A correspondência é feita somente por EAN válido ou código interno exato. Nomes parecidos não são associados automaticamente. Diferenças exibidas não são gravadas; confirme manualmente os produtos e quantidades antes de qualquer entrada.</p>
 </div>
@@ -395,6 +396,7 @@ let xmlCompareRowsData=[];
 const xmlTag=(parent,tag)=>{const el=parent?.getElementsByTagNameNS('*',tag)?.[0];return el?(el.textContent||'').trim():''};
 const xmlChild=(parent,tag)=>parent?.getElementsByTagNameNS('*',tag)?.[0]||null;
 function xmlCompareClear(){
+ xmlPrepareReset();
  xmlCompareRowsData=[];$('xmlCompareRows').replaceChildren();$('xmlCompareResults').hidden=true;$('xmlCompareFile').value='';
  $('xmlCompareStatus').textContent='Selecione um XML para começar.';
 }
@@ -455,9 +457,32 @@ function xmlCompareUpdateSummary(){
  });
  $('xmlCompareSummary').textContent=xmlCompareRowsData.length+' itens no XML • '+matched+' com correspondência única no PDV • '+equal+' conferidos • '+different+' com diferença / inválidos • '+unfilled+' sem contagem.';
 }
+/* Etapa 3a: validacao previa; nenhuma gravacao em estoque. */
+function xmlPrepareReset(){
+ $('xmlPrepareStatus').textContent='A prévia apenas valida os dados: não grava produtos, notas ou estoque.';
+}
+$('xmlPrepare').addEventListener('click',()=>{
+ if(!client||!adminAccess){$('xmlPrepareStatus').textContent='⚠️ Entre como administrador.';return}
+ if(!xmlCompareRowsData.length){$('xmlPrepareStatus').textContent='⚠️ Selecione e confira um XML primeiro.';return}
+ const problems=[],ids=new Set();let units=0;
+ xmlCompareRowsData.forEach((item,i)=>{
+  const line=i+1,qty=Number(item.received);
+  if(item.received===''||!Number.isFinite(qty)||qty<0){problems.push('Item '+line+': informe uma quantidade recebida válida.');return}
+  if(Math.abs(qty-item.qty)>0.000001)problems.push('Item '+line+': quantidade recebida diferente da nota; exige conferência manual.');
+  if(!item.match?.product){problems.push('Item '+line+': produto sem correspondência única; cadastre ou vincule antes da entrada.');return}
+  const id=String(item.match.product.id);
+  if(ids.has(id))problems.push('Item '+line+': mesmo produto vinculado a mais de uma linha; exige agrupamento seguro.');
+  ids.add(id);units+=qty;
+ });
+ if(problems.length){
+  $('xmlPrepareStatus').textContent='⛔ Entrada ainda não liberada ('+problems.length+' pendência(s)):\n'+problems.slice(0,12).join('\n')+(problems.length>12?'\n... e outras pendências.':'')+'\nNenhuma alteração foi gravada.';
+ }else{
+  $('xmlPrepareStatus').textContent='✅ Prévia consistente: '+xmlCompareRowsData.length+' item(ns), '+units+' unidade(s), todos com correspondência única e contagem conferida.\nPRÓXIMA ETAPA: vincular chave da NF-e, validar duplicidade no servidor e criar uma transação atômica no Supabase.\nNenhuma alteração foi gravada.';
+ }
+});
 $('xmlCompareClear').addEventListener('click',xmlCompareClear);
 $('xmlCompareFile').addEventListener('change',async function(){
- const file=this.files?.[0];$('xmlCompareResults').hidden=true;xmlCompareRowsData=[];
+ const file=this.files?.[0];$('xmlCompareResults').hidden=true;xmlCompareRowsData=[];xmlPrepareReset();
  if(!file)return;
  if(!client||!adminAccess){$('xmlCompareStatus').textContent='⚠️ Entre como administrador para comparar com o cadastro.';return}
  if(file.size>15*1024*1024){$('xmlCompareStatus').textContent='⚠️ Limite de arquivo: 15 MB.';return}
