@@ -58,7 +58,7 @@ BEGIN
   v_seen := array_append(v_seen,v_produto);
   -- O incremento é atômico, sob bloqueio de linha do UPDATE.
   UPDATE public.produtos
-  SET quantidade = quantidade + v_quantidade
+  SET quantidade = COALESCE(quantidade, 0) + v_quantidade
   WHERE id = v_produto AND ativo = true;
   IF NOT FOUND THEN RAISE EXCEPTION 'Produto não encontrado ou inativo: %',v_produto; END IF;
   v_count := v_count + 1;
