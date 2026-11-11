@@ -412,8 +412,7 @@ async function xmlEntryTestCheck(){
    sessionClient.from('xml_entradas_teste').select('id').eq('chave_nfe',xmlEntryTestKey).limit(1)
   ]);
   if(p.error)throw Error('Produto: '+p.error.message);
-  // A tabela de importações proíbe leitura direta. Logo, uma falha de permissão
-  // impede confirmar o estado e o teste não pode prosseguir neste fluxo.
+  // Uma resposta sem linhas não garante ausência por causa do RLS; o índice UNIQUE protege no servidor.
   if(n.error)throw Error('Consulta de importações: '+n.error.message);
   if(sessionClient!==client||!adminAccess)throw Error('Sessão alterada.');
   const products=p.data||[];
@@ -422,15 +421,34 @@ async function xmlEntryTestCheck(){
   const qty=Number(products[0].quantidade);
   if(n.data?.length){$('xmlEntryTestStatus').textContent='✅ Entrada de teste já registrada. Estoque atual: '+qty+'. Não será repetida.';return}
   if(qty!==0)throw Error('Estoque inicial não é zero ('+qty+'). Consulte histórico antes de continuar.');
-  // A consulta direta à tabela retorna lista vazia sob RLS restrita,
-  // portanto não constitui prova da ausência de uma importação.
-  // Não habilitamos a escrita sem uma checagem segura pelo backend.
-  $('xmlEntryTestStatus').textContent='✅ Produto fictício encontrado com estoque 0. Para habilitar a entrada, precisamos de uma função RPC de consulta segura da chave NF-e; a tabela está protegida contra leitura direta.';
+  // Não confiar na lista vazia sob RLS: a chave UNIQUE no servidor fornece idempotência.
+  xmlEntryTestReady=true;$('xmlEntryTestSubmit').disabled=false;
+  $('xmlEntryTestStatus').textContent='✅ Produto fictício encontrado com estoque 0. Confirme para inserir 3 unidades. A chave única impede repetição.';
  }catch(e){$('xmlEntryTestStatus').textContent='⚠️ '+(e.message||e)}
  finally{$('xmlEntryTestCheck').disabled=false}
 }
 $('xmlEntryTestCheck').addEventListener('click',xmlEntryTestCheck);
-$('xmlEntryTestSubmit').addEventListener('click',()=>{$('xmlEntryTestStatus').textContent='Bloqueado até implementar a consulta segura de duplicidade no servidor.'});
+$('xmlEntryTestSubmit').addEventListener('click',async()=>{
+ if(!xmlEntryTestReady||xmlEntryTestBusy||!client||!adminAccess)return;
+ if(!window.confirm('Registrar exatamente 3 unidades do produto fictício TESTE-XML-001? Isto altera o banco de testes.'))return;
+ const sessionClient=client;xmlEntryTestBusy=true;xmlEntryTestReady=false;
+ $('xmlEntryTestSubmit').disabled=true;
+ $('xmlEntryTestStatus').textContent='Registrando no Supabase...';
+ try{
+  const {data:p,error:e}=await sessionClient.from('produtos').select('id,nome,quantidade,ativo').eq('codigo','TESTE-XML-001').single();
+  if(e)throw e;
+  if(p.nome!=='TESTE XML - CALOTA FICTICIA'||p.ativo!==true||Number(p.quantidade)!==0)throw Error('Produto fictício não está nas condições do teste.');
+  if(sessionClient!==client||!adminAccess)throw Error('Sessão alterada.');
+  const {error}=await sessionClient.rpc('registrar_entrada_xml_teste',{
+    p_chave_nfe:xmlEntryTestKey,
+    p_itens:[{produto_id:p.id,quantidade:'3'}]
+  });
+  if(error)throw error;
+  $('xmlEntryTestStatus').textContent='✅ Solicitação registrada. Atualize a consulta para verificar estoque 3 e uma importação.';
+ }catch(err){
+  $('xmlEntryTestStatus').textContent='⚠️ '+(err.message||err)+' — Consulte o histórico e o estoque antes de repetir.';
+ }finally{xmlEntryTestBusy=false;await xmlEntryTestCheck();}
+});
 /* Conferência XML de NF-e — leitura local + correspondência de produtos, sem gravação. */
 let xmlCompareRowsData=[];
 const xmlTag=(parent,tag)=>{const el=parent?.getElementsByTagNameNS('*',tag)?.[0];return el?(el.textContent||'').trim():''};
