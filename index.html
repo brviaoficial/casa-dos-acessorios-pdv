@@ -154,6 +154,13 @@ body.recover-mode #recoveryPanel{display:block}
  <div class="panel" style="margin-top:15px"><h3>🧾 Últimas 100 movimentações do período</h3><div class="stock-table"><table><thead><tr><th>Data/hora</th><th>Funcionário</th><th>Operação</th><th>Garagem</th><th>Situação</th><th>Valor</th></tr></thead><tbody id="staffReportRecent"><tr><td colspan="6">Consulte o relatório.</td></tr></tbody></table></div><p class="staff-report-muted">Devoluções são atribuídas ao funcionário que realizou a venda original. Solicitações pendentes não entram no faturamento.</p></div>
 </section>
 <section id="stockView" class="stock-view" aria-labelledby="stockTitle"><div class="top"><div><h2 id="stockTitle" style="margin:0">📦 Cadastro de produtos</h2><p class="sub">Acesso exclusivo do administrador • Ambiente de testes</p></div><div class="actions" style="margin:0"><a class="btn secondary" style="text-decoration:none" href="./conferencia-xml.html" target="_blank" rel="noopener noreferrer">📄 Conferir XML de NF-e (sem importar)</a><button type="button" class="btn secondary" id="stockBack">← Voltar ao painel</button></div></div><div class="notice">Cadastros feitos aqui são gravados na tabela <b>produtos</b> do Supabase. <b>Não utilizar como estoque real</b> até finalizar a validação do sistema.</div>
+<section class="panel" id="xmlEntryTestPanel" aria-label="Entrada controlada XML de teste" style="margin-bottom:16px">
+<h3>🧪 Entrada controlada XML — TESTE</h3>
+<p class="sub">Teste separado da importação de NF-e real. Apenas o produto fictício de código <code>TESTE-XML-001</code> pode receber exatamente 3 unidades. Esta operação grava no Supabase e <strong>não valida um XML fiscal</strong>.</p>
+<p class="notice">Execute apenas uma vez após conferir o produto. Repetir o teste com a mesma chave não deve duplicar a entrada. Não use mercadorias reais.</p>
+<div class="actions"><button type="button" class="btn secondary" id="xmlEntryTestCheck">Consultar estado do teste</button><button type="button" class="btn" id="xmlEntryTestSubmit" disabled>Registrar 3 unidades fictícias</button></div>
+<p class="msg" id="xmlEntryTestStatus" role="status">Consulte o estado antes de registrar.</p>
+</section>
 <section class="panel" id="xmlComparePanel" aria-label="Comparar XML com cadastro" style="margin-bottom:16px">
 <h3>📄 Conferência de NF-e XML com produtos cadastrados — TESTE</h3>
 <p class="sub">Selecione um XML de NF-e modelo 55 para comparar códigos e conferir quantidades. <strong>Somente leitura: não cadastra, não dá entrada e não altera o estoque.</strong> O arquivo é interpretado neste navegador; apenas uma consulta de produtos é feita ao Supabase com sua sessão administrativa.</p>
@@ -391,6 +398,53 @@ function stockReset(){stockEditing=null;for(const f of stockFields)$('prod_'+f).
 function stockRender(){const term=$('stockSearch').value.trim().toLocaleLowerCase('pt-BR');const rows=stockItems.filter(p=>[p.nome,p.codigo,p.codigo_barras,p.marca,p.categoria].some(x=>String(x??'').toLocaleLowerCase('pt-BR').includes(term)));$('stockTotal').textContent=rows.length+' de '+stockItems.length+' produto(s)';$('stockRows').innerHTML=rows.map(p=>{const low=Number(p.quantidade||0)<=Number(p.estoque_minimo||0);return `<tr><td><b>${escape(p.nome)}</b><br><span class="muted">${escape(p.marca||p.categoria||'—')}</span></td><td>${escape(p.codigo||'—')}<br><span class="muted">${escape(p.codigo_barras||'—')}</span></td><td>${escape(money(p.preco_venda))}</td><td>${escape(p.quantidade)} ${low?'⚠️':''}</td><td><span class="stock-badge ${p.ativo===false?'off':''}">${p.ativo===false?'Inativo':'Ativo'}</span></td><td><button type="button" data-stock-action="edit" data-id="${escape(p.id)}">Editar</button> <button type="button" data-stock-action="toggle" data-id="${escape(p.id)}">${p.ativo===false?'Ativar':'Desativar'}</button></td></tr>`}).join('')||'<tr><td colspan="6">Nenhum produto encontrado.</td></tr>'}
 async function stockLoad(){if(!client||!adminAccess)return;$('stockRefresh').disabled=true;stockText('Consultando produtos...');try{let items=[],start=0;while(true){const {data,error}=await client.from('produtos').select(stockCols).order('nome',{ascending:true}).range(start,start+499);if(error)throw error;items.push(...data);if(data.length<500)break;start+=500;if(start>20000)throw Error('Muitos produtos para carregar na tela.')}stockItems=items;stockRender();renderStockAlerts(items);entryListRefresh();exitListRefresh();stockText('✅ Produtos carregados.')}catch(e){stockText('⚠️ Consulta: '+e.message)}finally{$('stockRefresh').disabled=false}}
 
+/* Teste controlado separado da importação fiscal. Chave fixa impede duplicação por engano. */
+const xmlEntryTestKey='99999999999999999999999999999999999999999999';
+let xmlEntryTestReady=false,xmlEntryTestBusy=false;
+async function xmlEntryTestCheck(){
+ if(!client||!adminAccess){$('xmlEntryTestStatus').textContent='⚠️ Entre como administrador.';return}
+ const sessionClient=client;
+ xmlEntryTestReady=false;$('xmlEntryTestSubmit').disabled=true;
+ $('xmlEntryTestCheck').disabled=true;$('xmlEntryTestStatus').textContent='Verificando produto fictício e importação anterior...';
+ try{
+  const p=await sessionClient.from('produtos').select('id,nome,codigo,quantidade,ativo').eq('codigo','TESTE-XML-001').limit(2);
+  if(p.error)throw Error('Produto: '+p.error.message);
+  // A tabela de importações não permite SELECT. A chave UNIQUE impede duplicidade no servidor.
+  if(sessionClient!==client||!adminAccess)throw Error('Sessão alterada.');
+  const products=p.data||[];
+  if(products.length!==1||products[0].nome!=='TESTE XML - CALOTA FICTICIA'||products[0].ativo!==true)
+   throw Error('Produto fictício ausente, duplicado ou modificado.');
+  const qty=Number(products[0].quantidade);
+  if(qty===3){$('xmlEntryTestStatus').textContent='✅ Estoque do produto fictício em 3 unidades. Entrada de teste possivelmente concluída; confirme no SQL Editor. Nenhum novo registro será permitido pela tela.';return}
+  if(qty!==0)throw Error('Estoque inicial não é zero ('+qty+'). Consulte histórico antes de continuar.');
+  // Não confiar na lista vazia sob RLS: a chave UNIQUE no servidor fornece idempotência.
+  xmlEntryTestReady=true;$('xmlEntryTestSubmit').disabled=false;
+  $('xmlEntryTestStatus').textContent='✅ Produto fictício encontrado com estoque 0. Confirme para inserir 3 unidades. A chave única impede repetição.';
+ }catch(e){$('xmlEntryTestStatus').textContent='⚠️ '+(e.message||e)}
+ finally{$('xmlEntryTestCheck').disabled=false}
+}
+$('xmlEntryTestCheck').addEventListener('click',xmlEntryTestCheck);
+$('xmlEntryTestSubmit').addEventListener('click',async()=>{
+ if(!xmlEntryTestReady||xmlEntryTestBusy||!client||!adminAccess)return;
+ if(!window.confirm('Registrar exatamente 3 unidades do produto fictício TESTE-XML-001? Isto altera o banco de testes.'))return;
+ const sessionClient=client;xmlEntryTestBusy=true;xmlEntryTestReady=false;
+ $('xmlEntryTestSubmit').disabled=true;
+ $('xmlEntryTestStatus').textContent='Registrando no Supabase...';
+ try{
+  const {data:p,error:e}=await sessionClient.from('produtos').select('id,nome,quantidade,ativo').eq('codigo','TESTE-XML-001').single();
+  if(e)throw e;
+  if(p.nome!=='TESTE XML - CALOTA FICTICIA'||p.ativo!==true||Number(p.quantidade)!==0)throw Error('Produto fictício não está nas condições do teste.');
+  if(sessionClient!==client||!adminAccess)throw Error('Sessão alterada.');
+  const {error}=await sessionClient.rpc('registrar_entrada_xml_teste',{
+    p_chave_nfe:xmlEntryTestKey,
+    p_itens:[{produto_id:p.id,quantidade:'3'}]
+  });
+  if(error)throw error;
+  $('xmlEntryTestStatus').textContent='✅ Solicitação registrada. Atualize a consulta para verificar estoque 3 e uma importação.';
+ }catch(err){
+  $('xmlEntryTestStatus').textContent='⚠️ '+(err.message||err)+' — Consulte o histórico e o estoque antes de repetir.';
+ }finally{xmlEntryTestBusy=false;await xmlEntryTestCheck();}
+});
 /* Conferência XML de NF-e — leitura local + correspondência de produtos, sem gravação. */
 let xmlCompareRowsData=[];
 const xmlTag=(parent,tag)=>{const el=parent?.getElementsByTagNameNS('*',tag)?.[0];return el?(el.textContent||'').trim():''};
