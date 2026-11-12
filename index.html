@@ -172,6 +172,12 @@ body.recover-mode #recoveryPanel{display:block}
 <div class="actions"><button type="button" class="btn secondary" id="xmlPrepare">🔎 Preparar prévia de entrada</button></div><p id="xmlPrepareStatus" class="msg" role="status">A prévia apenas valida os dados: não grava produtos, notas ou estoque.</p>
 <div class="stock-table"><table><thead><tr><th>Produto da nota</th><th>Código / EAN</th><th>Qtde. na nota</th><th>Recebido (manual)</th><th>Diferença</th><th>Correspondência no PDV</th><th>Estoque PDV</th></tr></thead><tbody id="xmlCompareRows"></tbody></table></div>
 <p class="foot">A correspondência é feita somente por EAN válido ou código interno exato. Nomes parecidos não são associados automaticamente. Diferenças exibidas não são gravadas; confirme manualmente os produtos e quantidades antes de qualquer entrada.</p>
+<div class="panel" id="xmlPhase3fPanel">
+<h3>🧪 Fase 3F — Entrada fictícia controlada</h3>
+<p class="sub">Exclusiva para o XML fictício original com calota (+20) e presilha (+100), ambos com estoque atual zero. A gravação só ocorre após sua confirmação e autorização pelo banco. Não é importação fiscal real.</p>
+<div class="actions"><button type="button" class="btn" id="xmlPhase3fSubmit">Registrar entrada fictícia (+20 / +100)</button></div>
+<p id="xmlPhase3fStatus" class="msg" role="status">Preencha as quantidades recebidas no quadro acima e confira o XML antes de registrar.</p>
+</div>
 <div class="panel" id="xmlNewProductsPanel" hidden>
 <h3>🧾 Cadastro assistido de produtos não encontrados — PRÉVIA</h3>
 <p class="sub">Revise código interno, categoria, localização e preço de venda de cada produto novo. Não é feita gravação no Supabase; NCM e custo são apenas informações de referência da nota.</p>
@@ -669,6 +675,68 @@ $('xmlRegisterFictitious').addEventListener('click',async()=>{
  }catch(err){
   status.textContent='⚠️ Não foi possível confirmar o cadastro: '+(err.message||err)+'. Verifique os códigos na lista de produtos ANTES de qualquer nova tentativa; a gravação pode ter sido concluída mesmo se houve falha de comunicação.';
  }finally{xmlFictitiousBusy=false;btn.disabled=false}
+});
+
+/* Fase 3F: único teste de estoque no Supabase. O banco controla autorização,
+   trava de concorrência, duplicidade e transação — nunca confiar só na UI. */
+let xmlPhase3fBusy=false;
+$('xmlPhase3fSubmit').addEventListener('click',async()=>{
+ if(xmlPhase3fBusy)return;
+ const status=$('xmlPhase3fStatus'),btn=$('xmlPhase3fSubmit');
+ if(!client||!adminAccess){status.textContent='⛔ Entre como administrador.';return}
+ const expected={
+  'CALOTA-ARO14':{name:'CALOTA ARO 14 - MODELO TESTE',qty:20,cost:18.50},
+  'PRESILHA-TESTE':{name:'PRESILHA AUTOMOTIVA - MODELO TESTE',qty:100,cost:0.75}
+ };
+ const items=xmlCompareRowsData;
+ if(items.length!==2||new Set(items.map(item=>item.code)).size!==2){
+  status.textContent='⛔ Carregue o XML fictício original com os dois itens esperados.';return;
+ }
+ for(const item of items){
+  const exp=expected[item.code],product=item.match?.product;
+  if(!exp||item.name!==exp.name||Number(item.qty)!==exp.qty
+     ||Number(item.received)!==exp.qty
+     ||Math.abs(Number(item.unitCost)-exp.cost)>0.00001
+     ||String(item.unit||'').trim().toUpperCase()!=='UN'
+     ||(item.ean&&item.ean!=='SEM GTIN')
+     ||!product||String(product.codigo||'')!==item.code
+     ||String(product.nome||'')!==item.name){
+   status.textContent='⛔ Conferência incompleta ou arquivo incorreto. Recarregue o XML fictício, verifique a correspondência e informe 20 calotas e 100 presilhas como recebidas.';return;
+  }
+ }
+ const sessionClient=client;
+ xmlPhase3fBusy=true;btn.disabled=true;
+ try{
+  status.textContent='Consultando estoque atual antes de solicitar a entrada...';
+  const {data:rows,error:readError}=await sessionClient.from('produtos')
+    .select('codigo,nome,quantidade,ativo')
+    .in('codigo',['CALOTA-ARO14','PRESILHA-TESTE']);
+  if(readError)throw readError;
+  if(client!==sessionClient||!adminAccess)throw Error('Sessão alterada durante a consulta.');
+  if(!rows||rows.length!==2||rows.some(row=>{
+    const exp=expected[row.codigo];
+    return !exp||row.nome!==exp.name||Number(row.quantidade)!==0||row.ativo!==true;
+  })){
+   status.textContent='⛔ Estoques ou cadastros não correspondem ao teste. Consulte Produtos/Estoque. Nenhuma solicitação de entrada foi enviada.';return;
+  }
+  if(!window.confirm('CONFIRMAÇÃO: Registrar entrada FICTÍCIA no Supabase? CALOTA-ARO14: 0 → 20 unidades; PRESILHA-TESTE: 0 → 100 unidades. Isso MODIFICA o estoque dos dois produtos de teste.')){
+   status.textContent='Operação cancelada; nenhum registro solicitado.';return;
+  }
+  status.textContent='Enviando entrada fictícia para a função protegida do Supabase...';
+  const {data,error}=await sessionClient.rpc('registrar_entrada_xml_fase3f_teste');
+  if(error)throw error;
+  if(client!==sessionClient||!adminAccess)throw Error('Sessão alterada após a solicitação.');
+  const {data:after,error:afterError}=await sessionClient.from('produtos')
+    .select('codigo,quantidade').in('codigo',['CALOTA-ARO14','PRESILHA-TESTE']);
+  if(afterError)throw afterError;
+  const verified=after?.length===2&&after.every(r=>r.codigo==='CALOTA-ARO14'?Number(r.quantidade)===20:r.codigo==='PRESILHA-TESTE'&&Number(r.quantidade)===100);
+  status.textContent=verified
+    ?'✅ Entrada de teste confirmada no Supabase: calota 20 e presilha 100. Chave interna: '+String(data?.chave_teste||'FASE3F')+'. Não execute novamente.'
+    :'⚠️ A função retornou, mas a conferência do estoque não confirmou as duas quantidades. Verifique diretamente no Supabase antes de repetir.';
+  await stockLoad();
+ }catch(err){
+  status.textContent='⚠️ Não foi possível confirmar a entrada: '+(err.message||err)+'. Consulte o estoque e o registro da Fase 3F no Supabase antes de qualquer nova tentativa.';
+ }finally{xmlPhase3fBusy=false;btn.disabled=false}
 });
 /* Etapa 3a: validacao previa; nenhuma gravacao em estoque. */
 function xmlPrepareReset(){
