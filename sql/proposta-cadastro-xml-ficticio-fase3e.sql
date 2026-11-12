@@ -73,7 +73,7 @@ BEGIN
             RAISE EXCEPTION 'Código não autorizado para teste: %', v_codigo;
         END IF;
         IF (v_item->>'preco_venda') IS NULL OR
-            (v_item->>'preco_venda') !~ '^[0-9]{1,6}(\\.[0-9]{1,2})?$' THEN
+            (v_item->>'preco_venda') !~ '^[0-9]{1,6}([.][0-9]{1,2})?$' THEN
             RAISE EXCEPTION 'Preço de venda inválido';
         END IF;
         v_preco := (v_item->>'preco_venda')::numeric;
