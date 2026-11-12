@@ -176,7 +176,7 @@ body.recover-mode #recoveryPanel{display:block}
 <h3>🧾 Cadastro assistido de produtos não encontrados — PRÉVIA</h3>
 <p class="sub">Revise código interno, categoria, localização e preço de venda de cada produto novo. Não é feita gravação no Supabase; NCM e custo são apenas informações de referência da nota.</p>
 <div id="xmlNewProductsRows"></div>
-<div class="actions"><button type="button" class="btn secondary" id="xmlReviewNewProducts">Validar cadastros preparados</button></div>
+<div class="actions"><button type="button" class="btn secondary" id="xmlReviewNewProducts">Validar cadastros preparados</button><button type="button" class="btn secondary" id="xmlCheckNewServer">Verificar códigos no Supabase</button></div>
 <p id="xmlNewProductsStatus" class="msg" role="status">Nenhum cadastro preparado.</p>
 </div>
 </div>
@@ -575,6 +575,52 @@ $('xmlReviewNewProducts').addEventListener('click',()=>{
   if(ean)usedBarcodes.add(ean);
  });
  $('xmlNewProductsStatus').textContent=errors.length?'⛔ Revisar: '+errors.join(' | '):'✅ Campos preenchidos para '+pending.length+' produto(s). Prévia somente local: ainda é obrigatório verificar duplicidades no servidor, validar NF-e e cadastrar com autorização. Nenhuma alteração foi gravada.';
+});
+/* Fase 3D: auditoria read-only de códigos contra o cadastro persistido.
+   Resultado informativo; unicidade é garantida somente pelo servidor no INSERT. */
+let xmlServerAuditBusy=false;
+$('xmlCheckNewServer').addEventListener('click',async()=>{
+ if(xmlServerAuditBusy)return;
+ if(!client||!adminAccess){$('xmlNewProductsStatus').textContent='⚠️ Entre como administrador.';return}
+ const pending=xmlCompareRowsData.filter(item=>!item.match?.product);
+ if(!pending.length){$('xmlNewProductsStatus').textContent='Não há produtos novos.';return}
+ const entries=pending.map(item=>({item,d:item.review||{}}));
+ const errors=[],codes=new Set(),barcodes=new Set();
+ entries.forEach(({d},i)=>{
+  const code=String(d.codigo||'').trim(),barcode=String(d.codigo_barras||'').trim();
+  const price=Number(String(d.preco_venda||'').replace(',','.'));
+  if(!String(d.nome||'').trim()||!code||!String(d.categoria||'').trim()||!String(d.localizacao||'').trim()||!Number.isFinite(price)||price<=0)
+   errors.push('Item '+(i+1)+': complete nome, código, categoria, localização e preço válido.');
+  if(code&&codes.has(code))errors.push('Código interno repetido: '+code);
+  if(code)codes.add(code);
+  if(barcode&&(!xmlValidBarcode(barcode)||barcodes.has(barcode)))errors.push('EAN inválido ou repetido no lote: '+barcode);
+  if(barcode)barcodes.add(barcode);
+ });
+ if(errors.length){$('xmlNewProductsStatus').textContent='⛔ '+errors.join(' | ');return}
+ const sessionClient=client,btn=$('xmlCheckNewServer');xmlServerAuditBusy=true;btn.disabled=true;
+ $('xmlNewProductsStatus').textContent='Consultando códigos internos e EANs no Supabase (somente leitura)...';
+ try{
+  const rows=[];
+  for(let offset=0;;offset+=500){
+   const {data,error}=await sessionClient.from('produtos').select('id,codigo,codigo_barras').range(offset,offset+499);
+   if(error)throw error;rows.push(...(data||[]));
+   if((data||[]).length<500)break;
+   if(offset>=49500)throw Error('Limite de consulta atingido; use validação de duplicidades no servidor.');
+  }
+  if(client!==sessionClient||!adminAccess)throw Error('Sessão alterada; consulta descartada.');
+  const collisions=[];
+  entries.forEach(({d},i)=>{
+   const code=String(d.codigo||'').trim(),barcode=String(d.codigo_barras||'').trim();
+   const hit=rows.find(p=>String(p.codigo||'').trim()===code || (barcode&&String(p.codigo_barras||'').trim()===barcode));
+   if(hit)collisions.push('Item '+(i+1)+' coincide com produto cadastrado (código/EAN).');
+  });
+  if(collisions.length){
+   $('xmlNewProductsStatus').textContent='⛔ Duplicidade encontrada: '+collisions.join(' ')+' Não foi gravado nenhum cadastro.';
+  }else{
+   $('xmlNewProductsStatus').textContent='✅ Nenhum código/EAN igual encontrado na consulta de '+rows.length+' produtos. Cadastro ainda NÃO liberado: a verificação não é atômica e precisa ser repetida pelo banco ao salvar. Nenhum produto ou estoque foi alterado.';
+  }
+ }catch(e){$('xmlNewProductsStatus').textContent='⚠️ Conferência no servidor falhou: '+(e.message||e)+' — nenhum dado foi alterado.'}
+ finally{xmlServerAuditBusy=false;btn.disabled=false}
 });
 /* Etapa 3a: validacao previa; nenhuma gravacao em estoque. */
 function xmlPrepareReset(){
