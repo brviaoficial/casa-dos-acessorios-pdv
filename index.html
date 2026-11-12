@@ -172,6 +172,13 @@ body.recover-mode #recoveryPanel{display:block}
 <div class="actions"><button type="button" class="btn secondary" id="xmlPrepare">🔎 Preparar prévia de entrada</button></div><p id="xmlPrepareStatus" class="msg" role="status">A prévia apenas valida os dados: não grava produtos, notas ou estoque.</p>
 <div class="stock-table"><table><thead><tr><th>Produto da nota</th><th>Código / EAN</th><th>Qtde. na nota</th><th>Recebido (manual)</th><th>Diferença</th><th>Correspondência no PDV</th><th>Estoque PDV</th></tr></thead><tbody id="xmlCompareRows"></tbody></table></div>
 <p class="foot">A correspondência é feita somente por EAN válido ou código interno exato. Nomes parecidos não são associados automaticamente. Diferenças exibidas não são gravadas; confirme manualmente os produtos e quantidades antes de qualquer entrada.</p>
+<div class="panel" id="xmlNewProductsPanel" hidden>
+<h3>🧾 Cadastro assistido de produtos não encontrados — PRÉVIA</h3>
+<p class="sub">Revise código interno, categoria, localização e preço de venda de cada produto novo. Não é feita gravação no Supabase; NCM e custo são apenas informações de referência da nota.</p>
+<div id="xmlNewProductsRows"></div>
+<div class="actions"><button type="button" class="btn secondary" id="xmlReviewNewProducts">Validar cadastros preparados</button></div>
+<p id="xmlNewProductsStatus" class="msg" role="status">Nenhum cadastro preparado.</p>
+</div>
 </div>
 </section>
 <div class="panel"><h3 id="stockFormTitle">Novo produto</h3><div class="stock-fields"><label>Nome do produto *<input id="prod_nome" type="text" maxlength="160" autocomplete="off"></label><label>Código interno<input id="prod_codigo" type="text" maxlength="160" autocomplete="off"></label><label>Código de barras<input id="prod_codigo_barras" type="text" maxlength="160" autocomplete="off"></label><label>Categoria<input id="prod_categoria" type="text" maxlength="160" autocomplete="off"></label><label>Marca<input id="prod_marca" type="text" maxlength="160" autocomplete="off"></label><label>Modelo do veículo<input id="prod_modelo_veiculo" type="text" maxlength="160" autocomplete="off"></label><label>Ano do veículo<input id="prod_ano_veiculo" type="text" maxlength="160" autocomplete="off"></label><label>Referência<input id="prod_referencia" type="text" maxlength="160" autocomplete="off"></label><label>Localização no estoque<input id="prod_localizacao" type="text" maxlength="160" autocomplete="off"></label><label>Preço de custo (R$)<input id="prod_preco_custo" type="number" step="0.01" min="0" autocomplete="off"></label><label>Preço de venda (R$) *<input id="prod_preco_venda" type="number" step="0.01" min="0" autocomplete="off"></label><label>Quantidade *<input id="prod_quantidade" type="number" step="1" min="0" autocomplete="off"></label><label>Estoque mínimo *<input id="prod_estoque_minimo" type="number" step="1" min="0" autocomplete="off"></label></div><div class="actions"><button type="button" class="btn" id="stockSave">Salvar produto</button><button type="button" class="btn secondary" id="stockCancel">Limpar / Novo produto</button><span class="stock-note">* Campos obrigatórios</span></div><div id="stockMsg" class="msg" role="status"></div></div><div class="panel" style="margin-top:16px" id="stockEntryPanel"><h3>📥 Entrada de mercadorias — TESTE</h3><p class="sub">Somente administrador. Esta operação altera o estoque do produto fictício selecionado e registra o histórico. Use somente produtos fictícios. Cada tentativa mantém seu identificador para evitar duplicidades, mesmo após recarregar a página.</p><div class="form"><label>Produto de TESTE<select id="entryProduct"><option value="">Escolha um produto de teste</option></select></label><label>Quantidade para adicionar<input type="number" id="entryQty" value="3" min="1" max="1000" step="1"></label><label style="grid-column:1/-1">Observações<input id="entryNotes" type="text" maxlength="160" value="Entrada fictícia para validação"></label></div><div class="actions"><button type="button" class="btn" id="entrySubmit">Registrar entrada de TESTE</button><button type="button" class="btn secondary" id="entryCheck">↻ Consultar estoque</button><button type="button" class="btn secondary" id="entryNew">Nova entrada</button></div><div id="entryMsg" class="msg" role="status">Selecione um produto fictício. A operação será preservada até você clicar em Nova entrada.</div><div class="stock-table"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Data</th><th>Observação</th></tr></thead><tbody id="entryRows"><tr><td colspan="5">Histórico não carregado.</td></tr></tbody></table></div></div><div class="panel" style="margin-top:16px" id="stockExitPanel">
@@ -511,9 +518,70 @@ function xmlCompareUpdateSummary(){
  });
  $('xmlCompareSummary').textContent=xmlCompareRowsData.length+' itens no XML • '+matched+' com correspondência única no PDV • '+equal+' conferidos • '+different+' com diferença / inválidos • '+unfilled+' sem contagem.';
 }
+/* Cadastro assistido em prévia: apenas em memória; nunca grava estoque ou produtos. */
+const xmlNewField=(labelText,initial,maxLength=160)=>{
+ const label=document.createElement('label');label.textContent=labelText;
+ const input=document.createElement('input');input.type='text';input.value=String(initial||'');
+ input.maxLength=maxLength;input.autocomplete='off';input.style.cssText='width:100%;padding:10px;margin:5px 0 10px;background:#07182c;color:#fff;border:1px solid #45627e;border-radius:7px';
+ label.appendChild(input);return {label,input};
+};
+function xmlNewProductsRender(){
+ const panel=$('xmlNewProductsPanel'),root=$('xmlNewProductsRows');root.replaceChildren();
+ const newItems=xmlCompareRowsData.map((item,index)=>({item,index})).filter(x=>!x.item.match?.product);
+ panel.hidden=!newItems.length;
+ newItems.forEach(({item,index})=>{
+  const section=document.createElement('section');section.className='panel';
+  const h=document.createElement('h4');h.textContent='Item '+(index+1)+' — '+item.name;section.appendChild(h);
+  const info=document.createElement('p');info.className='sub';
+  info.textContent='Fornecedor: '+(item.code||'—')+' • EAN: '+(item.ean||'—')+' • NCM: '+(item.ncm||'—')+' • Unidade: '+(item.unit||'—')+' • Custo unitário informado: R$ '+(item.unitCost||'—');
+  section.appendChild(info);
+  const grid=document.createElement('div');grid.className='stock-fields';
+  const fields=[
+   ['nome','Nome para cadastro',item.name],
+   ['codigo','Código interno (revisar)',item.code],
+   ['codigo_barras','Código de barras (revisar)',xmlValidBarcode(item.ean)?item.ean:''],
+   ['categoria','Categoria',''],
+   ['localizacao','Localização no estoque',''],
+   ['preco_venda','Preço de venda (R$)','']
+  ];
+  item.review={};
+  fields.forEach(([key,label,initial])=>{
+   const field=xmlNewField(label,initial);
+   item.review[key]=initial;
+   field.input.dataset.xmlDraftIndex=String(index);field.input.dataset.xmlDraftField=key;
+   field.input.addEventListener('input',()=>{item.review[key]=field.input.value;$('xmlNewProductsStatus').textContent='Campos editados. Clique em Validar cadastros preparados.'});
+   grid.appendChild(field.label);
+  });
+  section.appendChild(grid);root.appendChild(section);
+ });
+ $('xmlNewProductsStatus').textContent=newItems.length+' produto(s) sem correspondência. Preencha os campos e valide; nenhum cadastro é gravado.';
+}
+$('xmlReviewNewProducts').addEventListener('click',()=>{
+ const pending=xmlCompareRowsData.filter(x=>!x.match?.product);
+ if(!pending.length){$('xmlNewProductsStatus').textContent='Nenhum produto novo para preparar.';return}
+ const errors=[],usedCodes=new Set(),usedBarcodes=new Set();
+ pending.forEach((item,i)=>{
+  const d=item.review||{},n=i+1,price=Number(String(d.preco_venda||'').replace(',','.'));
+  if(!String(d.nome||'').trim())errors.push('Novo item '+n+': nome obrigatório.');
+  if(!String(d.codigo||'').trim())errors.push('Novo item '+n+': código interno obrigatório.');
+  if(!String(d.categoria||'').trim())errors.push('Novo item '+n+': categoria obrigatória.');
+  if(!String(d.localizacao||'').trim())errors.push('Novo item '+n+': localização obrigatória.');
+  if(!String(d.preco_venda||'').trim()||!Number.isFinite(price)||price<=0)errors.push('Novo item '+n+': preço de venda inválido.');
+  const code=String(d.codigo||'').trim();
+  if(code&&usedCodes.has(code))errors.push('Código interno repetido entre os itens novos: '+code);
+  usedCodes.add(code);
+  const ean=String(d.codigo_barras||'').trim();
+  if(ean&&(!xmlValidBarcode(ean)||usedBarcodes.has(ean)))errors.push('Novo item '+n+': EAN inválido ou repetido.');
+  if(ean)usedBarcodes.add(ean);
+ });
+ $('xmlNewProductsStatus').textContent=errors.length?'⛔ Revisar: '+errors.join(' | '):'✅ Campos preenchidos para '+pending.length+' produto(s). Prévia somente local: ainda é obrigatório verificar duplicidades no servidor, validar NF-e e cadastrar com autorização. Nenhuma alteração foi gravada.';
+});
 /* Etapa 3a: validacao previa; nenhuma gravacao em estoque. */
 function xmlPrepareReset(){
  $('xmlPrepareStatus').textContent='A prévia apenas valida os dados: não grava produtos, notas ou estoque.';
+ $('xmlNewProductsPanel').hidden=true;
+ $('xmlNewProductsRows').replaceChildren();
+ $('xmlNewProductsStatus').textContent='Nenhum cadastro preparado.';
 }
 $('xmlPrepare').addEventListener('click',()=>{
  if(!client||!adminAccess){$('xmlPrepareStatus').textContent='⚠️ Entre como administrador.';return}
@@ -554,7 +622,7 @@ $('xmlCompareFile').addEventListener('change',async function(){
    const prod=xmlChild(det,'prod');if(!prod)throw Error('Item sem dados de produto.');
    const qty=Number(xmlTag(prod,'qCom'));
    if(!Number.isFinite(qty)||qty<0)throw Error('Quantidade inválida no XML.');
-   return {name:xmlTag(prod,'xProd'),code:xmlTag(prod,'cProd'),ean:xmlTag(prod,'cEAN'),qty,received:'',match:null};
+   return {name:xmlTag(prod,'xProd'),code:xmlTag(prod,'cProd'),ean:xmlTag(prod,'cEAN'),ncm:xmlTag(prod,'NCM'),unit:xmlTag(prod,'uCom'),unitCost:xmlTag(prod,'vUnCom'),qty,received:'',match:null,review:null};
   });
   const products=[];
   for(let start=0;;start+=500){
@@ -568,7 +636,7 @@ $('xmlCompareFile').addEventListener('change',async function(){
   xmlCompareRowsData=items.map(item=>({...item,match:xmlCompareMatch(item,products)}));
   const emit=xmlChild(inf,'emit');
   $('xmlCompareNote').textContent='NF-e nº '+(xmlTag(ide,'nNF')||'—')+' • Série '+(xmlTag(ide,'serie')||'—')+' • Emitente: '+(xmlTag(emit,'xNome')||'—')+'. Os produtos são comparados sem modificar dados.';
-  xmlCompareRender();$('xmlCompareResults').hidden=false;
+  xmlCompareRender();xmlNewProductsRender();$('xmlCompareResults').hidden=false;
   $('xmlCompareStatus').textContent='✅ XML lido e comparado. Preencha as quantidades efetivamente recebidas para verificar diferenças.';
  }catch(err){$('xmlCompareStatus').textContent='⚠️ '+(err.message||'Erro ao conferir XML.');$('xmlCompareResults').hidden=true}
 });
