@@ -166,6 +166,11 @@ body.recover-mode #recoveryPanel{display:block}
 <p class="sub">Selecione um XML de NF-e modelo 55 para comparar códigos e conferir quantidades. <strong>Somente leitura: não cadastra, não dá entrada e não altera o estoque.</strong> O arquivo é interpretado neste navegador; apenas uma consulta de produtos é feita ao Supabase com sua sessão administrativa.</p>
 <div class="stock-toolbar"><input id="xmlCompareFile" type="file" accept=".xml,application/xml,text/xml" aria-label="Selecionar XML da NF-e"><button type="button" class="btn secondary" id="xmlCompareClear">Limpar conferência</button></div>
 <p class="msg" id="xmlCompareStatus" role="status">Selecione um XML para começar.</p>
+<div class="panel" id="xmlFiscalReadPanel" hidden>
+<h3>🔍 Fase 3G — Pré-conferência fiscal do XML (somente leitura)</h3>
+<p class="sub">Esta análise local verifica estrutura e informações declaradas no XML. NÃO consulta a SEFAZ, NÃO verifica assinatura digital e NÃO autoriza importação real.</p>
+<p id="xmlFiscalReadStatus" class="msg" role="status">Nenhum XML analisado.</p>
+</div>
 <div id="xmlCompareResults" hidden>
 <p class="sub" id="xmlCompareNote"></p>
 <p class="sub" id="xmlCompareSummary"></p>
@@ -462,9 +467,58 @@ $('xmlEntryTestSubmit').addEventListener('click',async()=>{
 let xmlCompareRowsData=[];
 const xmlTag=(parent,tag)=>{const el=parent?.getElementsByTagNameNS('*',tag)?.[0];return el?(el.textContent||'').trim():''};
 const xmlChild=(parent,tag)=>parent?.getElementsByTagNameNS('*',tag)?.[0]||null;
+/* Inspeção preliminar de metadados fiscais: NUNCA é autorização da NF-e. */
+function xmlFiscalPreview(xml,inf){
+ const ide=xmlChild(inf,'ide'),emit=xmlChild(inf,'emit'),dest=xmlChild(inf,'dest');
+ const rawKey=String(inf.getAttribute('Id')||'').replace(/^NFe/,'');
+ const cnpjEmit=xmlTag(emit,'CNPJ'),cnpjDest=xmlTag(dest,'CNPJ');
+ const cpfDest=xmlTag(dest,'CPF');
+ const protocol=xmlChild(xml,'protNFe'),infProt=xmlChild(protocol,'infProt');
+ const cStat=xmlTag(infProt,'cStat'),protKey=xmlTag(infProt,'chNFe');
+ const problems=[],warnings=[];
+ const cnpjShape=value=>/^\\d{14}$/.test(value);
+ const cnpjDigits=value=>{
+  if(!cnpjShape(value)||/^(\\d)\\1{13}$/.test(value))return false;
+  const calc=(base,weights)=>{const total=weights.reduce((sum,w,i)=>sum+Number(base[i])*w,0),rem=total%11;return rem<2?0:11-rem};
+  const w1=[5,4,3,2,9,8,7,6,5,4,3,2],w2=[6,5,4,3,2,9,8,7,6,5,4,3,2];
+  return calc(value.slice(0,12),w1)===Number(value[12])&&calc(value.slice(0,13),w2)===Number(value[13]);
+ };
+ const keyValid=value=>{
+  if(!/^\\d{44}$/.test(value))return false;
+  let sum=0,mult=2;for(let i=42;i>=0;i--){sum+=Number(value[i])*mult;mult=mult===9?2:mult+1}
+  const rest=sum%11,check=rest<2?0:11-rest;
+  return check===Number(value[43]);
+ };
+ if(!keyValid(rawKey))problems.push('Chave de acesso ausente ou inválida (44 dígitos/dígito verificador).');
+ if(!cnpjDigits(cnpjEmit))problems.push('CNPJ do emitente inválido ou ausente.');
+ if(cnpjDest){if(!cnpjDigits(cnpjDest))problems.push('CNPJ do destinatário inválido.')}
+ else if(cpfDest){warnings.push('Destinatário é CPF; confirmar regras aplicáveis à empresa antes de importar.')}
+ else problems.push('CNPJ/CPF do destinatário ausente.');
+ if(xmlTag(ide,'mod')!=='55')problems.push('Modelo diferente de NF-e 55.');
+ if(xmlTag(ide,'tpAmb')!=='1')warnings.push('Ambiente não identificado como produção.');
+ if(xmlTag(ide,'tpNF')!=='1')warnings.push('Tipo de operação não identificado como saída do fornecedor; conferir.');
+ if(!infProt||!cStat){warnings.push('Sem protocolo de autorização anexado (procNFe/protNFe). É obrigatório verificar na SEFAZ.')}
+ else{
+  if(cStat!=='100'&&cStat!=='150')warnings.push('Código de situação do protocolo: '+cStat+' (não indica autorização normal).');
+  if(rawKey!==protKey)problems.push('Chave declarada diverge da chave no protocolo.');
+  if(cStat==='100'||cStat==='150')warnings.push('Protocolo DECLARA autorização ('+cStat+'), mas não foi autenticado na SEFAZ.');
+ }
+ const summary=[
+  'Chave no XML: '+(rawKey||'ausente'),
+  'Emitente CNPJ: '+(cnpjEmit||'ausente'),
+  'Destinatário: '+(cnpjDest||cpfDest||'ausente'),
+  'Número/série: '+(xmlTag(ide,'nNF')||'—')+'/'+(xmlTag(ide,'serie')||'—'),
+  'Situação declarada no protocolo: '+(cStat||'não disponível'),
+  problems.length?'⛔ Pendências estruturais: '+problems.join(' | '):'✅ Dados estruturais básicos sem erro detectado.',
+  warnings.length?'⚠️ Atenção: '+warnings.join(' | '):'⚠️ Autenticidade, autorização vigente, destinatário da loja e duplicidade ainda exigem validação no servidor.',
+  '⛔ IMPORTAÇÃO REAL BLOQUEADA: nenhuma alteração no estoque ou na base fiscal.'
+ ];
+ $('xmlFiscalReadPanel').hidden=false;
+ $('xmlFiscalReadStatus').textContent=summary.join('\\n');
+}
 function xmlCompareClear(){
  xmlPrepareReset();
- xmlCompareRowsData=[];$('xmlCompareRows').replaceChildren();$('xmlCompareResults').hidden=true;$('xmlCompareFile').value='';
+ xmlCompareRowsData=[];$('xmlCompareRows').replaceChildren();$('xmlCompareResults').hidden=true;$('xmlCompareFile').value='';$('xmlFiscalReadPanel').hidden=true;
  $('xmlCompareStatus').textContent='Selecione um XML para começar.';
 }
 function xmlValidBarcode(value){
@@ -766,7 +820,7 @@ $('xmlPrepare').addEventListener('click',()=>{
 });
 $('xmlCompareClear').addEventListener('click',xmlCompareClear);
 $('xmlCompareFile').addEventListener('change',async function(){
- const file=this.files?.[0];$('xmlCompareResults').hidden=true;xmlCompareRowsData=[];xmlPrepareReset();
+ const file=this.files?.[0];$('xmlCompareResults').hidden=true;xmlCompareRowsData=[];xmlPrepareReset();$('xmlFiscalReadPanel').hidden=true;
  if(!file)return;
  if(!client||!adminAccess){$('xmlCompareStatus').textContent='⚠️ Entre como administrador para comparar com o cadastro.';return}
  if(file.size>15*1024*1024){$('xmlCompareStatus').textContent='⚠️ Limite de arquivo: 15 MB.';return}
@@ -778,7 +832,7 @@ $('xmlCompareFile').addEventListener('change',async function(){
   const xml=new DOMParser().parseFromString(raw,'application/xml');
   if(xml.getElementsByTagName('parsererror').length)throw Error('XML malformado.');
   const inf=xmlChild(xml,'infNFe');if(!inf)throw Error('Não encontrei infNFe. Envie XML de NF-e modelo 55.');
-  const ide=xmlChild(inf,'ide');if(xmlTag(ide,'mod')!=='55')throw Error('Aceitamos apenas NF-e modelo 55 nesta etapa.');
+  const ide=xmlChild(inf,'ide');if(xmlTag(ide,'mod')!=='55')throw Error('Aceitamos apenas NF-e modelo 55 nesta etapa.');\n  xmlFiscalPreview(xml,inf);
   const details=Array.from(inf.getElementsByTagNameNS('*','det'));if(!details.length)throw Error('XML sem itens.');
   const items=details.map(det=>{
    const prod=xmlChild(det,'prod');if(!prod)throw Error('Item sem dados de produto.');
