@@ -170,6 +170,8 @@ body.recover-mode #recoveryPanel{display:block}
 <h3>🔍 Fase 3G — Pré-conferência fiscal do XML (somente leitura)</h3>
 <p class="sub">Esta análise local verifica estrutura e informações declaradas no XML. NÃO consulta a SEFAZ, NÃO verifica assinatura digital e NÃO autoriza importação real.</p>
 <p id="xmlFiscalReadStatus" class="msg" role="status">Nenhum XML analisado.</p>
+<div class="actions"><button type="button" class="btn secondary" id="xmlCheckRecipient" disabled>Conferir destinatário no Supabase</button></div>
+<p id="xmlCheckRecipientStatus" class="msg" role="status">Carregue um XML para conferir o destinatário (somente leitura).</p>
 </div>
 <div id="xmlCompareResults" hidden>
 <p class="sub" id="xmlCompareNote"></p>
@@ -465,6 +467,48 @@ $('xmlEntryTestSubmit').addEventListener('click',async()=>{
 });
 /* Conferência XML de NF-e — leitura local + correspondência de produtos, sem gravação. */
 let xmlCompareRowsData=[];
+/* Fase 3H: CNPJ exclusivamente extraído do XML carregado neste navegador.
+   A RPC só compara um texto: NÃO atesta assinatura nem situação fiscal da NF-e. */
+let xmlRecipientCnpj='',xmlRecipientBusy=false,xmlRecipientSource=0;
+function xmlRecipientReset(){
+ xmlRecipientSource++;xmlRecipientCnpj='';
+ $('xmlCheckRecipient').disabled=true;
+ $('xmlCheckRecipientStatus').textContent='Carregue um XML para conferir o destinatário (somente leitura).';
+}
+$('xmlCheckRecipient').addEventListener('click',async()=>{
+ const status=$('xmlCheckRecipientStatus'),btn=$('xmlCheckRecipient');
+ if(xmlRecipientBusy)return;
+ if(!client||!adminAccess){status.textContent='⛔ Entre como administrador.';return}
+ if(!$('xmlCompareResults').hidden&&xmlRecipientCnpj===''){
+  status.textContent='⚠️ XML sem CNPJ do destinatário. Não é possível comparar com o CNPJ da empresa.';return
+ }
+ if($('xmlCompareResults').hidden){status.textContent='⛔ Carregue e confira um XML primeiro.';return}
+ if(!/^\d{14}$/.test(xmlRecipientCnpj)){
+  status.textContent='⛔ CNPJ do destinatário no XML deve conter 14 dígitos; nenhuma consulta de comparação realizada.';return
+ }
+ const sessionClient=client,source=xmlRecipientSource;
+ xmlRecipientBusy=true;btn.disabled=true;
+ status.textContent='Consultando igualdade do CNPJ destinatário no Supabase, sem gravação...';
+ try{
+  const {data,error}=await sessionClient.rpc('conferir_destinatario_xml_previa',{p_cnpj_destinatario:xmlRecipientCnpj});
+  if(error)throw error;
+  if(client!==sessionClient||source!==xmlRecipientSource||!adminAccess)throw Error('Sessão/arquivo alterado; descarte a consulta.');
+  const state=String(data?.status||'');
+  const explanations={
+   empresa_nao_configurada:'⚠️ CNPJ da empresa ainda NÃO configurado no Supabase. Nenhuma importação foi liberada.',
+   destinatario_divergente:'⛔ CNPJ destinatário informado no XML difere do CNPJ configurado na empresa.',
+   cnpj_xml_invalido:'⛔ CNPJ destinatário inválido no XML.',
+   cnpj_igual_ao_configurado:'✅ CNPJ declarado no XML coincide com o cadastrado. ISTO NÃO valida autenticidade da NF-e ou autorização SEFAZ.'
+  };
+  status.textContent=(explanations[state]||'⚠️ Retorno inesperado da conferência: '+state)+
+   ' Somente leitura; nenhuma alteração no estoque.';
+ }catch(err){
+  if(source===xmlRecipientSource)status.textContent='⚠️ Falha na consulta do destinatário: '+(err.message||err)+'. Nenhum cadastro/estoque alterado.';
+ }finally{
+  xmlRecipientBusy=false;btn.disabled=$('xmlCompareResults').hidden||!xmlRecipientCnpj;
+ }
+});
+
 const xmlTag=(parent,tag)=>{const el=parent?.getElementsByTagNameNS('*',tag)?.[0];return el?(el.textContent||'').trim():''};
 const xmlChild=(parent,tag)=>parent?.getElementsByTagNameNS('*',tag)?.[0]||null;
 /* Inspeção preliminar de metadados fiscais: NUNCA é autorização da NF-e. */
@@ -517,6 +561,7 @@ function xmlFiscalPreview(xml,inf){
  $('xmlFiscalReadStatus').textContent=summary.join('\n');
 }
 function xmlCompareClear(){
+ xmlRecipientReset();
  xmlPrepareReset();
  xmlCompareRowsData=[];$('xmlCompareRows').replaceChildren();$('xmlCompareResults').hidden=true;$('xmlCompareFile').value='';$('xmlFiscalReadPanel').hidden=true;
  $('xmlCompareStatus').textContent='Selecione um XML para começar.';
@@ -820,7 +865,7 @@ $('xmlPrepare').addEventListener('click',()=>{
 });
 $('xmlCompareClear').addEventListener('click',xmlCompareClear);
 $('xmlCompareFile').addEventListener('change',async function(){
- const file=this.files?.[0];$('xmlCompareResults').hidden=true;xmlCompareRowsData=[];xmlPrepareReset();$('xmlFiscalReadPanel').hidden=true;
+ const file=this.files?.[0];$('xmlCompareResults').hidden=true;xmlCompareRowsData=[];xmlPrepareReset();xmlRecipientReset();$('xmlFiscalReadPanel').hidden=true;
  if(!file)return;
  if(!client||!adminAccess){$('xmlCompareStatus').textContent='⚠️ Entre como administrador para comparar com o cadastro.';return}
  if(file.size>15*1024*1024){$('xmlCompareStatus').textContent='⚠️ Limite de arquivo: 15 MB.';return}
@@ -852,6 +897,12 @@ $('xmlCompareFile').addEventListener('change',async function(){
   if(client!==sessionClient||!adminAccess)throw Error('Sessão alterada. Reabra a conferência.');
   xmlCompareRowsData=items.map(item=>({...item,match:xmlCompareMatch(item,products)}));
   const emit=xmlChild(inf,'emit');
+  const recipient=xmlChild(inf,'dest');
+  xmlRecipientCnpj=xmlTag(recipient,'CNPJ');
+  $('xmlCheckRecipient').disabled=!/^\d{14}$/.test(xmlRecipientCnpj);
+  $('xmlCheckRecipientStatus').textContent=xmlRecipientCnpj
+    ?'CNPJ destinatário lido do XML. Clique em Conferir destinatário no Supabase (não valida a NF-e).'
+    :'XML sem CNPJ de destinatário; consulta não disponível neste documento fictício.';
   $('xmlCompareNote').textContent='NF-e nº '+(xmlTag(ide,'nNF')||'—')+' • Série '+(xmlTag(ide,'serie')||'—')+' • Emitente: '+(xmlTag(emit,'xNome')||'—')+'. Os produtos são comparados sem modificar dados.';
   xmlCompareRender();xmlNewProductsRender();$('xmlCompareResults').hidden=false;
   $('xmlCompareStatus').textContent='✅ XML lido e comparado. Preencha as quantidades efetivamente recebidas para verificar diferenças.';
