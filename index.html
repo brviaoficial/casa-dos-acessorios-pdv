@@ -476,15 +476,15 @@ function xmlFiscalPreview(xml,inf){
  const protocol=xmlChild(xml,'protNFe'),infProt=xmlChild(protocol,'infProt');
  const cStat=xmlTag(infProt,'cStat'),protKey=xmlTag(infProt,'chNFe');
  const problems=[],warnings=[];
- const cnpjShape=value=>/^\\d{14}$/.test(value);
+ const cnpjShape=value=>/^\d{14}$/.test(value);
  const cnpjDigits=value=>{
-  if(!cnpjShape(value)||/^(\\d)\\1{13}$/.test(value))return false;
+  if(!cnpjShape(value)||/^(\d)\1{13}$/.test(value))return false;
   const calc=(base,weights)=>{const total=weights.reduce((sum,w,i)=>sum+Number(base[i])*w,0),rem=total%11;return rem<2?0:11-rem};
   const w1=[5,4,3,2,9,8,7,6,5,4,3,2],w2=[6,5,4,3,2,9,8,7,6,5,4,3,2];
   return calc(value.slice(0,12),w1)===Number(value[12])&&calc(value.slice(0,13),w2)===Number(value[13]);
  };
  const keyValid=value=>{
-  if(!/^\\d{44}$/.test(value))return false;
+  if(!/^\d{44}$/.test(value))return false;
   let sum=0,mult=2;for(let i=42;i>=0;i--){sum+=Number(value[i])*mult;mult=mult===9?2:mult+1}
   const rest=sum%11,check=rest<2?0:11-rest;
   return check===Number(value[43]);
@@ -514,7 +514,7 @@ function xmlFiscalPreview(xml,inf){
   '⛔ IMPORTAÇÃO REAL BLOQUEADA: nenhuma alteração no estoque ou na base fiscal.'
  ];
  $('xmlFiscalReadPanel').hidden=false;
- $('xmlFiscalReadStatus').textContent=summary.join('\\n');
+ $('xmlFiscalReadStatus').textContent=summary.join('\n');
 }
 function xmlCompareClear(){
  xmlPrepareReset();
