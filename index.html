@@ -832,7 +832,8 @@ $('xmlCompareFile').addEventListener('change',async function(){
   const xml=new DOMParser().parseFromString(raw,'application/xml');
   if(xml.getElementsByTagName('parsererror').length)throw Error('XML malformado.');
   const inf=xmlChild(xml,'infNFe');if(!inf)throw Error('Não encontrei infNFe. Envie XML de NF-e modelo 55.');
-  const ide=xmlChild(inf,'ide');if(xmlTag(ide,'mod')!=='55')throw Error('Aceitamos apenas NF-e modelo 55 nesta etapa.');\n  xmlFiscalPreview(xml,inf);
+  const ide=xmlChild(inf,'ide');if(xmlTag(ide,'mod')!=='55')throw Error('Aceitamos apenas NF-e modelo 55 nesta etapa.');
+  xmlFiscalPreview(xml,inf);
   const details=Array.from(inf.getElementsByTagNameNS('*','det'));if(!details.length)throw Error('XML sem itens.');
   const items=details.map(det=>{
    const prod=xmlChild(det,'prod');if(!prod)throw Error('Item sem dados de produto.');
