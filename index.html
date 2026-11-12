@@ -176,7 +176,7 @@ body.recover-mode #recoveryPanel{display:block}
 <h3>🧾 Cadastro assistido de produtos não encontrados — PRÉVIA</h3>
 <p class="sub">Revise código interno, categoria, localização e preço de venda de cada produto novo. Não é feita gravação no Supabase; NCM e custo são apenas informações de referência da nota.</p>
 <div id="xmlNewProductsRows"></div>
-<div class="actions"><button type="button" class="btn secondary" id="xmlReviewNewProducts">Validar cadastros preparados</button><button type="button" class="btn secondary" id="xmlCheckNewServer">Verificar códigos no Supabase</button></div>
+<div class="actions"><button type="button" class="btn secondary" id="xmlReviewNewProducts">Validar cadastros preparados</button><button type="button" class="btn secondary" id="xmlCheckNewServer">Verificar códigos no Supabase</button><button type="button" class="btn" id="xmlRegisterFictitious" title="Apenas as duas peças fictícias do XML de teste; estoque zero">Cadastrar 2 produtos fictícios (teste)</button></div>
 <p id="xmlNewProductsStatus" class="msg" role="status">Nenhum cadastro preparado.</p>
 </div>
 </div>
@@ -621,6 +621,54 @@ $('xmlCheckNewServer').addEventListener('click',async()=>{
   }
  }catch(e){$('xmlNewProductsStatus').textContent='⚠️ Conferência no servidor falhou: '+(e.message||e)+' — nenhum dado foi alterado.'}
  finally{xmlServerAuditBusy=false;btn.disabled=false}
+});
+/* Fase 3E: execução EXCLUSIVA da RPC de duas peças fictícias.
+   O servidor continua sendo a autoridade: interface não concede permissão. */
+let xmlFictitiousBusy=false;
+$('xmlRegisterFictitious').addEventListener('click',async()=>{
+ const status=$('xmlNewProductsStatus'),btn=$('xmlRegisterFictitious');
+ if(xmlFictitiousBusy)return;
+ if(!client||!adminAccess){status.textContent='⛔ Somente administrador autenticado.';return}
+ const expected={
+  'CALOTA-ARO14':{name:'CALOTA ARO 14 - MODELO TESTE',cost:18.50,qty:20},
+  'PRESILHA-TESTE':{name:'PRESILHA AUTOMOTIVA - MODELO TESTE',cost:0.75,qty:100}
+ };
+ const items=xmlCompareRowsData;
+ if(items.length!==2||items.some(item=>item.match?.product)||new Set(items.map(x=>x.code)).size!==2){
+  status.textContent='⛔ Use somente o XML fictício original, com exatamente dois produtos ainda não cadastrados.';return;
+ }
+ const payload=[],problems=[];
+ for(const item of items){
+  const ex=expected[item.code],d=item.review||{};
+  const cost=Number(item.unitCost),priceText=String(d.preco_venda||'').trim().replace(',','.');
+  const price=Number(priceText),barcode=String(d.codigo_barras||'').trim();
+  if(!ex||item.name!==ex.name||Number(item.qty)!==ex.qty||Math.abs(cost-(ex?.cost||0))>0.00001
+     ||(item.ean&&item.ean!=='SEM GTIN')
+     ||String(item.unit||'').trim().toUpperCase()!=='UN'
+     ||String(d.nome||'').trim()!==ex?.name||String(d.codigo||'').trim()!==item.code
+     ||barcode||!String(d.categoria||'').trim()||!String(d.localizacao||'').trim()
+     ||!Number.isFinite(price)||price<=0||!/^[0-9]{1,6}([.][0-9]{1,2})?$/.test(priceText)){
+   problems.push(item.code||item.name||'Item inválido');continue;
+  }
+  payload.push({nome:ex.name,codigo:item.code,codigo_barras:'',categoria:String(d.categoria).trim(),
+    localizacao:String(d.localizacao).trim(),preco_venda:priceText,quantidade:'0'});
+ }
+ if(problems.length||payload.length!==2){
+  status.textContent='⛔ Dados diferentes do teste autorizado: '+problems.join(', ')+'. Nenhum cadastro solicitado.';return;
+ }
+ const sure=window.confirm('TESTE CONTROLADO: cadastrar CALOTA-ARO14 e PRESILHA-TESTE no banco, com quantidade ZERO? Isso cria dois cadastros reais de teste no Supabase; NÃO registra nota nem entrada de estoque.');
+ if(!sure){status.textContent='Cadastro cancelado. Nenhuma solicitação enviada.';return}
+ const sessionClient=client;xmlFictitiousBusy=true;btn.disabled=true;
+ status.textContent='Enviando somente os dois cadastros fictícios ao Supabase...';
+ try{
+  const {data,error}=await sessionClient.rpc('cadastrar_produtos_xml_ficticios_teste',{p_itens:payload});
+  if(error)throw error;
+  if(client!==sessionClient||!adminAccess)throw Error('A sessão mudou durante o cadastro.');
+  status.textContent='✅ Função confirmou '+String(data?.total??'?')+' cadastros fictícios com estoque ZERO. Consulte Produtos/Estoque para conferir. NÃO clique novamente.';
+  await stockLoad();
+ }catch(err){
+  status.textContent='⚠️ Não foi possível confirmar o cadastro: '+(err.message||err)+'. Verifique os códigos na lista de produtos ANTES de qualquer nova tentativa; a gravação pode ter sido concluída mesmo se houve falha de comunicação.';
+ }finally{xmlFictitiousBusy=false;btn.disabled=false}
 });
 /* Etapa 3a: validacao previa; nenhuma gravacao em estoque. */
 function xmlPrepareReset(){
